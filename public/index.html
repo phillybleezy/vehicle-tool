@@ -1742,6 +1742,100 @@ function renderVehicleIdentity(v) {
     </div>`;
 }
 
+// ── NHTSA Recalls ──
+async function fetchRecalls(v) {
+  document.getElementById('vin-results').insertAdjacentHTML('beforeend',
+    '<div class="vin-section" id="vin-recalls-card"><div class="vin-section-title">Recalls</div><div style="color:var(--text-dim);font-size:0.85rem">Loading\u2026</div></div>');
+
+  try {
+    const res = await fetch(`https://api.nhtsa.gov/recalls/recallsByVehicle?make=${encodeURIComponent(v.make)}&model=${encodeURIComponent(v.model)}&modelYear=${encodeURIComponent(v.year)}`);
+    const data = await res.json();
+    const recalls = data.results || [];
+
+    let inner = recalls.length === 0
+      ? '<div style="color:var(--green);font-size:0.85rem">\u2713 No open recalls found</div>'
+      : `<div style="color:var(--yellow);font-size:0.85rem;margin-bottom:10px">\u26a0 ${recalls.length} recall(s) found</div>` +
+        recalls.map(r => `<div class="recall-item"><div style="font-weight:500;margin-bottom:4px">${r.Component || 'Unknown Component'}</div><div style="color:var(--text-dim)">${r.Summary || r.Consequence || ''}</div></div>`).join('');
+
+    document.getElementById('vin-recalls-card').innerHTML =
+      `<div class="vin-section-title">Recalls (${recalls.length})</div>${inner}`;
+  } catch {
+    document.getElementById('vin-recalls-card').innerHTML =
+      '<div class="vin-section-title">Recalls</div><div style="color:var(--text-dim);font-size:0.85rem">Could not load recall data</div>';
+  }
+}
+
+// ── NHTSA Complaints ──
+async function fetchComplaints(v) {
+  document.getElementById('vin-results').insertAdjacentHTML('beforeend',
+    '<div class="vin-section" id="vin-complaints-card"><div class="vin-section-title">Complaints</div><div style="color:var(--text-dim);font-size:0.85rem">Loading\u2026</div></div>');
+
+  try {
+    const res = await fetch(`https://api.nhtsa.gov/complaints/complaintsByVehicle?make=${encodeURIComponent(v.make)}&model=${encodeURIComponent(v.model)}&modelYear=${encodeURIComponent(v.year)}`);
+    const data = await res.json();
+    const complaints = data.results || [];
+
+    const byComp = {};
+    complaints.forEach(c => { const k = c.components || 'Unknown'; byComp[k] = (byComp[k]||0)+1; });
+
+    let inner = complaints.length === 0
+      ? '<div style="color:var(--green);font-size:0.85rem">\u2713 No complaints found</div>'
+      : `<div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:10px">${complaints.length} total complaints filed with NHTSA</div>` +
+        Object.entries(byComp).sort((a,b)=>b[1]-a[1]).slice(0,8)
+          .map(([comp,cnt]) => `<div class="complaint-item"><span style="font-weight:500">${comp}</span><span style="color:var(--text-dim);float:right">${cnt} complaint${cnt>1?'s':''}</span></div>`).join('');
+
+    document.getElementById('vin-complaints-card').innerHTML =
+      `<div class="vin-section-title">NHTSA Complaints (${complaints.length})</div>${inner}`;
+  } catch {
+    document.getElementById('vin-complaints-card').innerHTML =
+      '<div class="vin-section-title">Complaints</div><div style="color:var(--text-dim);font-size:0.85rem">Could not load complaint data</div>';
+  }
+}
+
+// ── NICB Section ──
+function renderNICBSection(vin) {
+  document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
+    <div class="vin-section" id="vin-nicb-card">
+      <div class="vin-section-title">Stolen / Salvage Title Check</div>
+      <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:14px">NICB VINCheck is a free public service that checks if this vehicle has been reported stolen or has a salvage title.</div>
+      <a class="nicb-btn" href="https://www.nicb.org/vincheck" target="_blank" rel="noopener">Check on NICB VINCheck \u2197</a>
+      <div style="color:var(--text-dim);font-size:0.78rem;margin-top:10px">VIN to paste: <span style="font-family:'Space Mono',monospace;color:var(--text)">${vin}</span></div>
+    </div>`);
+}
+
+// ── Database Match ──
+function matchVehicleToDb(v) {
+  const make = (v.make || '').toUpperCase();
+  const model = (v.model || '').toUpperCase();
+  const year = parseInt(v.year);
+  if (!year) return null;
+  if (make === 'TOYOTA' && model === 'RAV4') return { dbKey: 'rav4', year };
+  if (make === 'HONDA' && (model === 'CR-V' || model === 'CRV')) return { dbKey: 'crv', year };
+  return null;
+}
+
+function renderDbMatch(v) {
+  const match = matchVehicleToDb(v);
+  if (!match) return;
+  const { dbKey, year } = match;
+  if (!DB[dbKey]?.years[year]) return;
+  const trims = DB[dbKey].years[year];
+  const makeName = dbKey === 'rav4' ? 'Toyota RAV4' : 'Honda CR-V';
+
+  let pills = trims.map(trim => {
+    const key = `${year}-${trim}`;
+    const d = DB[dbKey].data[key];
+    return d ? `<span style="background:var(--surface2);padding:4px 12px;border-radius:20px;font-size:0.82rem">${trim} \u2014 ${d.used_price}</span>` : '';
+  }).join('');
+
+  document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
+    <div class="vin-section" id="vin-db-match-card">
+      <div class="vin-section-title" style="color:var(--green)">\u2713 Found in Our Database</div>
+      <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:12px">${year} ${makeName} \u2014 trims and typical used prices:</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">${pills}</div>
+    </div>`);
+}
+
 initPin();
 setMode('compare');
 </script>
