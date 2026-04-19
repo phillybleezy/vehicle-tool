@@ -312,48 +312,113 @@
 
   /* ── VIN Check Tab ── */
   #vin-panel { display:none; }
-  .vin-input-row { display:flex; gap:12px; margin-bottom:24px; max-width:600px; margin-left:auto; margin-right:auto; }
-  #vin-input { flex:1; padding:12px 16px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-family:'Space Mono',monospace; font-size:0.95rem; letter-spacing:2px; text-transform:uppercase; }
-  #vin-input:focus { outline:none; border-color:var(--accent); }
-  .vin-check-btn { padding:12px 28px; border-radius:8px; border:none; background:var(--accent); color:#fff; font-family:'DM Sans',sans-serif; font-size:0.95rem; font-weight:600; cursor:pointer; white-space:nowrap; transition:opacity 0.2s; }
+  .vin-input-row { display:flex; gap:12px; margin-bottom:28px; max-width:600px; margin-left:auto; margin-right:auto; }
+  #vin-input { flex:1; padding:13px 16px; border-radius:10px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-family:'Space Mono',monospace; font-size:0.95rem; letter-spacing:2px; text-transform:uppercase; }
+  #vin-input:focus { outline:none; border-color:var(--accent); box-shadow:0 0 0 3px rgba(79,143,255,0.12); }
+  .vin-check-btn { padding:13px 28px; border-radius:10px; border:none; background:var(--accent); color:#fff; font-family:'DM Sans',sans-serif; font-size:0.95rem; font-weight:600; cursor:pointer; white-space:nowrap; transition:opacity 0.2s; }
   .vin-check-btn:hover { opacity:0.85; }
-  .vin-section { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:16px; animation:fadeIn 0.3s ease; }
-  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
-  .vin-section-title { font-family:'Space Mono',monospace; font-size:0.75rem; text-transform:uppercase; letter-spacing:2px; color:var(--text-dim); margin-bottom:14px; }
-  .vin-identity-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; }
-  .vin-identity-item { background:var(--surface2); border-radius:8px; padding:10px 14px; }
-  .vin-identity-label { font-size:0.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
-  .vin-identity-value { font-size:0.9rem; color:var(--text); font-weight:500; }
-  .risk-badge { display:inline-block; padding:8px 24px; border-radius:8px; font-family:'Space Mono',monospace; font-size:1.1rem; font-weight:700; margin-bottom:16px; }
+
+  @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+
+  /* Cards */
+  .vin-section { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin-bottom:16px; animation:fadeIn 0.3s ease; box-shadow:0 2px 12px rgba(0,0,0,0.2); }
+
+  /* Section heading — bright, readable, clearly a title */
+  .vin-section-title { font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:700; color:var(--text); margin-bottom:16px; letter-spacing:0; }
+
+  /* Collapsible cards */
+  details.vin-section > summary { cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center; padding:2px 0; border-radius:6px; transition:opacity 0.15s; }
+  details.vin-section > summary:hover { opacity:0.75; }
+  details.vin-section > summary::-webkit-details-marker { display:none; }
+  details.vin-section > summary::after { content:'\25BC'; font-size:0.58rem; color:var(--accent); transition:transform 0.2s; margin-left:10px; flex-shrink:0; }
+  details.vin-section[open] > summary::after { transform:rotate(180deg); }
+  details.vin-section > summary .vin-section-title { margin:0; }
+  details.vin-section[open] > summary { margin-bottom:16px; border-bottom:1px solid var(--border); padding-bottom:16px; }
+
+  /* Sub-labels inside cards (small monospace labels) */
+  .vin-sub-label { font-family:'Space Mono',monospace; font-size:0.68rem; text-transform:uppercase; letter-spacing:2px; color:var(--text-dim); margin-bottom:10px; }
+
+  /* Vehicle Identity grid */
+  .vin-identity-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:10px; }
+  .vin-identity-item { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:12px 16px; }
+  .vin-identity-label { font-family:'Space Mono',monospace; font-size:0.65rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.2px; margin-bottom:5px; }
+  .vin-identity-value { font-size:0.92rem; color:var(--text); font-weight:600; }
+  #vin-identity-card { border-left:3px solid var(--accent); }
+
+  /* Risk / analysis results */
+  .risk-badge { display:inline-block; padding:10px 28px; border-radius:10px; font-family:'Space Mono',monospace; font-size:1.1rem; font-weight:700; margin-bottom:16px; }
   .risk-badge.GREEN { background:var(--green-bg); color:var(--green); border:1px solid var(--green); }
   .risk-badge.YELLOW { background:var(--yellow-bg); color:var(--yellow); border:1px solid var(--yellow); }
   .risk-badge.RED { background:var(--red-bg); color:var(--red); border:1px solid var(--red); }
-  .stat-pills { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
-  .stat-pill { background:var(--surface2); border-radius:20px; padding:6px 14px; font-size:0.82rem; color:var(--text); }
-  .flags-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
-  .flag-item { border-radius:8px; padding:10px 14px; font-size:0.85rem; }
-  .flag-item.red { background:var(--red-bg); color:var(--red); }
-  .flag-item.green { background:var(--green-bg); color:var(--green); }
-  .checklist-item { display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); font-size:0.88rem; }
+  .stat-pills { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .stat-pill { background:var(--surface2); border:1px solid var(--border); border-radius:20px; padding:5px 14px; font-size:0.82rem; color:var(--text); }
+  .flags-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+  .flag-item { border-radius:8px; padding:10px 14px; font-size:0.85rem; line-height:1.5; }
+  .flag-item.red { background:var(--red-bg); color:var(--red); border:1px solid rgba(248,113,113,0.25); }
+  .flag-item.green { background:var(--green-bg); color:var(--green); border:1px solid rgba(52,211,153,0.25); }
+
+  /* Checklists */
+  .checklist-item { display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid var(--border); font-size:0.88rem; line-height:1.5; }
   .checklist-item:last-child { border-bottom:none; }
-  .checklist-cb { width:16px; height:16px; margin-top:2px; flex-shrink:0; accent-color:var(--accent); }
+  .checklist-cb { width:16px; height:16px; margin-top:3px; flex-shrink:0; accent-color:var(--accent); }
+
+  /* Price form */
   .price-form { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
   .price-input { flex:1; min-width:140px; padding:10px 12px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.9rem; }
   .price-input:focus { outline:none; border-color:var(--accent); }
-  .price-result { padding:16px; border-radius:8px; font-weight:600; font-size:0.95rem; text-align:center; margin-top:12px; }
+  .price-result { padding:16px; border-radius:10px; font-weight:600; font-size:0.95rem; text-align:center; margin-top:12px; }
   .price-result.above { background:var(--red-bg); color:var(--red); border:1px solid var(--red); }
   .price-result.within { background:var(--green-bg); color:var(--green); border:1px solid var(--green); }
   .price-result.below { background:var(--yellow-bg); color:var(--yellow); border:1px solid var(--yellow); }
-  .nicb-btn { display:inline-block; padding:10px 20px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.9rem; cursor:pointer; text-decoration:none; transition:border-color 0.2s; }
-  .nicb-btn:hover { border-color:var(--accent); color:var(--accent); }
-  .upload-area { border:2px dashed var(--border); border-radius:12px; padding:32px; text-align:center; cursor:pointer; transition:border-color 0.2s; }
-  .upload-area:hover { border-color:var(--accent); }
+
+  /* External link buttons */
+  .nicb-btn { display:inline-block; padding:10px 18px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.88rem; cursor:pointer; text-decoration:none; transition:all 0.2s; }
+  .nicb-btn:hover { border-color:var(--accent); color:var(--accent); background:rgba(79,143,255,0.06); }
+
+  /* Upload areas */
+  .upload-area { border:2px dashed var(--border); border-radius:12px; padding:28px; text-align:center; cursor:pointer; transition:all 0.2s; }
+  .upload-area:hover { border-color:var(--accent); background:rgba(79,143,255,0.04); }
   .upload-area.loading { opacity:0.6; cursor:wait; }
-  .upload-icon { font-size:2rem; margin-bottom:10px; }
-  .upload-text { color:var(--text-dim); font-size:0.9rem; }
-  .recall-item, .complaint-item { background:var(--surface2); border-radius:8px; padding:12px; margin-bottom:8px; font-size:0.85rem; }
+  .upload-icon { font-size:1.8rem; margin-bottom:8px; }
+  .upload-text { color:var(--text-dim); font-size:0.88rem; }
+
+  /* Recall / complaint list items */
+  .recall-item { background:var(--surface2); border:1px solid rgba(251,191,36,0.2); border-radius:8px; padding:12px 14px; margin-bottom:8px; font-size:0.85rem; line-height:1.5; }
+  .complaint-item { background:var(--surface2); border:1px solid var(--border); border-radius:8px; padding:10px 14px; margin-bottom:8px; font-size:0.85rem; }
   .recall-item:last-child, .complaint-item:last-child { margin-bottom:0; }
+
+  /* Section-specific left border accents */
+  #vin-nicb-card { border-left:3px solid var(--text-dim); }
+  #vin-recalls-card { border-left:3px solid var(--yellow); }
+  #vin-complaints-card { border-left:3px solid var(--text-dim); }
+  #vin-uploads-card { border-left:3px solid var(--accent); }
+  #vin-price-card { border-left:3px solid var(--accent2); }
+  #vin-checklist-card { border-left:3px solid var(--green); }
+
+  /* Unused leftover */
+  .nicb-result-btn { flex:1; padding:7px 4px; border-radius:6px; border:1px solid var(--border); background:var(--surface2); color:var(--text-dim); font-family:'DM Sans',sans-serif; font-size:0.82rem; cursor:pointer; transition:all 0.15s; }
+  .nicb-result-btn.active { border-color:var(--green); background:var(--green-bg); color:var(--green); }
+  .nicb-result-btn.active-bad { border-color:var(--red); background:var(--red-bg); color:var(--red); }
+
   @media (max-width:600px) { .flags-grid { grid-template-columns:1fr; } .vin-input-row { flex-direction:column; } }
+
+/* ── Saved Cars ── */
+.car-modal-box { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px; width:100%; max-width:620px; margin:0 auto; box-sizing:border-box; }
+.car-modal-field { margin-bottom:14px; }
+.car-modal-label { font-size:0.82rem; color:var(--text-dim); margin-bottom:4px; display:block; font-family:'DM Sans',sans-serif; }
+.car-modal-input { width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.9rem; box-sizing:border-box; }
+.car-modal-input:focus { outline:none; border-color:var(--accent); }
+.saved-car-card { background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:10px; cursor:pointer; transition:border-color 0.15s; }
+.saved-car-card:hover { border-color:var(--accent); }
+.saved-car-title { font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600; color:var(--text); margin-bottom:4px; }
+.saved-car-meta { font-size:0.83rem; color:var(--text-dim); margin-bottom:2px; }
+.saved-check-btn { padding:4px 10px; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:var(--text-dim); font-size:0.78rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s; white-space:nowrap; }
+.saved-check-btn.pass { border-color:var(--green); background:var(--green-bg); color:var(--green); }
+.saved-check-btn.fail { border-color:var(--red); background:var(--red-bg); color:var(--red); }
+.detail-section { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin-bottom:12px; }
+.detail-section-title { font-family:'DM Sans',sans-serif; font-size:0.85rem; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:10px; }
+.detail-label { font-size:0.78rem; color:var(--text-dim); font-family:'DM Sans',sans-serif; margin-bottom:2px; display:block; }
+.detail-value { font-size:0.92rem; color:var(--text); font-family:'DM Sans',sans-serif; }
 </style>
 </head>
 <body>
@@ -366,6 +431,7 @@
     <button class="mode-tab" onclick="setMode(&#39;compare&#39;)">Compare Two Vehicles</button>
     <button class="mode-tab" onclick="setMode(&#39;single&#39;)">Single Vehicle Lookup</button>
     <button class="mode-tab" onclick="setMode(&#39;vin&#39;)">VIN Check</button>
+    <button class="mode-tab" onclick="setMode('saved')">Saved Cars</button>
   </div>
   
   <div id="compare-selectors" class="selectors" style="flex-direction:column;align-items:center;">
@@ -391,6 +457,62 @@
     </div>
     <div id="vin-results"></div>
   </div>
+
+<!-- Saved Cars Panel -->
+<div id="saved-panel" style="display:none; max-width:860px; margin:24px auto; padding:0 16px;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+    <h2 style="font-family:'DM Sans',sans-serif; font-size:1.4rem; font-weight:700; color:var(--text); margin:0;">Saved Cars</h2>
+    <div style="display:flex; gap:10px; align-items:center;">
+      <span id="saved-sync-indicator" style="font-size:0.8rem; color:var(--text-dim);"></span>
+      <button onclick="openAddCarModal(null)" style="padding:8px 16px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:600; cursor:pointer;">+ Add Car</button>
+    </div>
+  </div>
+  <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+    <input id="saved-search" type="text" placeholder="Search by name, VIN, notes…" oninput="renderCarList()" style="flex:1; min-width:180px; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.9rem;">
+    <select id="saved-sort" onchange="renderCarList()" style="padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.9rem;">
+      <option value="newest">Newest First</option>
+      <option value="price-asc">Price ↑</option>
+      <option value="price-desc">Price ↓</option>
+      <option value="mileage-asc">Mileage ↑</option>
+      <option value="year-desc">Year ↓</option>
+    </select>
+  </div>
+  <div id="saved-car-list"><div style="text-align:center; color:var(--text-dim); padding:40px 0;">Loading…</div></div>
+</div>
+
+<!-- Add / Edit Car Modal -->
+<div id="car-modal" onclick="if(event.target===this)closeCarModal()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000; overflow-y:auto; padding:40px 16px; box-sizing:border-box;">
+  <div class="car-modal-box">
+    <h3 id="car-modal-title" style="font-family:'DM Sans',sans-serif; color:var(--text); margin:0 0 20px; font-size:1.15rem; font-weight:700;"></h3>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 16px;">
+      <div class="car-modal-field"><label class="car-modal-label">Year</label><input id="cm-year" class="car-modal-input" type="text" placeholder="2021"></div>
+      <div class="car-modal-field"><label class="car-modal-label">Make</label><input id="cm-make" class="car-modal-input" type="text" placeholder="Toyota"></div>
+      <div class="car-modal-field"><label class="car-modal-label">Model</label><input id="cm-model" class="car-modal-input" type="text" placeholder="RAV4"></div>
+      <div class="car-modal-field"><label class="car-modal-label">Trim</label><input id="cm-trim" class="car-modal-input" type="text" placeholder="XLE"></div>
+      <div class="car-modal-field"><label class="car-modal-label">Asking Price ($)</label><input id="cm-price" class="car-modal-input" type="number" placeholder="28500"></div>
+      <div class="car-modal-field"><label class="car-modal-label">Mileage</label><input id="cm-mileage" class="car-modal-input" type="number" placeholder="45000"></div>
+    </div>
+    <div class="car-modal-field"><label class="car-modal-label">VIN</label><input id="cm-vin" class="car-modal-input" type="text" placeholder="17-character VIN" maxlength="17"></div>
+    <div class="car-modal-field"><label class="car-modal-label">Carfax URL (optional)</label><input id="cm-carfax-url" class="car-modal-input" type="url" placeholder="https://"></div>
+    <div class="car-modal-field">
+      <label class="car-modal-label">Listing URL(s)</label>
+      <div id="cm-urls"></div>
+      <button onclick="addListingUrlField()" style="margin-top:6px; background:none; border:1px dashed var(--border); border-radius:6px; color:var(--text-dim); padding:5px 12px; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:0.83rem;">+ Add URL</button>
+    </div>
+    <div class="car-modal-field"><label class="car-modal-label">Notes</label><textarea id="cm-notes" class="car-modal-input" rows="3" placeholder="Any notes about this car…" style="resize:vertical;"></textarea></div>
+    <div style="display:flex; gap:10px; margin-top:20px; justify-content:flex-end;">
+      <button onclick="closeCarModal()" style="padding:8px 18px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; cursor:pointer;">Cancel</button>
+      <button onclick="saveCarModal()" style="padding:8px 18px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-weight:600; cursor:pointer;">Save Car</button>
+    </div>
+  </div>
+</div>
+
+<!-- Car Detail Modal -->
+<div id="car-detail-modal" onclick="if(event.target===this)closeCarDetail()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000; overflow-y:auto; padding:40px 16px; box-sizing:border-box;">
+  <div class="car-modal-box" style="max-width:700px;">
+    <div id="car-detail-content"></div>
+  </div>
+</div>
 </div>
 
 <div id="pin-overlay">
@@ -1274,6 +1396,10 @@ function setMode(mode) {
   document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
   event.target.classList.add('active');
 
+  const savedPanel = document.getElementById('saved-panel');
+  savedPanel.style.display = 'none';
+  stopCarPolling();
+
   const compareSelectors = document.getElementById('compare-selectors');
   const resultsDiv = document.getElementById('results');
   const vinPanel = document.getElementById('vin-panel');
@@ -1282,6 +1408,16 @@ function setMode(mode) {
     compareSelectors.style.display = 'none';
     resultsDiv.style.display = 'none';
     vinPanel.style.display = 'block';
+    return;
+  }
+
+  if (mode === 'saved') {
+    compareSelectors.style.display = 'none';
+    resultsDiv.style.display = 'none';
+    vinPanel.style.display = 'none';
+    savedPanel.style.display = 'block';
+    fetchCars();
+    startCarPolling();
     return;
   }
 
@@ -1677,6 +1813,13 @@ function submitPin() {
 
 // ── VIN Check State ──
 let currentVinData = null;
+let carfaxAnalysisResult = null;
+let listingAnalysisResult = null;
+
+// ── Saved Cars State ──
+let savedCars = [];
+let carPollingInterval = null;
+let carModalEditId = null;
 
 // ── VIN Decode ──
 async function decodeVIN() {
@@ -1689,6 +1832,8 @@ async function decodeVIN() {
   const resultsEl = document.getElementById('vin-results');
   resultsEl.innerHTML = '<div class="vin-section"><div class="vin-section-title">Decoding VIN\u2026</div></div>';
   currentVinData = null;
+  carfaxAnalysisResult = null;
+  listingAnalysisResult = null;
 
   try {
     const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${vin}?format=json`);
@@ -1710,13 +1855,12 @@ async function decodeVIN() {
     };
 
     renderVehicleIdentity(currentVinData);
+    renderNICBLink(vin);
+    renderUploadsSection(vin);
     fetchRecalls(currentVinData);
     fetchComplaints(currentVinData);
-    renderNICBSection(vin);
-    renderDbMatch(currentVinData);
     renderPriceAssessment(currentVinData);
     renderBuyersChecklist(currentVinData);
-    renderCarfaxUpload(vin);
 
   } catch (err) {
     resultsEl.innerHTML = `<div class="vin-section"><div class="vin-section-title" style="color:var(--red)">Error</div><div style="color:var(--text-dim);font-size:0.85rem">${err.message}</div></div>`;
@@ -1745,61 +1889,146 @@ function renderVehicleIdentity(v) {
 // ── NHTSA Recalls ──
 async function fetchRecalls(v) {
   document.getElementById('vin-results').insertAdjacentHTML('beforeend',
-    '<div class="vin-section" id="vin-recalls-card"><div class="vin-section-title">Recalls</div><div style="color:var(--text-dim);font-size:0.85rem">Loading\u2026</div></div>');
-
+    `<details class="vin-section" id="vin-recalls-card">
+      <summary><span class="vin-section-title">Recalls</span><span id="vin-recalls-badge" style="color:var(--text-dim);font-size:0.85rem">Loading\u2026</span></summary>
+      <div id="vin-recalls-body" style="margin-top:14px"><div style="color:var(--text-dim);font-size:0.85rem">Loading\u2026</div></div>
+    </details>`);
   try {
     const res = await fetch(`https://api.nhtsa.gov/recalls/recallsByVehicle?make=${encodeURIComponent(v.make)}&model=${encodeURIComponent(v.model)}&modelYear=${encodeURIComponent(v.year)}`);
     const data = await res.json();
     const recalls = data.results || [];
-
-    let inner = recalls.length === 0
-      ? '<div style="color:var(--green);font-size:0.85rem">\u2713 No open recalls found</div>'
-      : `<div style="color:var(--yellow);font-size:0.85rem;margin-bottom:10px">\u26a0 ${recalls.length} recall(s) found</div>` +
-        recalls.map(r => `<div class="recall-item"><div style="font-weight:500;margin-bottom:4px">${r.Component || 'Unknown Component'}</div><div style="color:var(--text-dim)">${r.Summary || r.Consequence || ''}</div></div>`).join('');
-
-    document.getElementById('vin-recalls-card').innerHTML =
-      `<div class="vin-section-title">Recalls (${recalls.length})</div>${inner}`;
+    const badge = document.getElementById('vin-recalls-badge');
+    const body = document.getElementById('vin-recalls-body');
+    if (recalls.length === 0) {
+      badge.innerHTML = '<span style="color:var(--green)">\u2713 None</span>';
+      body.innerHTML = '<div style="color:var(--green);font-size:0.85rem">\u2713 No open recalls found</div>';
+    } else {
+      badge.innerHTML = `<span style="color:var(--yellow);font-weight:700">\u26a0 ${recalls.length} recall${recalls.length > 1 ? 's' : ''} found</span>`;
+      document.getElementById('vin-recalls-card').open = true;
+      body.innerHTML = recalls.map(r => `<div class="recall-item"><div style="font-weight:500;margin-bottom:4px">${r.Component || 'Unknown Component'}</div><div style="color:var(--text-dim)">${r.Summary || r.Consequence || ''}</div></div>`).join('');
+    }
   } catch {
-    document.getElementById('vin-recalls-card').innerHTML =
-      '<div class="vin-section-title">Recalls</div><div style="color:var(--text-dim);font-size:0.85rem">Could not load recall data</div>';
+    document.getElementById('vin-recalls-badge').textContent = 'Error';
+    document.getElementById('vin-recalls-body').innerHTML = '<div style="color:var(--text-dim);font-size:0.85rem">Could not load recall data</div>';
   }
 }
 
 // ── NHTSA Complaints ──
 async function fetchComplaints(v) {
   document.getElementById('vin-results').insertAdjacentHTML('beforeend',
-    '<div class="vin-section" id="vin-complaints-card"><div class="vin-section-title">Complaints</div><div style="color:var(--text-dim);font-size:0.85rem">Loading\u2026</div></div>');
-
+    `<details class="vin-section" id="vin-complaints-card">
+      <summary><span class="vin-section-title">NHTSA Complaints</span><span id="vin-complaints-badge" style="color:var(--text-dim);font-size:0.85rem">Loading\u2026</span></summary>
+      <div id="vin-complaints-body" style="margin-top:14px"><div style="color:var(--text-dim);font-size:0.85rem">Loading\u2026</div></div>
+    </details>`);
   try {
     const res = await fetch(`https://api.nhtsa.gov/complaints/complaintsByVehicle?make=${encodeURIComponent(v.make)}&model=${encodeURIComponent(v.model)}&modelYear=${encodeURIComponent(v.year)}`);
     const data = await res.json();
     const complaints = data.results || [];
-
     const byComp = {};
     complaints.forEach(c => { const k = c.components || 'Unknown'; byComp[k] = (byComp[k]||0)+1; });
-
-    let inner = complaints.length === 0
-      ? '<div style="color:var(--green);font-size:0.85rem">\u2713 No complaints found</div>'
-      : `<div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:10px">${complaints.length} total complaints filed with NHTSA</div>` +
+    const badge = document.getElementById('vin-complaints-badge');
+    const body = document.getElementById('vin-complaints-body');
+    if (complaints.length === 0) {
+      badge.innerHTML = '<span style="color:var(--green)">\u2713 None</span>';
+      body.innerHTML = '<div style="color:var(--green);font-size:0.85rem">\u2713 No complaints found</div>';
+    } else {
+      badge.innerHTML = `<span style="color:var(--text-dim)">${complaints.length} total</span>`;
+      body.innerHTML = `<div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:10px">${complaints.length} total complaints filed with NHTSA</div>` +
         Object.entries(byComp).sort((a,b)=>b[1]-a[1]).slice(0,8)
           .map(([comp,cnt]) => `<div class="complaint-item"><span style="font-weight:500">${comp}</span><span style="color:var(--text-dim);float:right">${cnt} complaint${cnt>1?'s':''}</span></div>`).join('');
-
-    document.getElementById('vin-complaints-card').innerHTML =
-      `<div class="vin-section-title">NHTSA Complaints (${complaints.length})</div>${inner}`;
+    }
   } catch {
-    document.getElementById('vin-complaints-card').innerHTML =
-      '<div class="vin-section-title">Complaints</div><div style="color:var(--text-dim);font-size:0.85rem">Could not load complaint data</div>';
+    document.getElementById('vin-complaints-badge').textContent = 'Error';
+    document.getElementById('vin-complaints-body').innerHTML = '<div style="color:var(--text-dim);font-size:0.85rem">Could not load complaint data</div>';
   }
 }
 
-// ── NICB Section ──
-function renderNICBSection(vin) {
+// ── NICB Link ──
+function renderNICBLink(vin) {
+  const make = (currentVinData?.make || '').toUpperCase();
   document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
     <div class="vin-section" id="vin-nicb-card">
-      <div class="vin-section-title">Stolen / Salvage Title Check</div>
-      <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:14px">NICB VINCheck is a free public service that checks if this vehicle has been reported stolen or has a salvage title.</div>
-      <a class="nicb-btn" href="https://www.nicb.org/vincheck" target="_blank" rel="noopener">Check on NICB VINCheck \u2197</a>
-      <div style="color:var(--text-dim);font-size:0.78rem;margin-top:10px">VIN to paste: <span style="font-family:'Space Mono',monospace;color:var(--text)">${vin}</span></div>
+      <div class="vin-section-title">Free Title &amp; History Checks</div>
+
+      <div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin-bottom:8px">NICB \u2014 Stolen / Total Loss</div>
+      <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:10px">Checks if this vehicle has been reported stolen or declared a total loss.</div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:6px">
+        <a class="nicb-btn" href="https://www.nicb.org/vincheck" target="_blank" rel="noopener">Check on NICB VINCheck \u2197</a>
+        <span style="color:var(--text-dim);font-size:0.82rem">VIN: <span style="font-family:'Space Mono',monospace;color:var(--text)">${vin}</span></span>
+      </div>
+
+      <div style="border-top:1px solid var(--border);margin:18px 0"></div>
+
+      <div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin-bottom:8px">Arizona MVD \u2014 Title Check</div>
+      <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:10px">Checks title brands (salvage, rebuilt, flood) and active liens. Enter the VIN and Make below on the AZ MVD site.</div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:8px">
+        <a class="nicb-btn" href="https://azmvdnow.gov/titleregistration/title/search" target="_blank" rel="noopener">Check on AZ MVD Now \u2197</a>
+      </div>
+      <div style="display:flex;gap:24px;flex-wrap:wrap">
+        <span style="color:var(--text-dim);font-size:0.82rem">VIN: <span style="font-family:'Space Mono',monospace;color:var(--text)">${vin}</span></span>
+        <span style="color:var(--text-dim);font-size:0.82rem">Make: <span style="font-family:'Space Mono',monospace;color:var(--text)">${make || '\u2014'}</span></span>
+      </div>
+    </div>`);
+}
+
+// ── Uploads Section ──
+function renderUploadsSection(vin) {
+  document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
+    <div class="vin-section" id="vin-uploads-card">
+      <div class="vin-section-title">Documents &amp; Reports <span style="background:var(--accent);color:#fff;font-size:0.65rem;padding:2px 8px;border-radius:10px;vertical-align:middle;margin-left:6px">AI \u2014 Sonnet</span></div>
+      <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:20px">Upload your Carfax and car listing for AI-powered analysis. Each is analyzed independently, then cross-referenced together when both are provided. Your access PIN is required.</div>
+
+      <div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin-bottom:10px">Carfax Report</div>
+      <div style="margin-bottom:12px"><a class="nicb-btn" href="https://www.google.com/search?q=carfax+%22${vin}%22" target="_blank" rel="noopener">Search Google for Carfax \u2197</a></div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button id="carfax-tab-upload" onclick="switchCarfaxMode('upload')" style="padding:6px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer">Upload PDF</button>
+        <button id="carfax-tab-paste" onclick="switchCarfaxMode('paste')" style="padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer">Paste Text</button>
+      </div>
+      <div id="carfax-mode-upload">
+        <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:12px">Upload your Carfax PDF for accident, ownership, and title history analysis. Max 10MB.</div>
+        <div class="upload-area" id="carfax-upload-area" onclick="document.getElementById('carfax-file-input').click()">
+          <div class="upload-icon">\ud83d\udcc4</div>
+          <div class="upload-text" id="carfax-upload-text">Click to upload Carfax PDF</div>
+          <input type="file" id="carfax-file-input" accept=".pdf,application/pdf" style="display:none" onchange="handleCarfaxUpload(event)" />
+        </div>
+      </div>
+      <div id="carfax-mode-paste" style="display:none">
+        <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:12px">Copy and paste all text from your Carfax report.</div>
+        <textarea id="carfax-paste-input" placeholder="Paste Carfax report text here\u2026" style="width:100%;min-height:180px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;line-height:1.5;resize:vertical;outline:none"></textarea>
+        <button onclick="handleCarfaxTextAnalysis()" style="margin-top:10px;padding:10px 24px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;cursor:pointer">Analyze Carfax</button>
+      </div>
+      <div id="carfax-analysis-result"></div>
+
+      <div style="border-top:1px solid var(--border);margin:24px 0"></div>
+
+      <div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin-bottom:10px">Car Listing</div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button id="listing-tab-upload" onclick="switchListingMode('upload')" style="padding:6px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer">Upload Files</button>
+        <button id="listing-tab-paste" onclick="switchListingMode('paste')" style="padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer">Paste Text</button>
+      </div>
+      <div id="listing-mode-upload">
+        <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:12px">Upload the listing as PDFs or screenshots. For multi-tab listings, save or screenshot each tab and upload them all together. Max 10 files, 10MB each.</div>
+        <div class="upload-area" id="listing-upload-area" onclick="document.getElementById('listing-file-input').click()">
+          <div class="upload-icon">\ud83d\udccb</div>
+          <div class="upload-text" id="listing-upload-text">Click to upload listing files (PDF or images)</div>
+          <input type="file" id="listing-file-input" accept=".pdf,application/pdf,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" multiple style="display:none" onchange="handleListingUpload(event)" />
+        </div>
+      </div>
+      <div id="listing-mode-paste" style="display:none">
+        <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:12px">Copy and paste all text from the listing \u2014 you can include multiple tabs in one paste.</div>
+        <textarea id="listing-paste-input" placeholder="Paste listing text here\u2026" style="width:100%;min-height:180px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;line-height:1.5;resize:vertical;outline:none"></textarea>
+        <button onclick="handleListingTextAnalysis()" style="margin-top:10px;padding:10px 24px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;cursor:pointer">Analyze Listing</button>
+      </div>
+      <div id="listing-analysis-result"></div>
+
+      <div id="combined-analysis-section" style="display:none">
+        <div style="border-top:1px solid var(--border);margin:24px 0"></div>
+        <div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin-bottom:8px">Cross-Reference Analysis</div>
+        <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:14px">Both documents are ready. Run a combined analysis to verify the listing claims against Carfax and surface any discrepancies.</div>
+        <div id="combined-analysis-result">
+          <button onclick="handleCombinedAnalysis()" style="padding:10px 24px;border-radius:8px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;cursor:pointer">\u2194 Compare &amp; Verify Both Documents</button>
+        </div>
+      </div>
     </div>`);
 }
 
@@ -1861,22 +2090,24 @@ function renderPriceAssessment(v) {
   window._priceRanges = trims;
 
   document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
-    <div class="vin-section" id="vin-price-card">
-      <div class="vin-section-title">Price Assessment</div>
-      ${rangeHint ? `<div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:12px">Our data \u2014 ${rangeHint}</div>` : ''}
-      <div class="price-form">
-        <input class="price-input" id="price-asking" type="number" placeholder="Asking price ($)" min="0" />
-        <input class="price-input" id="price-mileage" type="number" placeholder="Mileage" min="0" />
-        <select class="price-input" id="price-condition" style="appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b8fa3' d='M6 8L1 3h10z'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 12px center;">
-          <option value="good">Condition: Good</option>
-          <option value="excellent">Condition: Excellent</option>
-          <option value="fair">Condition: Fair</option>
-          <option value="poor">Condition: Poor</option>
-        </select>
-        <button class="vin-check-btn" onclick="assessPrice()">Assess Price</button>
+    <details class="vin-section" id="vin-price-card">
+      <summary><span class="vin-section-title">Price Assessment</span></summary>
+      <div style="margin-top:14px">
+        ${rangeHint ? `<div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:12px">Our data \u2014 ${rangeHint}</div>` : ''}
+        <div class="price-form">
+          <input class="price-input" id="price-asking" type="number" placeholder="Asking price ($)" min="0" />
+          <input class="price-input" id="price-mileage" type="number" placeholder="Mileage" min="0" />
+          <select class="price-input" id="price-condition" style="appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b8fa3' d='M6 8L1 3h10z'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 12px center;">
+            <option value="good">Condition: Good</option>
+            <option value="excellent">Condition: Excellent</option>
+            <option value="fair">Condition: Fair</option>
+            <option value="poor">Condition: Poor</option>
+          </select>
+          <button class="vin-check-btn" onclick="assessPrice()">Assess Price</button>
+        </div>
+        <div id="price-result-area"></div>
       </div>
-      <div id="price-result-area"></div>
-    </div>`);
+    </details>`);
 }
 
 function assessPrice() {
@@ -1984,28 +2215,237 @@ function renderBuyersChecklist(v) {
 
   const makeStr = match ? ` \u2014 ${v.year} ${v.make} ${v.model}` : '';
   document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
-    <div class="vin-section" id="vin-checklist-card">
-      <div class="vin-section-title">Buyer's Checklist${makeStr}</div>
-      <div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:14px">\u2746 = known issue specific to this vehicle</div>
-      ${items.map(item => `<div class="checklist-item"><input type="checkbox" class="checklist-cb"><span>${item}</span></div>`).join('')}
-      <div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin:16px 0 10px">Documents to Request</div>
-      ${docs.map(doc => `<div class="checklist-item"><input type="checkbox" class="checklist-cb"><span>${doc}</span></div>`).join('')}
-    </div>`);
+    <details class="vin-section" id="vin-checklist-card">
+      <summary><span class="vin-section-title">Buyer's Checklist${makeStr}</span></summary>
+      <div style="margin-top:14px">
+        <div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:14px">\u2746 = known issue specific to this vehicle</div>
+        ${items.map(item => `<div class="checklist-item"><input type="checkbox" class="checklist-cb"><span>${item}</span></div>`).join('')}
+        <div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin:16px 0 10px">Documents to Request</div>
+        ${docs.map(doc => `<div class="checklist-item"><input type="checkbox" class="checklist-cb"><span>${doc}</span></div>`).join('')}
+      </div>
+    </details>`);
+}
+
+// ── Cross-Reference ──
+function checkBothDone() {
+  if (carfaxAnalysisResult && listingAnalysisResult) {
+    const sec = document.getElementById('combined-analysis-section');
+    if (sec) sec.style.display = '';
+  }
+}
+
+async function handleCombinedAnalysis() {
+  const resultArea = document.getElementById('combined-analysis-result');
+  resultArea.innerHTML = '<div style="color:var(--text-dim);font-size:0.85rem">Cross-referencing both documents\u2026</div>';
+  try {
+    const res = await fetch(`${API_BASE}/api/analyze-combined`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Access-Pin': accessPin },
+      body: JSON.stringify({ carfax: carfaxAnalysisResult, listing: listingAnalysisResult })
+    });
+    if (res.status === 401) { resultArea.innerHTML = vinError('Incorrect PIN. Reload the page to re-enter your PIN.'); return; }
+    if (res.status === 429) { resultArea.innerHTML = vinError('Daily limit reached (20 analyses/day). Try again tomorrow.'); return; }
+    if (!res.ok) { const err = await res.json().catch(()=>({})); resultArea.innerHTML = vinError(err.error || `Server error (${res.status})`); return; }
+    const analysis = await res.json();
+    resultArea.innerHTML = renderCombinedResults(analysis);
+  } catch (err) {
+    resultArea.innerHTML = vinError(`Failed: ${err.message}`);
+  }
+}
+
+function renderCombinedResults(a) {
+  const trust = a.trust_rating || 'MEDIUM';
+  const riskClass = trust === 'HIGH' ? 'GREEN' : trust === 'LOW' ? 'RED' : 'YELLOW';
+  let html = `<div style="text-align:center;margin-bottom:20px">
+    <div class="risk-badge ${riskClass}">${trust} TRUST</div>
+    <div style="color:var(--text-dim);font-size:0.9rem;margin-top:8px">${a.trust_summary || ''}</div>
+  </div>`;
+  if (a.matches?.length) {
+    html += `<div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--green);margin-bottom:8px">Verified \u2014 Information Matches</div>`;
+    a.matches.forEach(m => { html += `<div class="flag-item green">\u2713 ${m}</div>`; });
+  }
+  if (a.discrepancies?.length) {
+    html += `<div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--red);margin:12px 0 8px">Discrepancies Found</div>`;
+    a.discrepancies.forEach(d => { html += `<div class="flag-item red">\u26a0 ${d}</div>`; });
+  }
+  if (a.combined_red_flags?.length) {
+    html += `<div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--red);margin:12px 0 8px">Combined Red Flags</div>`;
+    a.combined_red_flags.forEach(f => { html += `<div class="flag-item red">\u26a0 ${f}</div>`; });
+  }
+  if (a.unverified_claims?.length) {
+    html += `<div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--yellow);margin:12px 0 8px">Unverified Listing Claims</div>`;
+    a.unverified_claims.forEach(c => { html += `<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:0.85rem;color:var(--yellow)">? ${c}</div>`; });
+  }
+  if (a.combined_assessment) {
+    html += `<div style="background:var(--surface2);border-radius:8px;padding:14px;margin:16px 0;font-size:0.88rem;line-height:1.6">${a.combined_assessment}</div>`;
+  }
+  if (a.recommended_actions?.length) {
+    html += `<div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin-bottom:8px">Recommended Actions</div>`;
+    a.recommended_actions.forEach(r => { html += `<div class="checklist-item"><input type="checkbox" class="checklist-cb"><span>${r}</span></div>`; });
+  }
+  return html;
 }
 
 // ── Carfax Upload ──
-function renderCarfaxUpload(vin) {
-  document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
-    <div class="vin-section" id="vin-carfax-card">
-      <div class="vin-section-title">Carfax Analysis <span style="background:var(--accent);color:#fff;font-size:0.65rem;padding:2px 8px;border-radius:10px;vertical-align:middle;margin-left:6px">AI \u2014 Sonnet</span></div>
-      <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:16px">Upload a Carfax PDF for AI-powered analysis. Max 10MB. Your access PIN is required.</div>
-      <div class="upload-area" id="carfax-upload-area" onclick="document.getElementById('carfax-file-input').click()">
-        <div class="upload-icon">\ud83d\udcc4</div>
-        <div class="upload-text" id="carfax-upload-text">Click to upload Carfax PDF</div>
-        <input type="file" id="carfax-file-input" accept=".pdf,application/pdf" style="display:none" onchange="handleCarfaxUpload(event)" />
-      </div>
-      <div id="carfax-analysis-result"></div>
-    </div>`);
+function switchCarfaxMode(mode) {
+  const isUpload = mode === 'upload';
+  document.getElementById('carfax-mode-upload').style.display = isUpload ? '' : 'none';
+  document.getElementById('carfax-mode-paste').style.display = isUpload ? 'none' : '';
+  document.getElementById('carfax-tab-upload').style.cssText = isUpload
+    ? 'padding:6px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-family:"DM Sans",sans-serif;font-size:0.85rem;cursor:pointer'
+    : 'padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);font-family:"DM Sans",sans-serif;font-size:0.85rem;cursor:pointer';
+  document.getElementById('carfax-tab-paste').style.cssText = isUpload
+    ? 'padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);font-family:"DM Sans",sans-serif;font-size:0.85rem;cursor:pointer'
+    : 'padding:6px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-family:"DM Sans",sans-serif;font-size:0.85rem;cursor:pointer';
+  document.getElementById('carfax-analysis-result').innerHTML = '';
+}
+
+async function handleCarfaxTextAnalysis() {
+  const text = document.getElementById('carfax-paste-input').value.trim();
+  if (!text) { alert('Please paste Carfax text before analyzing.'); return; }
+  const resultArea = document.getElementById('carfax-analysis-result');
+  const btn = document.querySelector('#carfax-mode-paste button');
+  btn.disabled = true;
+  btn.textContent = 'Analyzing\u2026';
+  resultArea.innerHTML = '';
+  try {
+    const res = await fetch(`${API_BASE}/api/analyze-carfax`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Access-Pin': accessPin },
+      body: JSON.stringify({ text })
+    });
+    if (res.status === 401) { resultArea.innerHTML = vinError('Incorrect PIN. Reload the page to re-enter your PIN.'); return; }
+    if (res.status === 429) { resultArea.innerHTML = vinError('Daily limit reached (20 analyses/day). Try again tomorrow.'); return; }
+    if (!res.ok) { const err = await res.json().catch(()=>({})); resultArea.innerHTML = vinError(err.error || `Server error (${res.status})`); return; }
+    const analysis = await res.json();
+    carfaxAnalysisResult = analysis;
+    checkBothDone();
+    resultArea.innerHTML = renderCarfaxResults(analysis);
+  } catch (err) {
+    resultArea.innerHTML = vinError(`Failed: ${err.message}`);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Analyze Carfax';
+  }
+}
+
+function switchListingMode(mode) {
+  const isUpload = mode === 'upload';
+  document.getElementById('listing-mode-upload').style.display = isUpload ? '' : 'none';
+  document.getElementById('listing-mode-paste').style.display = isUpload ? 'none' : '';
+  document.getElementById('listing-tab-upload').style.cssText = isUpload
+    ? 'padding:6px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-family:"DM Sans",sans-serif;font-size:0.85rem;cursor:pointer'
+    : 'padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);font-family:"DM Sans",sans-serif;font-size:0.85rem;cursor:pointer';
+  document.getElementById('listing-tab-paste').style.cssText = isUpload
+    ? 'padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);font-family:"DM Sans",sans-serif;font-size:0.85rem;cursor:pointer'
+    : 'padding:6px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-family:"DM Sans",sans-serif;font-size:0.85rem;cursor:pointer';
+  document.getElementById('listing-analysis-result').innerHTML = '';
+}
+
+async function handleListingTextAnalysis() {
+  const text = document.getElementById('listing-paste-input').value.trim();
+  if (!text) { alert('Please paste listing text before analyzing.'); return; }
+  const resultArea = document.getElementById('listing-analysis-result');
+  const btn = document.querySelector('#listing-mode-paste button');
+  btn.disabled = true;
+  btn.textContent = 'Analyzing\u2026';
+  resultArea.innerHTML = '';
+  try {
+    const res = await fetch(`${API_BASE}/api/analyze-listing`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Access-Pin': accessPin },
+      body: JSON.stringify({ text })
+    });
+    if (res.status === 401) { resultArea.innerHTML = vinError('Incorrect PIN. Reload the page to re-enter your PIN.'); return; }
+    if (res.status === 429) { resultArea.innerHTML = vinError('Daily limit reached (20 analyses/day). Try again tomorrow.'); return; }
+    if (!res.ok) { const err = await res.json().catch(()=>({})); resultArea.innerHTML = vinError(err.error || `Server error (${res.status})`); return; }
+    const analysis = await res.json();
+    listingAnalysisResult = analysis;
+    checkBothDone();
+    resultArea.innerHTML = renderListingResults(analysis);
+  } catch (err) {
+    resultArea.innerHTML = vinError(`Failed: ${err.message}`);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Analyze Listing';
+  }
+}
+
+async function handleListingUpload(event) {
+  const files = Array.from(event.target.files);
+  if (!files.length) return;
+  if (files.length > 10) { alert('Maximum 10 files allowed.'); return; }
+  for (const f of files) {
+    if (f.size > 10 * 1024 * 1024) { alert(`${f.name} is too large. Maximum 10MB per file.`); return; }
+  }
+  const uploadArea = document.getElementById('listing-upload-area');
+  const uploadText = document.getElementById('listing-upload-text');
+  const resultArea = document.getElementById('listing-analysis-result');
+  uploadArea.classList.add('loading');
+  uploadText.textContent = `Analyzing ${files.length} file${files.length > 1 ? 's' : ''}\u2026`;
+  resultArea.innerHTML = '';
+  try {
+    const fileData = await Promise.all(files.map(async f => {
+      const data = await fileToBase64(f);
+      const mediaType = f.type || (f.name.toLowerCase().endsWith('.pdf') ? 'application/pdf' : 'image/jpeg');
+      return { data, mediaType };
+    }));
+    const res = await fetch(`${API_BASE}/api/analyze-listing`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Access-Pin': accessPin },
+      body: JSON.stringify({ files: fileData })
+    });
+    if (res.status === 401) { resultArea.innerHTML = vinError('Incorrect PIN. Reload the page to re-enter your PIN.'); return; }
+    if (res.status === 429) { resultArea.innerHTML = vinError('Daily limit reached (20 analyses/day). Try again tomorrow.'); return; }
+    if (!res.ok) { const err = await res.json().catch(()=>({})); resultArea.innerHTML = vinError(err.error || `Server error (${res.status})`); return; }
+    const analysis = await res.json();
+    listingAnalysisResult = analysis;
+    checkBothDone();
+    resultArea.innerHTML = renderListingResults(analysis);
+  } catch (err) {
+    resultArea.innerHTML = vinError(`Failed: ${err.message}`);
+  } finally {
+    uploadArea.classList.remove('loading');
+    uploadText.textContent = 'Click to upload different files';
+  }
+}
+
+function renderListingResults(a) {
+  let html = '<div style="margin-top:16px">';
+  if (a.year || a.make || a.model) {
+    html += `<div style="font-size:1.05rem;font-weight:600;margin-bottom:10px">${[a.year, a.make, a.model].filter(Boolean).join(' ')}</div>`;
+  }
+  html += '<div class="stat-pills">';
+  if (a.asking_price) html += `<div class="stat-pill">$${Number(a.asking_price).toLocaleString()}</div>`;
+  if (a.mileage) html += `<div class="stat-pill">${Number(a.mileage).toLocaleString()} mi</div>`;
+  if (a.seller_type && a.seller_type !== 'Unknown') html += `<div class="stat-pill">${a.seller_type}</div>`;
+  if (a.location) html += `<div class="stat-pill">${a.location}</div>`;
+  if (a.owner_count != null) html += `<div class="stat-pill">${a.owner_count} Owner${a.owner_count !== 1 ? 's' : ''}</div>`;
+  html += '</div>';
+  if (a.summary) {
+    html += `<div style="background:var(--surface2);border-radius:8px;padding:14px;margin:12px 0;font-size:0.88rem;line-height:1.6">${a.summary}</div>`;
+  }
+  if (a.red_flags?.length) {
+    html += `<div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--red);margin-bottom:8px">Red Flags</div>`;
+    a.red_flags.forEach(f => { html += `<div class="flag-item red">\u26a0 ${f}</div>`; });
+  }
+  if (a.seller_claims?.length) {
+    html += `<div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin:12px 0 8px">Seller's Claims</div>`;
+    a.seller_claims.forEach(c => { html += `<div style="padding:6px 0;border-bottom:1px solid var(--border);font-size:0.85rem">${c}</div>`; });
+  }
+  if (a.questions_to_ask?.length) {
+    html += `<details style="margin:12px 0 4px"><summary style="cursor:pointer;list-style:none;font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center"><span>Questions to Ask (${a.questions_to_ask.length})</span><span style="font-size:0.6rem">&#9660;</span></summary><div style="margin-top:10px">`;
+    a.questions_to_ask.forEach(q => { html += `<div class="checklist-item"><input type="checkbox" class="checklist-cb"><span>${q}</span></div>`; });
+    html += `</div></details>`;
+  }
+  if (a.features?.length) {
+    html += `<div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin:12px 0 8px">Listed Features</div>`;
+    html += `<div style="display:flex;flex-wrap:wrap;gap:6px">`;
+    a.features.forEach(f => { html += `<span style="background:var(--surface2);padding:3px 10px;border-radius:12px;font-size:0.8rem">${f}</span>`; });
+    html += '</div>';
+  }
+  html += '</div>';
+  return html;
 }
 
 function fileToBase64(file) {
@@ -2065,6 +2505,8 @@ async function handleCarfaxUpload(event) {
     }
 
     const analysis = await res.json();
+    carfaxAnalysisResult = analysis;
+    checkBothDone();
     resultArea.innerHTML = renderCarfaxResults(analysis);
 
   } catch (err) {
@@ -2113,10 +2555,11 @@ function renderCarfaxResults(a) {
   }
 
   if (a.seller_questions?.length) {
-    html += `<div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin-bottom:10px">Questions to Ask the Seller</div>`;
+    html += `<details style="margin-top:4px"><summary style="cursor:pointer;list-style:none;font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);display:flex;justify-content:space-between;align-items:center"><span>Questions to Ask the Seller (${a.seller_questions.length})</span><span style="font-size:0.6rem">&#9660;</span></summary><div style="margin-top:10px">`;
     a.seller_questions.forEach(q => {
       html += `<div class="checklist-item"><input type="checkbox" class="checklist-cb"><span>${q}</span></div>`;
     });
+    html += `</div></details>`;
   }
 
   html += '</div>';
