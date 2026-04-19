@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<!-- saved from url=(0063)file:///C:/Users/philc/Downloads/vehicle-comparison-tool_4.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAV4 vs CR-V Comparison Tool</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700&family=Space+Mono:wght@400;700&display=swap');
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #232733;
+    --border: #2d3140;
+    --text: #e4e6ed;
+    --text-dim: #8b8fa3;
+    --accent: #4f8fff;
+    --accent2: #ff6b4f;
+    --green: #34d399;
+    --green-bg: rgba(52, 211, 153, 0.1);
+    --red: #f87171;
+    --red-bg: rgba(248, 113, 113, 0.1);
+    --yellow: #fbbf24;
+    --yellow-bg: rgba(251, 191, 36, 0.1);
+    --rav4: #4f8fff;
+    --rav4-bg: rgba(79, 143, 255, 0.08);
+    --crv: #ff6b4f;
+    --crv-bg: rgba(255, 107, 79, 0.08);
+  }
+  
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  .container { max-width: 1100px; margin: 0 auto; }
+  
+  h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.6rem;
+    text-align: center;
+    margin-bottom: 6px;
+    background: linear-gradient(135deg, var(--rav4), var(--crv));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .subtitle {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    margin-bottom: 30px;
+  }
+  
+  .mode-tabs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  
+  .mode-tab {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+  
+  .mode-tab:hover { border-color: var(--accent); color: var(--text); }
+  .mode-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  
+  .selectors {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .selector-group {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    flex: 1;
+    min-width: 280px;
+    max-width: 450px;
+  }
+  
+  .selector-group.rav4-border { border-color: rgba(79, 143, 255, 0.3); }
+  .selector-group.crv-border { border-color: rgba(255, 107, 79, 0.3); }
+  
+  .selector-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+  
+  .selector-label.rav4-color { color: var(--rav4); }
+  .selector-label.crv-color { color: var(--crv); }
+  
+  .select-row { display: flex; gap: 10px; }
+  
+  select {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b8fa3' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  
+  select:focus { outline: none; border-color: var(--accent); }
+  
+  .results { margin-top: 10px; }
+  
+  .results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  
+  .results-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .legend {
+    display: flex;
+    gap: 16px;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+  }
+  
+  .legend-item { display: flex; align-items: center; gap: 5px; }
+  .legend-dot {
+    width: 10px; height: 10px; border-radius: 3px;
+  }
+  .legend-dot.yes { background: var(--green); }
+  .legend-dot.no { background: var(--red); }
+  .legend-dot.win { background: var(--yellow); }
+  
+  .category {
+    margin-bottom: 16px;
+  }
+  
+  .category-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    padding: 8px 14px;
+    background: var(--surface2);
+    border-radius: 8px 8px 0 0;
+    border: 1px solid var(--border);
+    border-bottom: none;
+  }
+  
+  .feature-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border);
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
+  }
+  
+  .feature-table th {
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .feature-table th:first-child { text-align: left; width: 35%; }
+  .feature-table th.rav4-th { color: var(--rav4); }
+  .feature-table th.crv-th { color: var(--crv); }
+  .feature-table th.edge-th { color: var(--yellow); width: 22%; }
+  .feature-table th.single-th { color: var(--accent); }
+  
+  .feature-table td {
+    padding: 9px 14px;
+    font-size: 0.85rem;
+    border-bottom: 1px solid rgba(45, 49, 64, 0.5);
+    text-align: center;
+  }
+  
+  .feature-table td:first-child { text-align: left; color: var(--text); font-weight: 500; }
+  
+  .feature-table tr:last-child td { border-bottom: none; }
+  .feature-table tr:hover { background: rgba(255,255,255,0.02); }
+  
+  .val-yes { color: var(--green); font-weight: 600; }
+  .val-no { color: var(--red); }
+  .val-neutral { color: var(--text-dim); }
+  .val-win { color: var(--yellow); font-weight: 600; font-size: 0.8rem; }
+  .val-tie { color: var(--text-dim); font-size: 0.8rem; }
+  
+  .same-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .badge-same { background: rgba(79, 143, 255, 0.15); color: var(--accent); }
+  .badge-diff { background: rgba(251, 191, 36, 0.15); color: var(--yellow); }
+  
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+    font-size: 1rem;
+  }
+  
+  .empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
+  
+  .remove-btn {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .remove-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-bg); }
+  
+  .selector-group { position: relative; }
+  
+  .summary-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .summary-card {
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    text-align: center;
+    min-width: 120px;
+  }
+  
+  .summary-card .num { font-family: 'Space Mono', monospace; font-size: 1.4rem; font-weight: 700; }
+  .summary-card .label { font-size: 0.7rem; color: var(--text-dim); margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
+  .num.green { color: var(--green); }
+  .num.yellow { color: var(--yellow); }
+  .num.blue { color: var(--accent); }
+  
+  @media (max-width: 600px) {
+    h1 { font-size: 1.2rem; }
+    .selectors { flex-direction: column; }
+    .selector-group { max-width: 100%; }
+    .feature-table td, .feature-table th { padding: 7px 8px; font-size: 0.78rem; }
+    .legend { flex-wrap: wrap; gap: 8px; }
+    body { padding: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Vehicle Comparison Tool</h1>
+  <p class="subtitle">RAV4 &amp; CR-V — 2019–2023 | Phase 1: LE/XLE &amp; LX/EX trims</p>
+  
+  <div class="mode-tabs">
+    <button class="mode-tab" onclick="setMode(&#39;compare&#39;)">Compare Two Vehicles</button>
+    <button class="mode-tab" onclick="setMode(&#39;single&#39;)">Single Vehicle Lookup</button>
+  </div>
+  
+  <div id="compare-selectors" class="selectors" style="flex-direction:column;align-items:center;">
+    <div id="vehicle-slots" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;width:100%;">
+    </div>
+    <button id="add-vehicle-btn" onclick="addVehicleSlot()" style="margin-top:10px;padding:10px 24px;border-radius:8px;border:1px dashed var(--border);background:transparent;color:var(--accent);cursor:pointer;font-family:&#39;DM Sans&#39;,sans-serif;font-size:0.9rem;font-weight:500;transition:all 0.2s;">+ Add Vehicle</button>
+  </div>
+  
+  <div id="results" class="results">
+    <div class="empty-state">
+      <div class="icon">🚗</div>
+      <div>Select two vehicles above to compare, or switch to Single Vehicle Lookup</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const DB = {
+  rav4: {
+    years: {2018:['LE','XLE','Limited'], 2019:['LE','XLE','XLE Premium','Limited'], 2020:['LE','XLE','XLE Premium','Limited'], 2021:['LE','XLE','XLE Premium','Limited'], 2022:['LE','XLE','XLE Premium','Limited'], 2023:['LE','XLE','XLE Premium','Limited']},
+    data: {
+      "2018-LE": {
+        engine:"2.5L 4-cyl, 176hp", transmission:"6-speed automatic", mpg_combined_fwd:"26 mpg", mpg_combined_awd:"25 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No (optional pkg)", rear_cross_traffic_alert:"No (optional pkg)",
+        safety_sense_version:"TSS-P", nhtsa_rating:"4 stars overall", iihs_rating:"Top Safety Pick",
+        apple_carplay:"No", android_auto:"No", touchscreen:"6.1-inch", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"101.9 cu ft", cargo_space:"38.4 cu ft",
+        wheels:"17-inch steel", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Good",
+        known_issues:"4th gen — older platform, less power", roof_rail_leak:"N/A",
+        infotainment_system:"Entune 6.1-inch (no CarPlay)", used_price:"$14,000–$17,000", fits_20k_budget:"Yes"
+      },
+      "2018-XLE": {
+        engine:"2.5L 4-cyl, 176hp", transmission:"6-speed automatic", mpg_combined_fwd:"26 mpg", mpg_combined_awd:"25 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No (optional pkg)", rear_cross_traffic_alert:"No (optional pkg)",
+        safety_sense_version:"TSS-P", nhtsa_rating:"4 stars overall", iihs_rating:"Top Safety Pick",
+        apple_carplay:"No", android_auto:"No", touchscreen:"6.1-inch (7-inch optional)", wireless_carplay:"No",
+        push_button_start:"No (optional pkg)", smart_key_entry:"No (optional pkg)", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No (optional Cold Area pkg)", power_driver_seat:"No (optional pkg)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No (optional Cold Area pkg)", seat_material:"Cloth", interior_volume:"101.9 cu ft", cargo_space:"38.4 cu ft",
+        wheels:"17-inch alloy", roof_rails:"No (optional pkg)", fog_lights:"Yes", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Good",
+        known_issues:"4th gen — older platform, less power", roof_rail_leak:"N/A",
+        infotainment_system:"Entune Audio Plus (no CarPlay)", used_price:"$15,000–$18,000", fits_20k_budget:"Yes"
+      },
+      "2018-Limited": {
+        engine:"2.5L 4-cyl, 176hp", transmission:"6-speed automatic", mpg_combined_fwd:"26 mpg", mpg_combined_awd:"25 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes (standard)",
+        safety_sense_version:"TSS-P", nhtsa_rating:"4 stars overall", iihs_rating:"Top Safety Pick",
+        apple_carplay:"No", android_auto:"No", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way with memory)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No (optional Advanced Tech pkg)", seat_material:"SofTex (synthetic leather)", interior_volume:"101.9 cu ft", cargo_space:"38.4 cu ft",
+        wheels:"18-inch alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Good",
+        known_issues:"4th gen — older platform, less power", roof_rail_leak:"N/A",
+        infotainment_system:"Entune Premium Audio + Nav (7-inch, no CarPlay)", used_price:"$17,000–$20,000", fits_20k_budget:"Yes"
+      },
+      "2019-LE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No ($590 option)", rear_cross_traffic_alert:"No (optional)",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"No", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"17-inch steel", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"TSB: battery drain & transmission — verify performed", roof_rail_leak:"Yes (defective seals)",
+        infotainment_system:"Entune 3.0", used_price:"$17,000–$19,000", fits_20k_budget:"Yes"
+      },
+      "2019-XLE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"No", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"No (AWD optional pkg only)", power_driver_seat:"No (optional package)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"17-inch alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"Reflector LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"TSB: battery drain & transmission — verify performed", roof_rail_leak:"Yes (defective seals)",
+        infotainment_system:"Entune 3.0", used_price:"$19,000–$21,000", fits_20k_budget:"Yes"
+      },
+      "2020-LE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No ($590 option)", rear_cross_traffic_alert:"No (optional)",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"17-inch steel", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"TSB: battery drain & transmission — verify performed", roof_rail_leak:"Yes (defective seals)",
+        infotainment_system:"Entune 3.0", used_price:"$18,000–$20,000", fits_20k_budget:"Yes"
+      },
+      "2020-XLE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"Optional package (~$1,075)", power_driver_seat:"Yes", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Optional package", seat_material:"Cloth", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"17-inch alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"Reflector LED",
+        hood_insulation:"Yes", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"TSB: battery drain & transmission — verify performed", roof_rail_leak:"Yes (defective seals)",
+        infotainment_system:"Entune 3.0", used_price:"$20,000–$22,000", fits_20k_budget:"Tight"
+      },
+      "2021-LE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No ($590 option)", rear_cross_traffic_alert:"No (optional)",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"17-inch steel", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"TSB issues resolved from factory", roof_rail_leak:"Yes (defective seals)",
+        infotainment_system:"Entune 3.0", used_price:"$19,000–$21,000", fits_20k_budget:"Yes"
+      },
+      "2021-XLE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"Optional package (~$1,075)", power_driver_seat:"Yes", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Optional package", seat_material:"Cloth", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"17-inch alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"Reflector LED",
+        hood_insulation:"Yes", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"TSB issues resolved from factory", roof_rail_leak:"Yes (defective seals)",
+        infotainment_system:"Entune 3.0", used_price:"$21,000–$23,000", fits_20k_budget:"Over budget"
+      },
+      "2022-LE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No ($590 option)", rear_cross_traffic_alert:"No (optional)",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"17-inch steel", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"No major issues", roof_rail_leak:"Fixed (redesigned)",
+        infotainment_system:"Entune 3.0", used_price:"$20,000–$22,000", fits_20k_budget:"Tight"
+      },
+      "2022-XLE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"Optional package (~$1,075)", power_driver_seat:"Yes", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Optional package", seat_material:"Cloth", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"17-inch alloy", roof_rails:"Yes", fog_lights:"No (removed)", headlights:"Bi-LED projector",
+        hood_insulation:"Yes", illuminated_switches:"Yes",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"No major issues", roof_rail_leak:"Fixed (redesigned)",
+        infotainment_system:"Entune 3.0", used_price:"$22,000–$24,000", fits_20k_budget:"Over budget"
+      },
+      "2023-LE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No ($590 option)", rear_cross_traffic_alert:"No (optional)",
+        safety_sense_version:"TSS 2.5", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"8-inch", wireless_carplay:"Yes",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"17-inch steel", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"No major issues", roof_rail_leak:"Fixed",
+        infotainment_system:"New multimedia system (OTA updates)", used_price:"$22,000–$25,000", fits_20k_budget:"Over budget"
+      },
+      "2023-XLE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.5", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"8-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"Optional package (~$1,075)", power_driver_seat:"Yes", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Optional package", seat_material:"Cloth", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"17-inch alloy", roof_rails:"Yes", fog_lights:"No", headlights:"Bi-LED projector",
+        hood_insulation:"Yes", illuminated_switches:"Yes",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"No major issues", roof_rail_leak:"Fixed",
+        infotainment_system:"New multimedia system (OTA updates)", used_price:"$24,000–$27,000", fits_20k_budget:"No"
+      },
+      "2019-XLE Premium": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"No", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"Optional (Weather Grade pkg)", power_driver_seat:"Yes", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Optional (Weather Grade pkg)", seat_material:"SofTex (synthetic leather)", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"19-inch alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"LED projector",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"TSB: battery drain & transmission — verify performed", roof_rail_leak:"Yes (defective seals)",
+        infotainment_system:"Entune 3.0", used_price:"$21,000–$23,000", fits_20k_budget:"Over budget"
+      },
+      "2019-Limited": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"No", touchscreen:"7-inch (8-inch optional)", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Yes (standard)", seat_material:"SofTex (synthetic leather)", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"19-inch chrome alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"LED projector",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"TSB: battery drain & transmission — verify performed", roof_rail_leak:"Yes (defective seals)",
+        infotainment_system:"Entune 3.0 (opt JBL 11-speaker)", used_price:"$23,000–$26,000", fits_20k_budget:"No"
+      },
+      "2020-XLE Premium": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"Optional (Weather Grade pkg)", power_driver_seat:"Yes", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Optional (Weather Grade pkg)", seat_material:"SofTex (synthetic leather)", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"19-inch alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"LED projector",
+        hood_insulation:"Yes", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"TSB: battery drain & transmission — verify performed", roof_rail_leak:"Yes (defective seals)",
+        infotainment_system:"Entune 3.0", used_price:"$22,000–$24,000", fits_20k_budget:"Over budget"
+      },
+      "2020-Limited": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"8-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"Yes (standard, ventilated)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Yes (standard)", seat_material:"SofTex (synthetic leather)", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"19-inch chrome alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"LED projector",
+        hood_insulation:"Yes", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"TSB: battery drain & transmission — verify performed", roof_rail_leak:"Yes (defective seals)",
+        infotainment_system:"Entune 3.0 + JBL 11-speaker (standard)", used_price:"$24,000–$27,000", fits_20k_budget:"No"
+      },
+      "2021-XLE Premium": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"Optional (Weather Grade pkg)", power_driver_seat:"Yes", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Optional (Weather Grade pkg)", seat_material:"SofTex (synthetic leather)", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"19-inch alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"LED projector",
+        hood_insulation:"Yes", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"TSB issues resolved from factory", roof_rail_leak:"Yes (defective seals)",
+        infotainment_system:"Entune 3.0", used_price:"$23,000–$25,000", fits_20k_budget:"Over budget"
+      },
+      "2021-Limited": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"8-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"Yes (standard, ventilated)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Yes (standard)", seat_material:"SofTex (synthetic leather)", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"19-inch chrome alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"LED projector",
+        hood_insulation:"Yes", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"TSB issues resolved from factory", roof_rail_leak:"Yes (defective seals)",
+        infotainment_system:"Entune 3.0 + JBL 11-speaker (standard)", used_price:"$25,000–$28,000", fits_20k_budget:"No"
+      },
+      "2022-XLE Premium": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"Optional (Weather Grade pkg)", power_driver_seat:"Yes", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Optional (Weather Grade pkg)", seat_material:"SofTex (synthetic leather)", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"19-inch alloy", roof_rails:"Yes", fog_lights:"Yes (LED)", headlights:"LED projector",
+        hood_insulation:"Yes", illuminated_switches:"Yes",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"No major issues", roof_rail_leak:"Fixed (redesigned)",
+        infotainment_system:"Entune 3.0", used_price:"$24,000–$26,000", fits_20k_budget:"Over budget"
+      },
+      "2022-Limited": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"8-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"Yes (standard, ventilated)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Yes (standard)", seat_material:"SofTex (synthetic leather)", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"19-inch chrome alloy", roof_rails:"Yes", fog_lights:"Yes (LED)", headlights:"LED projector",
+        hood_insulation:"Yes", illuminated_switches:"Yes",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"No major issues", roof_rail_leak:"Fixed (redesigned)",
+        infotainment_system:"Entune 3.0 + JBL 11-speaker (standard)", used_price:"$26,000–$29,000", fits_20k_budget:"No"
+      },
+      "2023-XLE Premium": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.5", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"10.5-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"Optional (Weather Grade pkg)", power_driver_seat:"Yes", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Optional (Weather Grade pkg)", seat_material:"SofTex (synthetic leather)", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"19-inch alloy", roof_rails:"Yes", fog_lights:"Yes (LED)", headlights:"LED projector",
+        hood_insulation:"Yes", illuminated_switches:"Yes",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"No major issues", roof_rail_leak:"Fixed",
+        infotainment_system:"New multimedia system (OTA updates)", used_price:"$26,000–$29,000", fits_20k_budget:"No"
+      },
+      "2023-Limited": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.5", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"Yes", touchscreen:"10.5-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"Yes (standard, ventilated)", power_driver_seat:"Yes (8-way)", moonroof:"Panoramic", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Yes (standard)", seat_material:"SofTex (synthetic leather)", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"19-inch chrome alloy", roof_rails:"Yes", fog_lights:"Yes (LED)", headlights:"LED projector",
+        hood_insulation:"Yes", illuminated_switches:"Yes",
+        awd_available:"Yes ($1,400)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
+        known_issues:"No major issues", roof_rail_leak:"Fixed",
+        infotainment_system:"New multimedia + JBL 11-speaker (standard) + OTA", used_price:"$28,000–$32,000", fits_20k_budget:"No"
+      }
+    }
+  },
+  crv: {
+    years: {2018:['LX','EX','EX-L','Touring'], 2019:['LX','EX','EX-L','Touring'], 2020:['LX','EX','EX-L','Touring'], 2021:['LX','EX','EX-L','Touring'], 2022:['LX','EX','EX-L','Touring'], 2023:['LX','EX','EX-L','Touring']},
+    data: {
+      "2018-LX": {
+        engine:"2.4L 4-cyl, 184hp", transmission:"CVT", mpg_combined_fwd:"28 mpg", mpg_combined_awd:"27 mpg",
+        auto_emergency_braking:"No", adaptive_cruise_control:"No", lane_departure_warning:"No", lane_keep_assist:"No",
+        pedestrian_detection:"No", blind_spot_monitoring:"No", rear_cross_traffic_alert:"No",
+        safety_sense_version:"No Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"No", android_auto:"No", touchscreen:"5-inch LCD (not touch)", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No (single zone)",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"17-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"No",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Good",
+        known_issues:"2.4L engine (not turbo), no Honda Sensing", roof_rail_leak:"N/A",
+        infotainment_system:"5-inch basic LCD (no CarPlay)", used_price:"$13,000–$16,000", fits_20k_budget:"Yes"
+      },
+      "2018-EX": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"No", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"No",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Good",
+        known_issues:"Some oil dilution reports on 1.5T", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio", used_price:"$15,000–$18,000", fits_20k_budget:"Yes"
+      },
+      "2018-EX-L": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"No", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Leather", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"No",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Good",
+        known_issues:"Some oil dilution reports on 1.5T", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio + 8-speaker", used_price:"$16,000–$19,000", fits_20k_budget:"Yes"
+      },
+      "2018-Touring": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"No", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Leather", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"LED",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"No",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Good",
+        known_issues:"Some oil dilution reports on 1.5T", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio + 9-speaker + nav + wireless charging", used_price:"$17,000–$20,000", fits_20k_budget:"Yes"
+      },
+      "2019-LX": {
+        engine:"2.4L 4-cyl, 184hp", transmission:"CVT", mpg_combined_fwd:"28 mpg", mpg_combined_awd:"27 mpg",
+        auto_emergency_braking:"No", adaptive_cruise_control:"No", lane_departure_warning:"No", lane_keep_assist:"No",
+        pedestrian_detection:"No", blind_spot_monitoring:"No", rear_cross_traffic_alert:"No",
+        safety_sense_version:"No Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"No", android_auto:"No", touchscreen:"5-inch LCD (not touch)", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No (single zone)",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"17-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"No",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Good",
+        known_issues:"2.4L engine (not turbo), NO Honda Sensing on LX", roof_rail_leak:"N/A",
+        infotainment_system:"5-inch basic LCD (no CarPlay)", used_price:"$13,000–$16,000", fits_20k_budget:"Yes"
+      },
+      "2019-EX": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"No", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"No",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Good",
+        known_issues:"Oil dilution mostly resolved by 2019", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio", used_price:"$15,000–$18,000", fits_20k_budget:"Yes"
+      },
+      "2019-EX-L": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"No", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Leather", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"No",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Good",
+        known_issues:"Oil dilution mostly resolved by 2019", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio + 8-speaker", used_price:"$16,000–$19,000", fits_20k_budget:"Yes"
+      },
+      "2019-Touring": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"No", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Leather", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"LED",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,400)", hybrid_available:"No",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Good",
+        known_issues:"Oil dilution mostly resolved by 2019", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio + 9-speaker + nav", used_price:"$17,000–$20,000", fits_20k_budget:"Yes"
+      },
+      "2020-LX": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No", rear_cross_traffic_alert:"No",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"No", android_auto:"No", touchscreen:"5-inch LCD (not touch)", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No (single zone)",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"17-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"Some oil dilution reports (mostly resolved)", roof_rail_leak:"N/A",
+        infotainment_system:"5-inch basic display", used_price:"$15,000–$17,000", fits_20k_budget:"Yes"
+      },
+      "2020-EX": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"Some oil dilution reports (mostly resolved)", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio (some lag reported)", used_price:"$17,000–$19,000", fits_20k_budget:"Yes — BEST VALUE"
+      },
+      "2021-LX": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No", rear_cross_traffic_alert:"No",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"No", android_auto:"No", touchscreen:"5-inch LCD (not touch)", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No (single zone)",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"17-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"No major issues", roof_rail_leak:"N/A",
+        infotainment_system:"5-inch basic display", used_price:"$16,000–$18,000", fits_20k_budget:"Yes"
+      },
+      "2021-EX": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"No major issues", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio (some lag reported)", used_price:"$18,000–$20,000", fits_20k_budget:"Yes"
+      },
+      "2022-LX": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No", rear_cross_traffic_alert:"No",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"No", android_auto:"No", touchscreen:"5-inch LCD (not touch)", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No (single zone)",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"17-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"No major issues (final year 5th gen)", roof_rail_leak:"N/A",
+        infotainment_system:"5-inch basic display", used_price:"$17,000–$19,000", fits_20k_budget:"Yes"
+      },
+      "2022-EX": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"No major issues (final year 5th gen — proven)", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio (some lag reported)", used_price:"$19,000–$21,000", fits_20k_budget:"Tight"
+      },
+      "2023-LX": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No", rear_cross_traffic_alert:"No",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No (single zone)",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"17-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"LED",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (Sport Hybrid trim)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"First year 6th gen — new design", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch touchscreen (new system)", used_price:"$21,000–$24,000", fits_20k_budget:"Over budget"
+      },
+      "2023-EX": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"9-inch", wireless_carplay:"No (EX-L+ only)",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"102.9 cu ft", cargo_space:"36.3 cu ft",
+        wheels:"18-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"LED",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (Sport Hybrid trim)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"First year 6th gen — new design", roof_rail_leak:"N/A",
+        infotainment_system:"9-inch touchscreen (new improved system)", used_price:"$23,000–$27,000", fits_20k_budget:"No"
+      },
+      "2020-EX-L": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Leather", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"Some oil dilution reports (mostly resolved)", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio + 8-speaker", used_price:"$18,000–$21,000", fits_20k_budget:"Yes"
+      },
+      "2020-Touring": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Yes (standard)", seat_material:"Leather", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"LED",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"Some oil dilution reports (mostly resolved)", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio + 9-speaker premium + nav + wireless charging", used_price:"$20,000–$23,000", fits_20k_budget:"Tight"
+      },
+      "2021-EX-L": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Leather", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"No major issues", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio + 8-speaker", used_price:"$19,000–$22,000", fits_20k_budget:"Yes"
+      },
+      "2021-Touring": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Yes (standard)", seat_material:"Leather", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"LED",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"No major issues", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio + 9-speaker premium + nav + wireless charging", used_price:"$21,000–$24,000", fits_20k_budget:"Over budget"
+      },
+      "2022-EX-L": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Leather", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"No major issues (final year 5th gen — proven)", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio + 8-speaker", used_price:"$20,000–$23,000", fits_20k_budget:"Tight"
+      },
+      "2022-Touring": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Yes (standard)", seat_material:"Leather", interior_volume:"105.9 cu ft", cargo_space:"39.2 cu ft",
+        wheels:"18-inch alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"LED",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes (AWD standard on Touring 2022)", hybrid_available:"Yes (separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"No major issues (final year 5th gen — proven)", roof_rail_leak:"N/A",
+        infotainment_system:"7-inch Display Audio + 9-speaker premium + nav + wireless charging", used_price:"$22,000–$25,000", fits_20k_budget:"Over budget"
+      },
+      "2023-EX-L": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"9-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"No", seat_material:"Leather", interior_volume:"102.9 cu ft", cargo_space:"36.3 cu ft",
+        wheels:"18-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"LED",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (Sport Hybrid trim)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"First year 6th gen — new design", roof_rail_leak:"N/A",
+        infotainment_system:"9-inch touchscreen (wireless CarPlay) + 8-speaker + parking sensors", used_price:"$24,000–$28,000", fits_20k_budget:"No"
+      },
+      "2023-Touring": {
+        engine:"1.5L Turbo 4-cyl, 190hp", transmission:"CVT", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"29 mpg",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"Honda Sensing", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"9-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"Yes", wifi_hotspot:"No",
+        heated_seats:"Yes (standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Yes (standard)", seat_material:"Leather", interior_volume:"102.9 cu ft", cargo_space:"36.3 cu ft",
+        wheels:"19-inch alloy", roof_rails:"Yes", fog_lights:"Yes", headlights:"LED",
+        hood_insulation:"N/A", illuminated_switches:"No",
+        awd_available:"Yes ($1,500)", hybrid_available:"Yes (Sport Touring Hybrid trim)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$407/year", resale_value:"Slightly lower than RAV4",
+        known_issues:"First year 6th gen — new design", roof_rail_leak:"N/A",
+        infotainment_system:"9-inch touchscreen (wireless CarPlay) + Bose 12-speaker + nav + wireless charging", used_price:"$26,000–$30,000", fits_20k_budget:"No"
+      }
+    }
+  }
+};
+
+const CATEGORIES = {
+  "Safety": ["auto_emergency_braking","adaptive_cruise_control","lane_departure_warning","lane_keep_assist","pedestrian_detection","blind_spot_monitoring","rear_cross_traffic_alert","safety_sense_version","nhtsa_rating","iihs_rating"],
+  "Technology": ["apple_carplay","android_auto","touchscreen","wireless_carplay","push_button_start","smart_key_entry","remote_start","wifi_hotspot","infotainment_system"],
+  "Comfort": ["heated_seats","power_driver_seat","moonroof","dual_zone_climate","heated_steering_wheel","seat_material","interior_volume","cargo_space"],
+  "Performance & Efficiency": ["engine","transmission","mpg_combined_fwd","mpg_combined_awd","awd_available","hybrid_available"],
+  "Exterior": ["wheels","roof_rails","fog_lights","headlights","hood_insulation","illuminated_switches"],
+  "Reliability & Ownership": ["reliability_rating","avg_repair_cost","resale_value","known_issues","roof_rail_leak"],
+  "Pricing": ["used_price","fits_20k_budget"]
+};
+
+const LABELS = {
+  auto_emergency_braking:"Auto Emergency Braking", adaptive_cruise_control:"Adaptive Cruise Control",
+  lane_departure_warning:"Lane Departure Warning", lane_keep_assist:"Lane Keep Assist",
+  pedestrian_detection:"Pedestrian Detection", blind_spot_monitoring:"Blind Spot Monitoring",
+  rear_cross_traffic_alert:"Rear Cross-Traffic Alert", safety_sense_version:"Safety Suite Version",
+  nhtsa_rating:"NHTSA Crash Rating", iihs_rating:"IIHS Rating",
+  apple_carplay:"Apple CarPlay", android_auto:"Android Auto", touchscreen:"Touchscreen",
+  wireless_carplay:"Wireless CarPlay/AA", push_button_start:"Push-Button Start",
+  smart_key_entry:"Smart Key Entry", remote_start:"Remote Engine Start", wifi_hotspot:"Wi-Fi Hotspot",
+  infotainment_system:"Infotainment System",
+  heated_seats:"Heated Front Seats", power_driver_seat:"Power Driver's Seat", moonroof:"Moonroof / Sunroof",
+  dual_zone_climate:"Dual-Zone Climate", heated_steering_wheel:"Heated Steering Wheel",
+  seat_material:"Seat Material", interior_volume:"Interior Volume", cargo_space:"Cargo Space",
+  engine:"Engine", transmission:"Transmission", mpg_combined_fwd:"MPG Combined (FWD)",
+  mpg_combined_awd:"MPG Combined (AWD)", awd_available:"AWD Available", hybrid_available:"Hybrid Available",
+  wheels:"Wheels", roof_rails:"Roof Rails", fog_lights:"Fog Lights", headlights:"Headlights",
+  hood_insulation:"Hood Sound Insulation", illuminated_switches:"Illuminated Interior Switches",
+  reliability_rating:"Reliability Rating", avg_repair_cost:"Avg Annual Repair Cost",
+  resale_value:"Resale Value", known_issues:"Known Issues", roof_rail_leak:"Roof Rail Leak Issue",
+  used_price:"Used Price Range", fits_20k_budget:"Fits $20k Budget?"
+};
+
+let currentMode = 'compare';
+const SLOT_LETTERS = ['A','B','C','D','E','F'];
+let vehicleSlots = [];
+let slotCounter = 0;
+
+function addVehicleSlot() {
+  if (vehicleSlots.length >= 6) return;
+  const id = 'v' + (slotCounter++);
+  vehicleSlots.push(id);
+  
+  const label = SLOT_LETTERS[vehicleSlots.length - 1] || id;
+  const container = document.getElementById('vehicle-slots');
+  
+  const div = document.createElement('div');
+  div.className = 'selector-group';
+  div.id = `group-${id}`;
+  div.innerHTML = `
+    <div class="selector-label" id="label-${id}">Vehicle ${label}</div>
+    ${vehicleSlots.length > 2 ? `<button class="remove-btn" onclick="removeVehicleSlot('${id}')" title="Remove">✕</button>` : ''}
+    <div class="select-row">
+      <select id="make-${id}" onchange="updateTrims('${id}'); compare();">
+        <option value="">Make</option>
+        <option value="rav4">Toyota RAV4</option>
+        <option value="crv">Honda CR-V</option>
+      </select>
+      <select id="year-${id}" onchange="compare();">
+        <option value="">Year</option>
+      </select>
+      <select id="trim-${id}" onchange="compare();">
+        <option value="">Trim</option>
+      </select>
+    </div>
+  `;
+  container.appendChild(div);
+  
+  if (vehicleSlots.length >= 6) {
+    document.getElementById('add-vehicle-btn').style.display = 'none';
+  }
+  updateSlotLabels();
+}
+
+function removeVehicleSlot(id) {
+  const el = document.getElementById(`group-${id}`);
+  if (el) el.remove();
+  vehicleSlots = vehicleSlots.filter(s => s !== id);
+  document.getElementById('add-vehicle-btn').style.display = '';
+  updateSlotLabels();
+  compare();
+}
+
+function updateSlotLabels() {
+  vehicleSlots.forEach((id, i) => {
+    const label = document.getElementById(`label-${id}`);
+    if (label) label.textContent = `Vehicle ${SLOT_LETTERS[i] || (i+1)}`;
+    // Show/hide remove buttons (keep minimum 2)
+    const group = document.getElementById(`group-${id}`);
+    if (group) {
+      const removeBtn = group.querySelector('.remove-btn');
+      if (vehicleSlots.length <= 2) {
+        if (removeBtn) removeBtn.style.display = 'none';
+      } else {
+        if (removeBtn) removeBtn.style.display = '';
+      }
+    }
+  });
+}
+
+function setMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  const slotsContainer = document.getElementById('vehicle-slots');
+  const addBtn = document.getElementById('add-vehicle-btn');
+  
+  // Clear all slots
+  slotsContainer.innerHTML = '';
+  vehicleSlots = [];
+  slotCounter = 0;
+  
+  if (mode === 'single') {
+    addBtn.style.display = 'none';
+    // Add single slot without year
+    const id = 'v' + (slotCounter++);
+    vehicleSlots.push(id);
+    const div = document.createElement('div');
+    div.className = 'selector-group';
+    div.id = `group-${id}`;
+    div.innerHTML = `
+      <div class="selector-label" id="label-${id}">Select Make & Trim</div>
+      <div class="select-row">
+        <select id="make-${id}" onchange="updateTrims('${id}'); compare();">
+          <option value="">Make</option>
+          <option value="rav4">Toyota RAV4</option>
+          <option value="crv">Honda CR-V</option>
+        </select>
+        <select id="year-${id}" style="display:none;" onchange="compare();">
+          <option value="">Year</option>
+        </select>
+        <select id="trim-${id}" onchange="compare();">
+          <option value="">Trim</option>
+        </select>
+      </div>
+    `;
+    slotsContainer.appendChild(div);
+  } else {
+    addBtn.style.display = '';
+    addVehicleSlot();
+    addVehicleSlot();
+  }
+  
+  document.getElementById('results').innerHTML = '<div class="empty-state"><div class="icon">🚗</div><div>' + (mode === 'single' ? 'Select a make and trim to see all years compared' : 'Select vehicles above to compare') + '</div></div>';
+}
+
+function updateTrims(id) {
+  const make = document.getElementById(`make-${id}`).value;
+  const yearSel = document.getElementById(`year-${id}`);
+  const trimSel = document.getElementById(`trim-${id}`);
+  
+  yearSel.innerHTML = '<option value="">Year</option>';
+  trimSel.innerHTML = '<option value="">Trim</option>';
+  
+  if (!make || !DB[make]) return;
+  
+  const group = document.getElementById(`group-${id}`);
+  group.className = 'selector-group ' + (make === 'rav4' ? 'rav4-border' : 'crv-border');
+  
+  if (currentMode === 'single') {
+    const allTrims = new Set();
+    Object.values(DB[make].years).forEach(trims => trims.forEach(t => allTrims.add(t)));
+    [...allTrims].sort().forEach(t => {
+      trimSel.innerHTML += `<option value="${t}">${t}</option>`;
+    });
+    return;
+  }
+  
+  Object.keys(DB[make].years).sort().forEach(y => {
+    yearSel.innerHTML += `<option value="${y}">${y}</option>`;
+  });
+  
+  yearSel.onchange = function() {
+    trimSel.innerHTML = '<option value="">Trim</option>';
+    const yr = parseInt(this.value);
+    if (yr && DB[make].years[yr]) {
+      DB[make].years[yr].forEach(t => {
+        trimSel.innerHTML += `<option value="${t}">${t}</option>`;
+      });
+    }
+    compare();
+  };
+}
+
+function getVehicle(id) {
+  const makeEl = document.getElementById(`make-${id}`);
+  const yearEl = document.getElementById(`year-${id}`);
+  const trimEl = document.getElementById(`trim-${id}`);
+  if (!makeEl || !yearEl || !trimEl) return null;
+  const make = makeEl.value;
+  const year = yearEl.value;
+  const trim = trimEl.value;
+  if (!make || !year || !trim) return null;
+  const key = `${year}-${trim}`;
+  const data = DB[make].data[key];
+  if (!data) return null;
+  const name = make === 'rav4' ? 'Toyota RAV4' : 'Honda CR-V';
+  return { make, year, trim, name: `${year} ${name} ${trim}`, data, color: make === 'rav4' ? 'rav4' : 'crv' };
+}
+
+function valClass(val) {
+  if (!val) return 'val-neutral';
+  const v = val.toString().toUpperCase();
+  if (v === 'YES' || v.startsWith('YES')) return 'val-yes';
+  if (v === 'NO' || v.startsWith('NO')) return 'val-no';
+  return 'val-neutral';
+}
+
+function compare() {
+  const results = document.getElementById('results');
+  
+  if (currentMode === 'single') {
+    const id = vehicleSlots[0];
+    const make = document.getElementById(`make-${id}`).value;
+    const trim = document.getElementById(`trim-${id}`).value;
+    if (!make || !trim) {
+      results.innerHTML = '<div class="empty-state"><div class="icon">🔍</div><div>Select a make and trim to see all years compared</div></div>';
+      return;
+    }
+    renderSingleAllYears(make, trim);
+    return;
+  }
+  
+  // Gather all valid vehicles from slots
+  const vehicles = [];
+  vehicleSlots.forEach(id => {
+    const v = getVehicle(id);
+    if (v) vehicles.push(v);
+  });
+  
+  if (vehicles.length < 2) {
+    results.innerHTML = '<div class="empty-state"><div class="icon">🚗</div><div>Select at least two vehicles to compare</div></div>';
+    return;
+  }
+  
+  renderCompareMulti(vehicles);
+}
+
+const YEAR_NOTES = {
+  rav4: {
+    2018: "2018: 4th generation (final year). 2.5L 176hp engine with 6-speed automatic. TSS-P safety suite standard (older version). NO Apple CarPlay or Android Auto. 6.1-inch touchscreen (7-inch on Limited+). Blind spot monitoring only standard on Limited+, optional package on XLE. Trims: LE, XLE, Adventure (new), SE, Limited, Platinum. Less power (176hp vs 203hp in 2019+), worse MPG (26 vs 30 combined), older platform.",
+    2019: "2019: Complete 5th-gen redesign — new platform, new everything. Engine upgraded to 203hp. 8-speed auto replaces 6-speed. TSS 2.0 replaces TSS-P. Apple CarPlay added. No Android Auto. XLE: no power seat standard, heated seats AWD-only optional. Known TSB issues (battery drain, transmission jerkiness) — verify performed on any used purchase.",
+    2020: "2020: Added Android Auto. XLE gets standard power driver's seat. Heated seats now available on FWD XLE (optional pkg). Hood sound insulation added on XLE. New TRD Off-Road trim added to lineup. TSB issues still present — verify performed.",
+    2021: "2021: TSB battery drain and transmission issues resolved from factory — most reliable early model year. Otherwise identical to 2020. Roof rail leak issue still present on all trims with roof rails.",
+    2022: "2022: Roof rail leak issue fixed (redesigned). XLE gets Bi-LED projector headlights (upgraded from reflector LED). Illuminated interior switches added on XLE+. Fog lights REMOVED from XLE. New wheel colors. Power passenger seat added on Limited.",
+    2023: "2023: Major tech refresh — new 8-inch touchscreen (was 7-inch), wireless Apple CarPlay and Android Auto, new multimedia system with OTA updates, Toyota Safety Sense upgraded to TSS 2.5 (adds intersection turn assist, improved pedestrian detection). 7-inch digital instrument cluster. Roof rail leak fully resolved."
+  },
+  crv: {
+    2018: "2018: 5th generation (2nd year). LX has older 2.4L engine (184hp, no turbo) and NO Honda Sensing safety suite — no auto braking, no adaptive cruise, no lane keep. EX and above get 1.5L turbo (190hp) and Honda Sensing. Apple CarPlay and Android Auto standard on EX+. Some oil dilution reports on 1.5T engine. No hybrid option. LX is very bare bones.",
+    2019: "2019: No significant changes from 2018. LX still has 2.4L engine and NO Honda Sensing. EX-L with Navigation trim eliminated (nav now Touring-only, use CarPlay instead). Oil dilution issues mostly resolved. Still no hybrid option.",
+    2020: "2020: Major update year — Honda Sensing standard ALL trims (was EX+ only). 1.5L turbo engine now standard ALL trims (LX had 2.4L before). Restyled front/rear exterior. Revised center console with better USB placement. First CR-V Hybrid introduced. LX still missing Apple CarPlay, touchscreen, blind spot monitoring.",
+    2021: "2021: No significant changes from 2020 — essentially the same vehicle. Proven and reliable. LX still bare bones (no CarPlay, no touchscreen).",
+    2022: "2022: Final year of 5th generation — no changes from 2021. Highly sought after for proven reliability. Touring trim now AWD only. LX still missing CarPlay and touchscreen. Best \"known quantity\" year to buy used.",
+    2023: "2023: ALL-NEW 6th generation redesign. Bigger body (184.8\" vs 180.6\"). New interior design. LX FINALLY gets Apple CarPlay, Android Auto, and a 7-inch touchscreen. EX gets 9-inch screen. New safety features: hill descent control, snow mode, traffic sign recognition, low-speed braking. Sport Hybrid and Sport Touring Hybrid trims added. First-year new generation — potential early production quirks."
+  }
+};
+
+function renderSingleAllYears(make, trim) {
+  const makeName = make === 'rav4' ? 'Toyota RAV4' : 'Honda CR-V';
+  const color = make === 'rav4' ? 'rav4' : 'crv';
+  
+  // Gather all years that have this trim
+  const allYears = [];
+  Object.keys(DB[make].years).sort().forEach(y => {
+    const yr = parseInt(y);
+    if (DB[make].years[yr].includes(trim)) {
+      const key = `${yr}-${trim}`;
+      if (DB[make].data[key]) {
+        allYears.push({ year: yr, name: `${yr}`, data: DB[make].data[key] });
+      }
+    }
+  });
+  
+  if (allYears.length === 0) {
+    document.getElementById('results').innerHTML = '<div class="empty-state"><div class="icon">⚠️</div><div>No data found for this combination</div></div>';
+    return;
+  }
+  
+  // Summary: count changes between consecutive years
+  let changesHtml = '<div class="summary-bar">';
+  for (let i = 1; i < allYears.length; i++) {
+    let changes = 0;
+    Object.keys(LABELS).forEach(key => {
+      const a = (allYears[i-1].data[key]||'').toString().trim();
+      const b = (allYears[i].data[key]||'').toString().trim();
+      if (a !== b) changes++;
+    });
+    changesHtml += `<div class="summary-card"><div class="num ${changes > 0 ? 'yellow' : 'blue'}">${changes}</div><div class="label">${allYears[i-1].year}→${allYears[i].year}</div></div>`;
+  }
+  changesHtml += '</div>';
+  
+  let html = `<div style="text-align:center;margin-bottom:16px;font-family:'Space Mono',monospace;font-size:1.1rem;color:var(--${color})">${makeName} ${trim} — All Years</div>`;
+  html += changesHtml;
+  
+  for (const [cat, keys] of Object.entries(CATEGORIES)) {
+    // Check for any diffs across all years in this category
+    let catHasDiff = false;
+    keys.forEach(key => {
+      const first = (allYears[0].data[key]||'').toString().trim();
+      allYears.forEach(av => {
+        if ((av.data[key]||'').toString().trim() !== first) catHasDiff = true;
+      });
+    });
+    const badge = catHasDiff ? '<span class="same-badge badge-diff">has changes</span>' : '<span class="same-badge badge-same">no changes across years</span>';
+    
+    html += `<div class="category"><div class="category-header">${cat} ${badge}</div>`;
+    html += '<table class="feature-table"><thead><tr><th>Feature</th>';
+    allYears.forEach(av => {
+      html += `<th class="${color}-th">${av.name}</th>`;
+    });
+    html += '<th class="edge-th">Changed?</th>';
+    html += '</tr></thead><tbody>';
+    
+    for (const key of keys) {
+      const vals = allYears.map(av => av.data[key] || 'N/A');
+      const isDiff = vals.some(val => val.toString().trim() !== vals[0].toString().trim());
+      const rowStyle = isDiff ? 'style="background:rgba(251,191,36,0.04)"' : '';
+      
+      html += `<tr ${rowStyle}><td>${LABELS[key]||key}</td>`;
+      vals.forEach((val, i) => {
+        let cls = valClass(val);
+        if (i > 0 && val.toString().trim() !== vals[i-1].toString().trim()) {
+          html += `<td class="${cls}" style="background:rgba(52,211,153,0.1);font-weight:600">${val}</td>`;
+        } else {
+          html += `<td class="${cls}">${val}</td>`;
+        }
+      });
+      html += `<td class="${isDiff ? 'val-win' : 'val-tie'}">${isDiff ? '⚡ Changed' : '—'}</td>`;
+      html += '</tr>';
+    }
+    html += '</tbody></table></div>';
+  }
+  
+  // Year-over-year notes
+  html += '<div class="category" style="margin-top:24px">';
+  html += '<div class="category-header" style="cursor:pointer" onclick="document.getElementById(\'yoy-notes\').style.display=document.getElementById(\'yoy-notes\').style.display===\'none\'?\'block\':\'none\'">📋 Key Year-Over-Year Changes (click to expand/collapse)</div>';
+  html += '<div id="yoy-notes" style="background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;padding:16px">';
+  
+  const makeNotes = YEAR_NOTES[make];
+  const noteYears = Object.keys(makeNotes).map(Number).sort();
+  noteYears.forEach(ny => {
+    const note = makeNotes[ny];
+    const hasThisYear = allYears.some(av => av.year === ny);
+    const style = hasThisYear ? 'border-left:3px solid var(--accent);padding-left:12px;margin-bottom:14px' : 'border-left:3px solid var(--border);padding-left:12px;margin-bottom:14px';
+    const titleStyle = hasThisYear ? 'color:var(--accent);font-weight:700' : 'color:var(--text-dim);font-weight:600';
+    html += `<div style="${style}"><div style="${titleStyle};font-family:'Space Mono',monospace;font-size:0.8rem;margin-bottom:4px">${ny} ${makeName}</div>`;
+    html += `<div style="font-size:0.83rem;color:var(--text);line-height:1.5">${note}</div></div>`;
+  });
+  
+  html += '</div></div>';
+  
+  document.getElementById('results').innerHTML = html;
+}
+
+function renderCompareMulti(vehicles) {
+  const allKeys = Object.keys(LABELS);
+  
+  // Count all-same vs different
+  let same = 0, diff = 0;
+  allKeys.forEach(key => {
+    const first = (vehicles[0].data[key]||'').toString().trim();
+    const allSame = vehicles.every(v => (v.data[key]||'').toString().trim() === first);
+    if (allSame) same++; else diff++;
+  });
+  
+  let html = `<div class="summary-bar">
+    <div class="summary-card"><div class="num blue">${same}</div><div class="label">Same</div></div>
+    <div class="summary-card"><div class="num yellow">${diff}</div><div class="label">Different</div></div>
+    <div class="summary-card"><div class="num green">${vehicles.length}</div><div class="label">Vehicles</div></div>
+  </div>`;
+  
+  html += `<div class="results-header"><div class="results-title">Feature Comparison</div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot yes"></div>Has feature</div>
+      <div class="legend-item"><div class="legend-dot no"></div>Missing</div>
+      <div class="legend-item"><div class="legend-dot win"></div>Difference</div>
+    </div></div>`;
+  
+  for (const [cat, keys] of Object.entries(CATEGORIES)) {
+    const catDiffs = keys.filter(k => {
+      const first = (vehicles[0].data[k]||'').toString().trim();
+      return !vehicles.every(v => (v.data[k]||'').toString().trim() === first);
+    });
+    const badge = catDiffs.length > 0 ? `<span class="same-badge badge-diff">${catDiffs.length} diff</span>` : `<span class="same-badge badge-same">all same</span>`;
+    
+    html += `<div class="category"><div class="category-header">${cat} ${badge}</div>`;
+    html += `<table class="feature-table"><thead><tr><th>Feature</th>`;
+    vehicles.forEach(v => {
+      html += `<th class="${v.color}-th">${v.name}</th>`;
+    });
+    html += `<th class="edge-th">Edge</th></tr></thead><tbody>`;
+    
+    for (const key of keys) {
+      const vals = vehicles.map(v => v.data[key] || 'N/A');
+      const first = vals[0].toString().trim();
+      const isDiff = !vals.every(v => v.toString().trim() === first);
+      
+      let edge = '';
+      let edgeClass = 'val-tie';
+      if (isDiff) {
+        // Check if any vehicle has Yes while others have No
+        const yesVehicles = [];
+        const noVehicles = [];
+        vehicles.forEach((v, i) => {
+          const up = vals[i].toString().toUpperCase();
+          if (up.startsWith('YES')) yesVehicles.push(v);
+          else if (up.startsWith('NO')) noVehicles.push(v);
+        });
+        if (yesVehicles.length > 0 && noVehicles.length > 0 && yesVehicles.length < vehicles.length) {
+          const winners = yesVehicles.map(v => v.name.split(' ').slice(1,3).join(' '));
+          edge = `★ ${[...new Set(winners)].join(', ')}`;
+          edgeClass = 'val-win';
+        } else {
+          edge = '↔ Different';
+          edgeClass = 'val-win';
+        }
+      } else {
+        edge = 'Tie';
+      }
+      
+      const rowStyle = isDiff ? 'style="background:rgba(251,191,36,0.04)"' : '';
+      html += `<tr ${rowStyle}><td>${LABELS[key]||key}</td>`;
+      vals.forEach(val => {
+        html += `<td class="${valClass(val)}">${val}</td>`;
+      });
+      html += `<td class="${edgeClass}">${edge}</td></tr>`;
+    }
+    html += '</tbody></table></div>';
+  }
+  
+  // Notes
+  html += '<div class="category" style="margin-top:24px">';
+  html += '<div class="category-header" style="cursor:pointer" onclick="document.getElementById(\'yoy-notes-compare\').style.display=document.getElementById(\'yoy-notes-compare\').style.display===\'none\'?\'block\':\'none\'">📋 Key Year-Over-Year Changes (click to expand/collapse)</div>';
+  html += '<div id="yoy-notes-compare" style="background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;padding:16px">';
+  
+  const makes = new Set(vehicles.map(v => v.make));
+  makes.forEach(make => {
+    const makeName = make === 'rav4' ? 'Toyota RAV4' : 'Honda CR-V';
+    const makeNotes = YEAR_NOTES[make];
+    const noteYears = Object.keys(makeNotes).map(Number).sort();
+    html += `<div style="margin-top:8px"><div style="font-family:'Space Mono',monospace;font-size:0.8rem;color:${make==='rav4'?'var(--rav4)':'var(--crv)'};margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">${makeName} Changes</div>`;
+    noteYears.forEach(ny => {
+      const note = makeNotes[ny];
+      const matchingVehicles = vehicles.filter(v => v.make === make && parseInt(v.year) === ny);
+      const highlight = matchingVehicles.length > 0;
+      const style = highlight ? 'border-left:3px solid var(--accent);padding-left:12px;margin-bottom:12px' : 'border-left:3px solid var(--border);padding-left:12px;margin-bottom:12px';
+      const titleStyle = highlight ? 'color:var(--accent);font-weight:700' : 'color:var(--text-dim);font-weight:600';
+      const tags = matchingVehicles.map(v => {
+        const idx = vehicles.indexOf(v);
+        return SLOT_LETTERS[idx] || '';
+      }).join(', ');
+      const tag = highlight ? ` ◄ Vehicle ${tags}` : '';
+      html += `<div style="${style}"><div style="${titleStyle};font-family:'Space Mono',monospace;font-size:0.8rem;margin-bottom:4px">${ny}${tag}</div>`;
+      html += `<div style="font-size:0.83rem;color:var(--text);line-height:1.5">${note}</div></div>`;
+    });
+    html += '</div>';
+  });
+  
+  html += '</div></div>';
+  
+  document.getElementById('results').innerHTML = html;
+}
+// Init — start with 2 compare slots
+setMode('compare');
+</script>
+
+
+
+</body></html>
