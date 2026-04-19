@@ -17,12 +17,15 @@ export default {
 async function handleCarfaxAnalysis(request, env) {
   // 1. Validate PIN
   const pin = request.headers.get('X-Access-Pin');
-  if (!pin || pin !== env.ACCESS_PIN) {
+  if (!pin || !timingSafeEqual(pin, env.ACCESS_PIN || '')) {
     return jsonResponse({ error: 'Unauthorized' }, 401, env);
   }
 
   // 2. Rate limit by IP
-  const ip = request.headers.get('CF-Connecting-IP') || 'dev';
+  const ip = request.headers.get('CF-Connecting-IP');
+  if (!ip) {
+    return jsonResponse({ error: 'Cannot determine client IP' }, 400, env);
+  }
   const rateResult = await checkRateLimit(ip, env);
   if (!rateResult.allowed) {
     return jsonResponse({ error: 'Rate limit exceeded. Maximum 20 analyses per day.' }, 429, env);
@@ -59,7 +62,8 @@ async function handleCarfaxAnalysis(request, env) {
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
+        'anthropic-version': '2023-06-01',
+        'anthropic-beta': 'pdfs-2024-09-25'
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
@@ -120,7 +124,7 @@ Return ONLY valid JSON. No markdown, no backticks, no explanation.`
     const analysis = JSON.parse(text.replace(/```json|```/g, '').trim());
     return jsonResponse(analysis, 200, env);
   } catch {
-    return jsonResponse({ raw: text, error: 'Could not parse Claude response as JSON' }, 200, env);
+    return jsonResponse({ error: 'Could not parse Claude response as JSON' }, 502, env);
   }
 }
 
@@ -134,7 +138,17 @@ async function checkRateLimit(ip, env) {
   }
 
   await env.RATE_LIMIT.put(key, String(count + 1), { expirationTtl: 86400 });
-  return { allowed: true, remaining: 19 - count };
+  return { allowed: true };
+}
+
+function timingSafeEqual(a, b) {
+  const enc = new TextEncoder();
+  const aBuf = enc.encode(a);
+  const bBuf = enc.encode(b);
+  if (aBuf.length !== bBuf.length) return false;
+  let diff = 0;
+  for (let i = 0; i < aBuf.length; i++) diff |= aBuf[i] ^ bBuf[i];
+  return diff === 0;
 }
 
 function corsHeaders(env) {
