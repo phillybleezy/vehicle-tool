@@ -1647,6 +1647,102 @@ function renderCompareMulti(vehicles) {
   document.getElementById('results').innerHTML = html;
 }
 // Init — start with 2 compare slots
+
+// ── Config ──
+const API_BASE = 'https://vehicle-tool-api.YOURNAME.workers.dev';
+
+// ── PIN System ──
+const PIN_KEY = 'vehicle_tool_pin';
+let accessPin = '';
+
+function initPin() {
+  const stored = localStorage.getItem(PIN_KEY);
+  if (stored) {
+    accessPin = stored;
+    document.getElementById('pin-overlay').classList.add('hidden');
+  }
+}
+
+function submitPin() {
+  const val = document.getElementById('pin-input').value.trim();
+  if (!val) {
+    document.getElementById('pin-error').textContent = 'Please enter a PIN.';
+    return;
+  }
+  accessPin = val;
+  localStorage.setItem(PIN_KEY, val);
+  document.getElementById('pin-overlay').classList.add('hidden');
+  document.getElementById('pin-error').textContent = '';
+}
+
+// ── VIN Check State ──
+let currentVinData = null;
+
+// ── VIN Decode ──
+async function decodeVIN() {
+  const vin = document.getElementById('vin-input').value.trim();
+  if (vin.length !== 17) {
+    alert('Please enter a valid 17-character VIN.');
+    return;
+  }
+
+  const resultsEl = document.getElementById('vin-results');
+  resultsEl.innerHTML = '<div class="vin-section"><div class="vin-section-title">Decoding VIN\u2026</div></div>';
+  currentVinData = null;
+
+  try {
+    const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${vin}?format=json`);
+    if (!res.ok) throw new Error(`NHTSA returned ${res.status}`);
+    const data = await res.json();
+    const v = data.Results[0];
+
+    currentVinData = {
+      vin,
+      year: v.ModelYear,
+      make: v.Make,
+      model: v.Model,
+      trim: v.Trim,
+      engine: [v.DisplacementL ? v.DisplacementL + 'L' : '', v.EngineCylinders ? v.EngineCylinders + '-cyl' : ''].filter(Boolean).join(' '),
+      transmission: v.TransmissionStyle,
+      drive: v.DriveType,
+      body: v.BodyClass,
+      plant: [v.PlantCity, v.PlantState, v.PlantCountry].filter(Boolean).join(', ')
+    };
+
+    renderVehicleIdentity(currentVinData);
+    fetchRecalls(currentVinData);
+    fetchComplaints(currentVinData);
+    renderNICBSection(vin);
+    renderDbMatch(currentVinData);
+    renderPriceAssessment(currentVinData);
+    renderBuyersChecklist(currentVinData);
+    renderCarfaxUpload(vin);
+
+  } catch (err) {
+    resultsEl.innerHTML = `<div class="vin-section"><div class="vin-section-title" style="color:var(--red)">Error</div><div style="color:var(--text-dim);font-size:0.85rem">${err.message}</div></div>`;
+  }
+}
+
+function renderVehicleIdentity(v) {
+  document.getElementById('vin-results').innerHTML = `
+    <div class="vin-section" id="vin-identity-card">
+      <div class="vin-section-title">Vehicle Identity</div>
+      <div class="vin-identity-grid">
+        <div class="vin-identity-item"><div class="vin-identity-label">VIN</div><div class="vin-identity-value" style="font-family:'Space Mono',monospace;font-size:0.78rem">${v.vin}</div></div>
+        <div class="vin-identity-item"><div class="vin-identity-label">Year</div><div class="vin-identity-value">${v.year || '\u2014'}</div></div>
+        <div class="vin-identity-item"><div class="vin-identity-label">Make</div><div class="vin-identity-value">${v.make || '\u2014'}</div></div>
+        <div class="vin-identity-item"><div class="vin-identity-label">Model</div><div class="vin-identity-value">${v.model || '\u2014'}</div></div>
+        <div class="vin-identity-item"><div class="vin-identity-label">Trim</div><div class="vin-identity-value">${v.trim || '\u2014'}</div></div>
+        <div class="vin-identity-item"><div class="vin-identity-label">Engine</div><div class="vin-identity-value">${v.engine || '\u2014'}</div></div>
+        <div class="vin-identity-item"><div class="vin-identity-label">Transmission</div><div class="vin-identity-value">${v.transmission || '\u2014'}</div></div>
+        <div class="vin-identity-item"><div class="vin-identity-label">Drive</div><div class="vin-identity-value">${v.drive || '\u2014'}</div></div>
+        <div class="vin-identity-item"><div class="vin-identity-label">Body</div><div class="vin-identity-value">${v.body || '\u2014'}</div></div>
+        <div class="vin-identity-item"><div class="vin-identity-label">Assembly Plant</div><div class="vin-identity-value">${v.plant || '\u2014'}</div></div>
+      </div>
+    </div>`;
+}
+
+initPin();
 setMode('compare');
 </script>
 
