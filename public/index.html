@@ -365,6 +365,7 @@
   <div class="mode-tabs">
     <button class="mode-tab" onclick="setMode(&#39;compare&#39;)">Compare Two Vehicles</button>
     <button class="mode-tab" onclick="setMode(&#39;single&#39;)">Single Vehicle Lookup</button>
+    <button class="mode-tab" onclick="setMode(&#39;vin&#39;)">VIN Check</button>
   </div>
   
   <div id="compare-selectors" class="selectors" style="flex-direction:column;align-items:center;">
@@ -378,6 +379,28 @@
       <div class="icon">🚗</div>
       <div>Select two vehicles above to compare, or switch to Single Vehicle Lookup</div>
     </div>
+  </div>
+
+  <div id="vin-panel">
+    <div class="vin-input-row">
+      <input id="vin-input" type="text" maxlength="17" placeholder="Enter 17-character VIN"
+        autocomplete="off" spellcheck="false"
+        oninput="this.value=this.value.toUpperCase().replace(/[^A-HJ-NPR-Z0-9]/g,'')"
+        onkeydown="if(event.key==='Enter')decodeVIN()" />
+      <button class="vin-check-btn" onclick="decodeVIN()">Check VIN</button>
+    </div>
+    <div id="vin-results"></div>
+  </div>
+</div>
+
+<div id="pin-overlay">
+  <div class="pin-card">
+    <h2>Vehicle Tool</h2>
+    <p>Enter your access PIN to continue</p>
+    <input id="pin-input" type="password" placeholder="••••••••"
+      onkeydown="if(event.key==='Enter')submitPin()" />
+    <button id="pin-submit" onclick="submitPin()">Enter</button>
+    <div id="pin-error"></div>
   </div>
 </div>
 
@@ -1250,18 +1273,30 @@ function setMode(mode) {
   currentMode = mode;
   document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
   event.target.classList.add('active');
-  
+
+  const compareSelectors = document.getElementById('compare-selectors');
+  const resultsDiv = document.getElementById('results');
+  const vinPanel = document.getElementById('vin-panel');
+
+  if (mode === 'vin') {
+    compareSelectors.style.display = 'none';
+    resultsDiv.style.display = 'none';
+    vinPanel.style.display = 'block';
+    return;
+  }
+
+  compareSelectors.style.display = '';
+  resultsDiv.style.display = '';
+  vinPanel.style.display = 'none';
+
   const slotsContainer = document.getElementById('vehicle-slots');
   const addBtn = document.getElementById('add-vehicle-btn');
-  
-  // Clear all slots
   slotsContainer.innerHTML = '';
   vehicleSlots = [];
   slotCounter = 0;
-  
+
   if (mode === 'single') {
     addBtn.style.display = 'none';
-    // Add single slot without year
     const id = 'v' + (slotCounter++);
     vehicleSlots.push(id);
     const div = document.createElement('div');
@@ -1289,8 +1324,10 @@ function setMode(mode) {
     addVehicleSlot();
     addVehicleSlot();
   }
-  
-  document.getElementById('results').innerHTML = '<div class="empty-state"><div class="icon">🚗</div><div>' + (mode === 'single' ? 'Select a make and trim to see all years compared' : 'Select vehicles above to compare') + '</div></div>';
+
+  document.getElementById('results').innerHTML = '<div class="empty-state"><div class="icon">🚗</div><div>' +
+    (mode === 'single' ? 'Select a make and trim to see all years compared' : 'Select vehicles above to compare') +
+    '</div></div>';
 }
 
 function updateTrims(id) {
