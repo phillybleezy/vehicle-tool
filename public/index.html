@@ -1816,6 +1816,15 @@ let currentVinData = null;
 let carfaxAnalysisResult = null;
 let listingAnalysisResult = null;
 
+function esc(s) {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // ── Saved Cars State ──
 let savedCars = [];
 let carPollingInterval = null;
@@ -1872,7 +1881,7 @@ function renderCarList() {
   if (sort === 'price-asc') cars.sort((a, b) => (a.askingPrice ?? Infinity) - (b.askingPrice ?? Infinity));
   else if (sort === 'price-desc') cars.sort((a, b) => (b.askingPrice ?? 0) - (a.askingPrice ?? 0));
   else if (sort === 'mileage-asc') cars.sort((a, b) => (a.mileage ?? Infinity) - (b.mileage ?? Infinity));
-  else if (sort === 'year-desc') cars.sort((a, b) => (b.year || '0').localeCompare(a.year || '0'));
+  else if (sort === 'year-desc') cars.sort((a, b) => (Number(b.year) || 0) - (Number(a.year) || 0));
   else cars.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
 
   if (cars.length === 0) {
@@ -1883,15 +1892,17 @@ function renderCarList() {
   }
 
   el.innerHTML = cars.map(car => {
-    const title = [car.year, car.make, car.model, car.trim].filter(Boolean).join(' ') || 'Unnamed Car';
+    const title = [car.year, car.make, car.model, car.trim].filter(Boolean).map(esc).join(' ') || 'Unnamed Car';
     const price = car.askingPrice ? '$' + car.askingPrice.toLocaleString() : null;
     const mileage = car.mileage ? car.mileage.toLocaleString() + ' mi' : null;
-    const vinLabel = car.vin ? 'VIN: ' + car.vin : null;
+    const vinLabel = car.vin ? 'VIN: ' + esc(car.vin) : null;
     const meta = [price, mileage, vinLabel].filter(Boolean).join(' · ');
 
     const risk = car.carfaxAnalysis?.risk_rating;
-    const riskBadge = risk
-      ? `<span style="display:inline-block; padding:1px 8px; border-radius:10px; font-size:0.72rem; font-weight:700; margin-left:8px; background:var(--${risk.toLowerCase()}-bg); color:var(--${risk.toLowerCase()}); border:1px solid var(--${risk.toLowerCase()});">${risk}</span>`
+    const RISK_MAP = { GREEN: 'green', YELLOW: 'yellow', RED: 'red' };
+    const riskKey = RISK_MAP[risk?.toUpperCase()];
+    const riskBadge = riskKey
+      ? `<span style="display:inline-block; padding:1px 8px; border-radius:10px; font-size:0.72rem; font-weight:700; margin-left:8px; background:var(--${riskKey}-bg); color:var(--${riskKey}); border:1px solid var(--${riskKey});">${esc(risk)}</span>`
       : '';
 
     const nicbState = car.nicbChecked;
@@ -1906,8 +1917,8 @@ function renderCarList() {
         <div style="flex:1; min-width:0;" onclick="openCarDetail('${car.id}')">
           <div class="saved-car-title">${title}${riskBadge}</div>
           ${meta ? `<div class="saved-car-meta">${meta}</div>` : ''}
-          ${car.notes ? `<div class="saved-car-meta" style="font-style:italic;">"${car.notes.slice(0,100)}${car.notes.length>100?'…':''}"</div>` : ''}
-          ${car.listingUrls?.length ? `<div class="saved-car-meta" style="margin-top:6px;">${car.listingUrls.slice(0,2).map(u=>`<a href="${u}" target="_blank" onclick="event.stopPropagation()" style="color:var(--accent); text-decoration:none; margin-right:10px; font-size:0.8rem;">Listing ↗</a>`).join('')}</div>` : ''}
+          ${car.notes ? `<div class="saved-car-meta" style="font-style:italic;">"${esc(car.notes.slice(0,100))}${car.notes.length>100?'…':''}"</div>` : ''}
+          ${car.listingUrls?.length ? `<div class="saved-car-meta" style="margin-top:6px;">${car.listingUrls.slice(0,2).filter(u => typeof u === 'string' && (u.startsWith('https://') || u.startsWith('http://'))).map(u=>`<a href="${esc(u)}" target="_blank" onclick="event.stopPropagation()" style="color:var(--accent); text-decoration:none; margin-right:10px; font-size:0.8rem;">Listing ↗</a>`).join('')}</div>` : ''}
         </div>
         <div style="display:flex; flex-direction:column; gap:6px; flex-shrink:0; align-items:flex-end;">
           <div style="display:flex; gap:6px;">
@@ -1927,8 +1938,8 @@ function renderCarList() {
 async function cycleCheck(id, field) {
   const car = savedCars.find(c => c.id === id);
   if (!car) return;
-  const cycle = { null: 'pass', pass: 'fail', fail: null };
-  const next = cycle[car[field] ?? 'null'] ?? null;
+  const NEXT_CHECK = { pass: 'fail', fail: null };
+  const next = (car[field] in NEXT_CHECK) ? NEXT_CHECK[car[field]] : 'pass';
   try {
     const res = await fetch(`${API_BASE}/api/cars/${id}`, {
       method: 'PUT',
