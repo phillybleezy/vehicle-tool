@@ -38,16 +38,22 @@ export default {
 };
 
 function authPinOnly(request, env) {
+  if (!env.ACCESS_PIN) {
+    return { error: jsonResponse({ error: 'Service misconfigured' }, 503, env) };
+  }
   const pin = request.headers.get('X-Access-Pin');
-  if (!pin || !timingSafeEqual(pin, env.ACCESS_PIN || '')) {
+  if (!pin || !timingSafeEqual(pin, env.ACCESS_PIN)) {
     return { error: jsonResponse({ error: 'Unauthorized' }, 401, env) };
   }
   return { ok: true };
 }
 
 async function authAndRateLimit(request, env) {
+  if (!env.ACCESS_PIN) {
+    return { error: jsonResponse({ error: 'Service misconfigured' }, 503, env) };
+  }
   const pin = request.headers.get('X-Access-Pin');
-  if (!pin || !timingSafeEqual(pin, env.ACCESS_PIN || '')) {
+  if (!pin || !timingSafeEqual(pin, env.ACCESS_PIN)) {
     return { error: jsonResponse({ error: 'Unauthorized' }, 401, env) };
   }
   const ip = request.headers.get('CF-Connecting-IP');
@@ -360,13 +366,28 @@ Return ONLY valid JSON. No markdown, no backticks, no explanation.`
   return jsonResponse(result.analysis, 200, env);
 }
 
+async function getCarsFromKV(env) {
+  const data = await env.SAVED_CARS.get('cars');
+  if (!data) return [];
+  try {
+    return JSON.parse(data);
+  } catch {
+    throw new Error('Stored car data is corrupt');
+  }
+}
+
 async function handleGetCars(request, env) {
   const auth = authPinOnly(request, env);
   if (auth.error) return auth.error;
-  const data = await env.SAVED_CARS.get('cars');
-  return jsonResponse(data ? JSON.parse(data) : [], 200, env);
+  let cars;
+  try { cars = await getCarsFromKV(env); } catch {
+    return jsonResponse({ error: 'Could not read car data' }, 500, env);
+  }
+  return jsonResponse(cars, 200, env);
 }
 
+// Note: KV has no atomic read-modify-write. Concurrent mutations can cause
+// lost writes. Acceptable for this personal/family use case.
 async function handleCreateCar(request, env) {
   const auth = authPinOnly(request, env);
   if (auth.error) return auth.error;
@@ -374,8 +395,10 @@ async function handleCreateCar(request, env) {
   try { body = await request.json(); } catch {
     return jsonResponse({ error: 'Invalid JSON body' }, 400, env);
   }
-  const data = await env.SAVED_CARS.get('cars');
-  const cars = data ? JSON.parse(data) : [];
+  let cars;
+  try { cars = await getCarsFromKV(env); } catch {
+    return jsonResponse({ error: 'Could not read car data' }, 500, env);
+  }
   const car = {
     id: crypto.randomUUID(),
     createdAt: new Date().toISOString(),
@@ -387,7 +410,9 @@ async function handleCreateCar(request, env) {
     vin: body.vin || null,
     askingPrice: body.askingPrice || null,
     mileage: body.mileage || null,
-    listingUrls: Array.isArray(body.listingUrls) ? body.listingUrls.filter(u => u.trim()) : [],
+    listingUrls: Array.isArray(body.listingUrls)
+      ? body.listingUrls.filter(u => typeof u === 'string' && u.trim())
+      : [],
     carfaxUrl: body.carfaxUrl || null,
     notes: body.notes || '',
     nicbChecked: null,
@@ -408,11 +433,19 @@ async function handleUpdateCar(request, env, id) {
   try { body = await request.json(); } catch {
     return jsonResponse({ error: 'Invalid JSON body' }, 400, env);
   }
-  const data = await env.SAVED_CARS.get('cars');
-  const cars = data ? JSON.parse(data) : [];
+  let cars;
+  try { cars = await getCarsFromKV(env); } catch {
+    return jsonResponse({ error: 'Could not read car data' }, 500, env);
+  }
   const idx = cars.findIndex(c => c.id === id);
   if (idx === -1) return jsonResponse({ error: 'Car not found' }, 404, env);
-  cars[idx] = { ...cars[idx], ...body, id, updatedAt: new Date().toISOString() };
+  const MUTABLE_FIELDS = ['year','make','model','trim','vin','askingPrice','mileage',
+    'listingUrls','carfaxUrl','notes','nicbChecked','mvdChecked',
+    'carfaxAnalysis','listingAnalysis','combinedAnalysis'];
+  const updates = Object.fromEntries(
+    Object.entries(body).filter(([k]) => MUTABLE_FIELDS.includes(k))
+  );
+  cars[idx] = { ...cars[idx], ...updates, id, updatedAt: new Date().toISOString() };
   await env.SAVED_CARS.put('cars', JSON.stringify(cars));
   return jsonResponse(cars[idx], 200, env);
 }
@@ -420,8 +453,10 @@ async function handleUpdateCar(request, env, id) {
 async function handleDeleteCar(request, env, id) {
   const auth = authPinOnly(request, env);
   if (auth.error) return auth.error;
-  const data = await env.SAVED_CARS.get('cars');
-  const cars = data ? JSON.parse(data) : [];
+  let cars;
+  try { cars = await getCarsFromKV(env); } catch {
+    return jsonResponse({ error: 'Could not read car data' }, 500, env);
+  }
   const filtered = cars.filter(c => c.id !== id);
   if (filtered.length === cars.length) return jsonResponse({ error: 'Car not found' }, 404, env);
   await env.SAVED_CARS.put('cars', JSON.stringify(filtered));
