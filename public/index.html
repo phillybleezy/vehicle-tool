@@ -1956,6 +1956,127 @@ async function cycleCheck(id, field) {
   }
 }
 
+// ── Car Modal (Add / Edit / Delete) ──
+function addListingUrlField(value) {
+  value = value || '';
+  const container = document.getElementById('cm-urls');
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex; gap:6px; margin-bottom:6px;';
+  div.innerHTML = `<input type="url" class="car-modal-input" value="${esc(value)}" placeholder="https://..." style="flex:1;"><button onclick="this.parentElement.remove()" style="padding:4px 8px; background:none; border:1px solid var(--border); border-radius:6px; color:var(--text-dim); cursor:pointer;">✕</button>`;
+  container.appendChild(div);
+}
+
+function openAddCarModal(id) {
+  carModalEditId = id || null;
+  document.getElementById('car-modal-title').textContent = id ? 'Edit Car' : 'Add Car';
+  document.getElementById('cm-urls').innerHTML = '';
+
+  if (id) {
+    const car = savedCars.find(c => c.id === id);
+    if (!car) return;
+    document.getElementById('cm-year').value = car.year || '';
+    document.getElementById('cm-make').value = car.make || '';
+    document.getElementById('cm-model').value = car.model || '';
+    document.getElementById('cm-trim').value = car.trim || '';
+    document.getElementById('cm-price').value = car.askingPrice || '';
+    document.getElementById('cm-mileage').value = car.mileage || '';
+    document.getElementById('cm-vin').value = car.vin || '';
+    document.getElementById('cm-carfax-url').value = car.carfaxUrl || '';
+    document.getElementById('cm-notes').value = car.notes || '';
+    (car.listingUrls || []).forEach(u => addListingUrlField(u));
+    if (!(car.listingUrls && car.listingUrls.length)) addListingUrlField();
+  } else {
+    ['cm-year','cm-make','cm-model','cm-trim','cm-price','cm-mileage','cm-vin','cm-carfax-url','cm-notes']
+      .forEach(fid => { document.getElementById(fid).value = ''; });
+    addListingUrlField();
+  }
+
+  document.getElementById('car-modal').style.display = 'block';
+}
+
+function closeCarModal() {
+  document.getElementById('car-modal').style.display = 'none';
+  carModalEditId = null;
+  window._importPayload = null;
+}
+
+async function saveCarModal() {
+  const urls = [...document.querySelectorAll('#cm-urls input')]
+    .map(i => i.value.trim())
+    .filter(u => u.startsWith('https://') || u.startsWith('http://'));
+
+  const payload = {
+    year: document.getElementById('cm-year').value.trim() || null,
+    make: document.getElementById('cm-make').value.trim() || null,
+    model: document.getElementById('cm-model').value.trim() || null,
+    trim: document.getElementById('cm-trim').value.trim() || null,
+    askingPrice: parseFloat(document.getElementById('cm-price').value) || null,
+    mileage: parseFloat(document.getElementById('cm-mileage').value) || null,
+    vin: document.getElementById('cm-vin').value.trim() || null,
+    carfaxUrl: document.getElementById('cm-carfax-url').value.trim() || null,
+    notes: document.getElementById('cm-notes').value.trim(),
+    listingUrls: urls
+  };
+
+  if (window._importPayload && !carModalEditId) {
+    payload.carfaxAnalysis = window._importPayload.carfaxAnalysis;
+    payload.listingAnalysis = window._importPayload.listingAnalysis;
+    payload.combinedAnalysis = window._importPayload.combinedAnalysis;
+    window._importPayload = null;
+  }
+
+  const saveBtn = document.querySelector('#car-modal button[onclick="saveCarModal()"]');
+  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; }
+
+  try {
+    let res;
+    if (carModalEditId) {
+      res = await fetch(`${API_BASE}/api/cars/${carModalEditId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Access-Pin': accessPin },
+        body: JSON.stringify(payload)
+      });
+    } else {
+      res = await fetch(`${API_BASE}/api/cars`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Access-Pin': accessPin },
+        body: JSON.stringify(payload)
+      });
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const car = await res.json();
+    if (carModalEditId) {
+      const idx = savedCars.findIndex(c => c.id === carModalEditId);
+      if (idx !== -1) savedCars[idx] = car;
+    } else {
+      savedCars.push(car);
+    }
+    closeCarModal();
+    renderCarList();
+  } catch (e) {
+    alert('Could not save car. Please try again.');
+  } finally {
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Car'; }
+  }
+}
+
+async function confirmDeleteCar(id) {
+  const car = savedCars.find(c => c.id === id);
+  const title = [car?.year, car?.make, car?.model].filter(Boolean).join(' ') || 'this car';
+  if (!confirm(`Delete ${title}? This cannot be undone.`)) return;
+  try {
+    const res = await fetch(`${API_BASE}/api/cars/${id}`, {
+      method: 'DELETE',
+      headers: { 'X-Access-Pin': accessPin }
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    savedCars = savedCars.filter(c => c.id !== id);
+    renderCarList();
+  } catch (e) {
+    alert('Could not delete car. Please try again.');
+  }
+}
+
 // ── VIN Decode ──
 async function decodeVIN() {
   const vin = document.getElementById('vin-input').value.trim();
