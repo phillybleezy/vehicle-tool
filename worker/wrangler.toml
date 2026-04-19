@@ -4,6 +4,7 @@ compatibility_date = "2024-01-01"
 
 [vars]
 ALLOWED_ORIGIN = "*"
+# ACCESS_PIN and ANTHROPIC_API_KEY are set as Cloudflare secrets (wrangler secret put)
 
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
