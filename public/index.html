@@ -1836,6 +1836,85 @@ function renderDbMatch(v) {
     </div>`);
 }
 
+// ── Price Assessment ──
+function parsePriceRange(str) {
+  const nums = str.replace(/[$,]/g,'').split(/[\u2013\u2014-]/).map(s=>parseInt(s.trim())).filter(n=>!isNaN(n));
+  return nums.length === 2 ? nums : null;
+}
+
+function formatMoney(n) { return '$' + Math.round(n).toLocaleString(); }
+
+function renderPriceAssessment(v) {
+  const match = matchVehicleToDb(v);
+  let trims = [];
+  let rangeHint = '';
+
+  if (match) {
+    const { dbKey, year } = match;
+    (DB[dbKey]?.years[year] || []).forEach(trim => {
+      const d = DB[dbKey]?.data[`${year}-${trim}`];
+      if (d?.used_price) trims.push({ trim, range: d.used_price });
+    });
+    if (trims.length) rangeHint = trims.map(t=>`${t.trim}: ${t.range}`).join(' &nbsp;|&nbsp; ');
+  }
+
+  window._priceRanges = trims;
+
+  document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
+    <div class="vin-section" id="vin-price-card">
+      <div class="vin-section-title">Price Assessment</div>
+      ${rangeHint ? `<div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:12px">Our data \u2014 ${rangeHint}</div>` : ''}
+      <div class="price-form">
+        <input class="price-input" id="price-asking" type="number" placeholder="Asking price ($)" min="0" />
+        <input class="price-input" id="price-mileage" type="number" placeholder="Mileage" min="0" />
+        <select class="price-input" id="price-condition" style="appearance:none;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238b8fa3' d='M6 8L1 3h10z'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 12px center;">
+          <option value="good">Condition: Good</option>
+          <option value="excellent">Condition: Excellent</option>
+          <option value="fair">Condition: Fair</option>
+          <option value="poor">Condition: Poor</option>
+        </select>
+        <button class="vin-check-btn" onclick="assessPrice()">Assess Price</button>
+      </div>
+      <div id="price-result-area"></div>
+    </div>`);
+}
+
+function assessPrice() {
+  const asking = parseInt(document.getElementById('price-asking').value);
+  const mileage = parseInt(document.getElementById('price-mileage').value);
+  const condition = document.getElementById('price-condition').value;
+  const area = document.getElementById('price-result-area');
+
+  if (!asking || isNaN(asking)) {
+    area.innerHTML = '<div style="color:var(--red);font-size:0.85rem">Please enter an asking price.</div>';
+    return;
+  }
+
+  const ranges = window._priceRanges || [];
+  if (!ranges.length) {
+    area.innerHTML = `<div class="price-result" style="background:var(--surface2);color:var(--text-dim);border:1px solid var(--border)">No price data in our database for this vehicle. Entered price: ${formatMoney(asking)}.</div>`;
+    return;
+  }
+
+  const condAdj = { excellent:1.05, good:1.0, fair:0.95, poor:0.88 }[condition] || 1.0;
+  const mileAdj = (mileage && mileage > 60000) ? Math.max(0.70, 1 - (mileage - 60000) * 0.000005) : 1.0;
+  const factor = condAdj * mileAdj;
+
+  let lows = [], highs = [];
+  ranges.forEach(t => { const p = parsePriceRange(t.range); if (p) { lows.push(p[0]); highs.push(p[1]); } });
+
+  const low = Math.min(...lows) * factor;
+  const high = Math.max(...highs) * factor;
+
+  let cls, label;
+  if (asking < low)       { cls='below'; label=`BELOW typical range (${formatMoney(low)}\u2013${formatMoney(high)}) \u2014 potentially a good deal, verify condition carefully`; }
+  else if (asking > high) { cls='above'; label=`ABOVE typical range (${formatMoney(low)}\u2013${formatMoney(high)}) \u2014 priced higher than market`; }
+  else                    { cls='within'; label=`WITHIN typical range (${formatMoney(low)}\u2013${formatMoney(high)}) \u2014 fair market price`; }
+
+  const note = `<div style="font-size:0.75rem;opacity:0.7;margin-top:6px">Adjusted for ${condition} condition${mileage ? ', ' + mileage.toLocaleString() + ' miles' : ''}</div>`;
+  area.innerHTML = `<div class="price-result ${cls}">${label}${note}</div>`;
+}
+
 initPin();
 setMode('compare');
 </script>
