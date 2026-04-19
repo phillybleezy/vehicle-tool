@@ -3,9 +3,13 @@ main = "index.js"
 compatibility_date = "2024-01-01"
 
 [vars]
-ALLOWED_ORIGIN = "*"
+ALLOWED_ORIGIN = "https://vehicle-tool.pages.dev"
 # ACCESS_PIN and ANTHROPIC_API_KEY are set as Cloudflare secrets (wrangler secret put)
 
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
 id = "91c5314c136c44949dbb512e918f0359"
+
+[[kv_namespaces]]
+binding = "SAVED_CARS"
+id = "59d289081cc24b41a6ad58fdde7b6695"
