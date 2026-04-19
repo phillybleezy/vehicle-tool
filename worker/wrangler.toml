@@ -5,7 +5,6 @@ compatibility_date = "2024-01-01"
 [vars]
 ALLOWED_ORIGIN = "*"
 
-# KV namespace added in Task 4 — run: wrangler kv:namespace create RATE_LIMIT
-# [[kv_namespaces]]
-# binding = "RATE_LIMIT"
-# id = "REPLACE_WITH_KV_NAMESPACE_ID"
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "91c5314c136c44949dbb512e918f0359"
