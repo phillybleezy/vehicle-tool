@@ -1915,6 +1915,84 @@ function assessPrice() {
   area.innerHTML = `<div class="price-result ${cls}">${label}${note}</div>`;
 }
 
+// ── Buyer's Checklist ──
+function renderBuyersChecklist(v) {
+  const match = matchVehicleToDb(v);
+  const year = parseInt(v.year);
+  const items = [];
+
+  if (match) {
+    const { dbKey } = match;
+    if (dbKey === 'rav4') {
+      if (year === 2018) {
+        items.push('Verify 6-speed auto shifts smoothly (older 4th-gen platform, less power than 2019+)');
+        items.push('No CarPlay/Android Auto on this year \u2014 confirm acceptable before buying');
+      }
+      if (year === 2019 || year === 2020) {
+        items.push('\u2746 Verify TSB for battery drain was performed (check service records)');
+        items.push('\u2746 Verify TSB for transmission jerkiness was performed');
+      }
+      if (year >= 2019 && year <= 2021) {
+        items.push('\u2746 Check for roof rail leak \u2014 inspect headliner above rear doors and rail seals');
+      }
+      if (year === 2021) {
+        items.push('2021 is the most reliable early 5th-gen year \u2014 TSBs resolved from factory');
+      }
+      if (year >= 2022) {
+        items.push('Roof rail redesign in 2022 \u2014 verify seals look intact (earlier issue was fixed)');
+      }
+    }
+    if (dbKey === 'crv') {
+      if (year === 2018 || year === 2019) {
+        items.push('\u2746 Check oil level before test drive \u2014 1.5T had oil dilution issues 2018-2019');
+        items.push('\u2746 Smell dipstick: should smell like oil, not gasoline (dilution indicator)');
+        items.push('LX trim has NO Honda Sensing in these years \u2014 confirm if safety features matter');
+      }
+      if (year >= 2020) {
+        items.push('Honda Sensing is standard on all trims from 2020 \u2014 verify cameras/sensors work');
+      }
+      if (year === 2023) {
+        items.push('First-year 6th generation \u2014 ask dealer/seller about any early production issues');
+      }
+    }
+  }
+
+  items.push(
+    'Request full service records (oil changes, major services)',
+    'Run Carfax or AutoCheck (use the Carfax Analysis section below)',
+    'Check all four tires: even wear, matching brand, similar age',
+    'Inspect all body panels for paint mismatch (indicates prior repair)',
+    'Test all power windows, door locks, and mirrors',
+    'Test HVAC: AC blows cold, heat works, defrost works',
+    'Inspect under hood: fluid levels, hose condition, no corrosion',
+    'Check under the car for rust, fluid leaks, or impact damage',
+    'Test infotainment: CarPlay/Android Auto, backup camera, all speakers',
+    'Request pre-purchase inspection by independent mechanic ($100\u2013150)',
+    'Verify VIN matches title, registration, and door jamb sticker',
+    'Confirm title is clean (no salvage, rebuilt, flood, or lemon brand)',
+    'Ask about remaining factory warranty or any extended warranty',
+    'Test drive at 70+ mph: listen for vibration, wind noise, pulling'
+  );
+
+  const docs = [
+    "Clean title (in seller's name)",
+    'Service records / maintenance receipts',
+    'Carfax or AutoCheck report',
+    'Any warranty documentation',
+    'Registration history'
+  ];
+
+  const makeStr = match ? ` \u2014 ${v.year} ${v.make} ${v.model}` : '';
+  document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
+    <div class="vin-section" id="vin-checklist-card">
+      <div class="vin-section-title">Buyer's Checklist${makeStr}</div>
+      <div style="font-size:0.78rem;color:var(--text-dim);margin-bottom:14px">\u2746 = known issue specific to this vehicle</div>
+      ${items.map(item => `<div class="checklist-item"><input type="checkbox" class="checklist-cb"><span>${item}</span></div>`).join('')}
+      <div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin:16px 0 10px">Documents to Request</div>
+      ${docs.map(doc => `<div class="checklist-item"><input type="checkbox" class="checklist-cb"><span>${doc}</span></div>`).join('')}
+    </div>`);
+}
+
 initPin();
 setMode('compare');
 </script>
