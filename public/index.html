@@ -485,21 +485,21 @@
   <div class="car-modal-box">
     <h3 id="car-modal-title" style="font-family:'DM Sans',sans-serif; color:var(--text); margin:0 0 20px; font-size:1.15rem; font-weight:700;"></h3>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 16px;">
-      <div class="car-modal-field"><label class="car-modal-label">Year</label><input id="cm-year" class="car-modal-input" type="text" placeholder="2021"></div>
-      <div class="car-modal-field"><label class="car-modal-label">Make</label><input id="cm-make" class="car-modal-input" type="text" placeholder="Toyota"></div>
-      <div class="car-modal-field"><label class="car-modal-label">Model</label><input id="cm-model" class="car-modal-input" type="text" placeholder="RAV4"></div>
-      <div class="car-modal-field"><label class="car-modal-label">Trim</label><input id="cm-trim" class="car-modal-input" type="text" placeholder="XLE"></div>
-      <div class="car-modal-field"><label class="car-modal-label">Asking Price ($)</label><input id="cm-price" class="car-modal-input" type="number" placeholder="28500"></div>
-      <div class="car-modal-field"><label class="car-modal-label">Mileage</label><input id="cm-mileage" class="car-modal-input" type="number" placeholder="45000"></div>
+      <div class="car-modal-field"><label class="car-modal-label" for="cm-year">Year</label><input id="cm-year" class="car-modal-input" type="text" placeholder="2021"></div>
+      <div class="car-modal-field"><label class="car-modal-label" for="cm-make">Make</label><input id="cm-make" class="car-modal-input" type="text" placeholder="Toyota"></div>
+      <div class="car-modal-field"><label class="car-modal-label" for="cm-model">Model</label><input id="cm-model" class="car-modal-input" type="text" placeholder="RAV4"></div>
+      <div class="car-modal-field"><label class="car-modal-label" for="cm-trim">Trim</label><input id="cm-trim" class="car-modal-input" type="text" placeholder="XLE"></div>
+      <div class="car-modal-field"><label class="car-modal-label" for="cm-price">Asking Price ($)</label><input id="cm-price" class="car-modal-input" type="number" placeholder="28500"></div>
+      <div class="car-modal-field"><label class="car-modal-label" for="cm-mileage">Mileage</label><input id="cm-mileage" class="car-modal-input" type="number" placeholder="45000"></div>
     </div>
-    <div class="car-modal-field"><label class="car-modal-label">VIN</label><input id="cm-vin" class="car-modal-input" type="text" placeholder="17-character VIN" maxlength="17"></div>
-    <div class="car-modal-field"><label class="car-modal-label">Carfax URL (optional)</label><input id="cm-carfax-url" class="car-modal-input" type="url" placeholder="https://"></div>
+    <div class="car-modal-field"><label class="car-modal-label" for="cm-vin">VIN</label><input id="cm-vin" class="car-modal-input" type="text" placeholder="17-character VIN" maxlength="17"></div>
+    <div class="car-modal-field"><label class="car-modal-label" for="cm-carfax-url">Carfax URL (optional)</label><input id="cm-carfax-url" class="car-modal-input" type="url" placeholder="https://"></div>
     <div class="car-modal-field">
       <label class="car-modal-label">Listing URL(s)</label>
       <div id="cm-urls"></div>
       <button onclick="addListingUrlField()" style="margin-top:6px; background:none; border:1px dashed var(--border); border-radius:6px; color:var(--text-dim); padding:5px 12px; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:0.83rem;">+ Add URL</button>
     </div>
-    <div class="car-modal-field"><label class="car-modal-label">Notes</label><textarea id="cm-notes" class="car-modal-input" rows="3" placeholder="Any notes about this car…" style="resize:vertical;"></textarea></div>
+    <div class="car-modal-field"><label class="car-modal-label" for="cm-notes">Notes</label><textarea id="cm-notes" class="car-modal-input" rows="3" placeholder="Any notes about this car…" style="resize:vertical;"></textarea></div>
     <div style="display:flex; gap:10px; margin-top:20px; justify-content:flex-end;">
       <button onclick="closeCarModal()" style="padding:8px 18px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; cursor:pointer;">Cancel</button>
       <button onclick="saveCarModal()" style="padding:8px 18px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-weight:600; cursor:pointer;">Save Car</button>
@@ -1820,6 +1820,10 @@ let listingAnalysisResult = null;
 let savedCars = [];
 let carPollingInterval = null;
 let carModalEditId = null;
+
+function stopCarPolling() {}
+function startCarPolling() {}
+async function fetchCars() {}
 
 // ── VIN Decode ──
 async function decodeVIN() {
