@@ -1821,9 +1821,129 @@ let savedCars = [];
 let carPollingInterval = null;
 let carModalEditId = null;
 
-function stopCarPolling() {}
-function startCarPolling() {}
-async function fetchCars() {}
+async function fetchCars() {
+  if (!accessPin) return;
+  const indicator = document.getElementById('saved-sync-indicator');
+  try {
+    const res = await fetch(`${API_BASE}/api/cars`, {
+      headers: { 'X-Access-Pin': accessPin }
+    });
+    if (res.status === 401) {
+      if (indicator) indicator.textContent = 'Auth error — check PIN';
+      return;
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    savedCars = await res.json();
+    renderCarList();
+    if (indicator) indicator.textContent = 'Synced ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  } catch (e) {
+    if (indicator) indicator.textContent = 'Sync failed';
+  }
+}
+
+function startCarPolling() {
+  if (carPollingInterval) clearInterval(carPollingInterval);
+  carPollingInterval = setInterval(fetchCars, 20000);
+}
+
+function stopCarPolling() {
+  if (carPollingInterval) {
+    clearInterval(carPollingInterval);
+    carPollingInterval = null;
+  }
+}
+
+function renderCarList() {
+  const el = document.getElementById('saved-car-list');
+  if (!el) return;
+
+  const search = (document.getElementById('saved-search')?.value || '').toLowerCase();
+  const sort = document.getElementById('saved-sort')?.value || 'newest';
+
+  let cars = [...savedCars];
+
+  if (search) {
+    cars = cars.filter(c =>
+      [c.year, c.make, c.model, c.trim, c.vin, c.notes, ...(c.listingUrls || [])]
+        .filter(Boolean).join(' ').toLowerCase().includes(search)
+    );
+  }
+
+  if (sort === 'price-asc') cars.sort((a, b) => (a.askingPrice ?? Infinity) - (b.askingPrice ?? Infinity));
+  else if (sort === 'price-desc') cars.sort((a, b) => (b.askingPrice ?? 0) - (a.askingPrice ?? 0));
+  else if (sort === 'mileage-asc') cars.sort((a, b) => (a.mileage ?? Infinity) - (b.mileage ?? Infinity));
+  else if (sort === 'year-desc') cars.sort((a, b) => (b.year || '0').localeCompare(a.year || '0'));
+  else cars.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+
+  if (cars.length === 0) {
+    el.innerHTML = '<div style="text-align:center; color:var(--text-dim); padding:40px 0; font-size:0.95rem;">' +
+      (savedCars.length === 0 ? 'No saved cars yet. Add one above or import from VIN Check.' : 'No results match your search.') +
+      '</div>';
+    return;
+  }
+
+  el.innerHTML = cars.map(car => {
+    const title = [car.year, car.make, car.model, car.trim].filter(Boolean).join(' ') || 'Unnamed Car';
+    const price = car.askingPrice ? '$' + car.askingPrice.toLocaleString() : null;
+    const mileage = car.mileage ? car.mileage.toLocaleString() + ' mi' : null;
+    const vinLabel = car.vin ? 'VIN: ' + car.vin : null;
+    const meta = [price, mileage, vinLabel].filter(Boolean).join(' · ');
+
+    const risk = car.carfaxAnalysis?.risk_rating;
+    const riskBadge = risk
+      ? `<span style="display:inline-block; padding:1px 8px; border-radius:10px; font-size:0.72rem; font-weight:700; margin-left:8px; background:var(--${risk.toLowerCase()}-bg); color:var(--${risk.toLowerCase()}); border:1px solid var(--${risk.toLowerCase()});">${risk}</span>`
+      : '';
+
+    const nicbState = car.nicbChecked;
+    const mvdState = car.mvdChecked;
+    const nicbLabel = nicbState === 'pass' ? '✓ NICB' : nicbState === 'fail' ? '✗ NICB' : 'NICB?';
+    const mvdLabel = mvdState === 'pass' ? '✓ AZ MVD' : mvdState === 'fail' ? '✗ AZ MVD' : 'AZ MVD?';
+    const nicbClass = nicbState === 'pass' ? 'pass' : nicbState === 'fail' ? 'fail' : '';
+    const mvdClass = mvdState === 'pass' ? 'pass' : mvdState === 'fail' ? 'fail' : '';
+
+    return `<div class="saved-car-card">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+        <div style="flex:1; min-width:0;" onclick="openCarDetail('${car.id}')">
+          <div class="saved-car-title">${title}${riskBadge}</div>
+          ${meta ? `<div class="saved-car-meta">${meta}</div>` : ''}
+          ${car.notes ? `<div class="saved-car-meta" style="font-style:italic;">"${car.notes.slice(0,100)}${car.notes.length>100?'…':''}"</div>` : ''}
+          ${car.listingUrls?.length ? `<div class="saved-car-meta" style="margin-top:6px;">${car.listingUrls.slice(0,2).map(u=>`<a href="${u}" target="_blank" onclick="event.stopPropagation()" style="color:var(--accent); text-decoration:none; margin-right:10px; font-size:0.8rem;">Listing ↗</a>`).join('')}</div>` : ''}
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px; flex-shrink:0; align-items:flex-end;">
+          <div style="display:flex; gap:6px;">
+            <button class="saved-check-btn ${nicbClass}" onclick="cycleCheck('${car.id}','nicbChecked')">${nicbLabel}</button>
+            <button class="saved-check-btn ${mvdClass}" onclick="cycleCheck('${car.id}','mvdChecked')">${mvdLabel}</button>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button onclick="openAddCarModal('${car.id}')" style="padding:3px 10px; background:none; border:1px solid var(--border); border-radius:6px; color:var(--text-dim); font-size:0.78rem; cursor:pointer; font-family:'DM Sans',sans-serif;">Edit</button>
+            <button onclick="confirmDeleteCar('${car.id}')" style="padding:3px 10px; background:none; border:1px solid rgba(239,68,68,0.3); border-radius:6px; color:var(--red); font-size:0.78rem; cursor:pointer; font-family:'DM Sans',sans-serif;">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function cycleCheck(id, field) {
+  const car = savedCars.find(c => c.id === id);
+  if (!car) return;
+  const cycle = { null: 'pass', pass: 'fail', fail: null };
+  const next = cycle[car[field] ?? 'null'] ?? null;
+  try {
+    const res = await fetch(`${API_BASE}/api/cars/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Access-Pin': accessPin },
+      body: JSON.stringify({ [field]: next })
+    });
+    if (!res.ok) throw new Error('update failed');
+    const updated = await res.json();
+    const idx = savedCars.findIndex(c => c.id === id);
+    if (idx !== -1) savedCars[idx] = updated;
+    renderCarList();
+  } catch (e) {
+    alert('Could not update check status. Please try again.');
+  }
+}
 
 // ── VIN Decode ──
 async function decodeVIN() {
