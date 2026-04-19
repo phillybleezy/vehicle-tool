@@ -297,6 +297,63 @@
     .legend { flex-wrap: wrap; gap: 8px; }
     body { padding: 12px; }
   }
+
+  /* ── PIN Overlay ── */
+  #pin-overlay { position:fixed; inset:0; background:rgba(15,17,23,0.97); display:flex; align-items:center; justify-content:center; z-index:9999; }
+  #pin-overlay.hidden { display:none; }
+  .pin-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:40px; text-align:center; max-width:360px; width:100%; }
+  .pin-card h2 { font-family:'Space Mono',monospace; font-size:1.1rem; margin-bottom:8px; color:var(--accent); }
+  .pin-card p { color:var(--text-dim); font-size:0.85rem; margin-bottom:24px; }
+  #pin-input { width:100%; padding:12px 16px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-family:'Space Mono',monospace; font-size:1.1rem; text-align:center; letter-spacing:4px; margin-bottom:16px; }
+  #pin-input:focus { outline:none; border-color:var(--accent); }
+  #pin-submit { width:100%; padding:12px; border-radius:8px; border:none; background:var(--accent); color:#fff; font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600; cursor:pointer; transition:opacity 0.2s; }
+  #pin-submit:hover { opacity:0.85; }
+  #pin-error { color:var(--red); font-size:0.85rem; margin-top:10px; min-height:20px; }
+
+  /* ── VIN Check Tab ── */
+  #vin-panel { display:none; }
+  .vin-input-row { display:flex; gap:12px; margin-bottom:24px; max-width:600px; margin-left:auto; margin-right:auto; }
+  #vin-input { flex:1; padding:12px 16px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-family:'Space Mono',monospace; font-size:0.95rem; letter-spacing:2px; text-transform:uppercase; }
+  #vin-input:focus { outline:none; border-color:var(--accent); }
+  .vin-check-btn { padding:12px 28px; border-radius:8px; border:none; background:var(--accent); color:#fff; font-family:'DM Sans',sans-serif; font-size:0.95rem; font-weight:600; cursor:pointer; white-space:nowrap; transition:opacity 0.2s; }
+  .vin-check-btn:hover { opacity:0.85; }
+  .vin-section { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:16px; animation:fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+  .vin-section-title { font-family:'Space Mono',monospace; font-size:0.75rem; text-transform:uppercase; letter-spacing:2px; color:var(--text-dim); margin-bottom:14px; }
+  .vin-identity-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; }
+  .vin-identity-item { background:var(--surface2); border-radius:8px; padding:10px 14px; }
+  .vin-identity-label { font-size:0.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
+  .vin-identity-value { font-size:0.9rem; color:var(--text); font-weight:500; }
+  .risk-badge { display:inline-block; padding:8px 24px; border-radius:8px; font-family:'Space Mono',monospace; font-size:1.1rem; font-weight:700; margin-bottom:16px; }
+  .risk-badge.GREEN { background:var(--green-bg); color:var(--green); border:1px solid var(--green); }
+  .risk-badge.YELLOW { background:var(--yellow-bg); color:var(--yellow); border:1px solid var(--yellow); }
+  .risk-badge.RED { background:var(--red-bg); color:var(--red); border:1px solid var(--red); }
+  .stat-pills { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+  .stat-pill { background:var(--surface2); border-radius:20px; padding:6px 14px; font-size:0.82rem; color:var(--text); }
+  .flags-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+  .flag-item { border-radius:8px; padding:10px 14px; font-size:0.85rem; }
+  .flag-item.red { background:var(--red-bg); color:var(--red); }
+  .flag-item.green { background:var(--green-bg); color:var(--green); }
+  .checklist-item { display:flex; align-items:flex-start; gap:10px; padding:8px 0; border-bottom:1px solid var(--border); font-size:0.88rem; }
+  .checklist-item:last-child { border-bottom:none; }
+  .checklist-cb { width:16px; height:16px; margin-top:2px; flex-shrink:0; accent-color:var(--accent); }
+  .price-form { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; }
+  .price-input { flex:1; min-width:140px; padding:10px 12px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.9rem; }
+  .price-input:focus { outline:none; border-color:var(--accent); }
+  .price-result { padding:16px; border-radius:8px; font-weight:600; font-size:0.95rem; text-align:center; margin-top:12px; }
+  .price-result.above { background:var(--red-bg); color:var(--red); border:1px solid var(--red); }
+  .price-result.within { background:var(--green-bg); color:var(--green); border:1px solid var(--green); }
+  .price-result.below { background:var(--yellow-bg); color:var(--yellow); border:1px solid var(--yellow); }
+  .nicb-btn { display:inline-block; padding:10px 20px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.9rem; cursor:pointer; text-decoration:none; transition:border-color 0.2s; }
+  .nicb-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .upload-area { border:2px dashed var(--border); border-radius:12px; padding:32px; text-align:center; cursor:pointer; transition:border-color 0.2s; }
+  .upload-area:hover { border-color:var(--accent); }
+  .upload-area.loading { opacity:0.6; cursor:wait; }
+  .upload-icon { font-size:2rem; margin-bottom:10px; }
+  .upload-text { color:var(--text-dim); font-size:0.9rem; }
+  .recall-item, .complaint-item { background:var(--surface2); border-radius:8px; padding:12px; margin-bottom:8px; font-size:0.85rem; }
+  .recall-item:last-child, .complaint-item:last-child { margin-bottom:0; }
+  @media (max-width:600px) { .flags-grid { grid-template-columns:1fr; } .vin-input-row { flex-direction:column; } }
 </style>
 </head>
 <body>
