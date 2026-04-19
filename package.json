@@ -1,0 +1,13 @@
+{
+  "name": "vehicle-tool",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  },
+  "scripts": {
+    "dev:worker": "cd worker && npx wrangler dev",
+    "deploy:worker": "cd worker && npx wrangler deploy",
+    "deploy:pages": "npx wrangler pages deploy public/ --project-name vehicle-tool"
+  }
+}
