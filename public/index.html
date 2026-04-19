@@ -1993,6 +1993,136 @@ function renderBuyersChecklist(v) {
     </div>`);
 }
 
+// ── Carfax Upload ──
+function renderCarfaxUpload(vin) {
+  document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
+    <div class="vin-section" id="vin-carfax-card">
+      <div class="vin-section-title">Carfax Analysis <span style="background:var(--accent);color:#fff;font-size:0.65rem;padding:2px 8px;border-radius:10px;vertical-align:middle;margin-left:6px">AI \u2014 Sonnet</span></div>
+      <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:16px">Upload a Carfax PDF for AI-powered analysis. Max 10MB. Your access PIN is required.</div>
+      <div class="upload-area" id="carfax-upload-area" onclick="document.getElementById('carfax-file-input').click()">
+        <div class="upload-icon">\ud83d\udcc4</div>
+        <div class="upload-text" id="carfax-upload-text">Click to upload Carfax PDF</div>
+        <input type="file" id="carfax-file-input" accept=".pdf,application/pdf" style="display:none" onchange="handleCarfaxUpload(event)" />
+      </div>
+      <div id="carfax-analysis-result"></div>
+    </div>`);
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleCarfaxUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (!file.name.toLowerCase().endsWith('.pdf') && file.type !== 'application/pdf') {
+    alert('Please upload a PDF file.');
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024) {
+    alert('File is too large. Maximum 10MB.');
+    return;
+  }
+
+  const uploadArea = document.getElementById('carfax-upload-area');
+  const uploadText = document.getElementById('carfax-upload-text');
+  const resultArea = document.getElementById('carfax-analysis-result');
+
+  uploadArea.classList.add('loading');
+  uploadText.textContent = `Analyzing ${file.name}\u2026`;
+  resultArea.innerHTML = '';
+
+  try {
+    const base64 = await fileToBase64(file);
+
+    const res = await fetch(`${API_BASE}/api/analyze-carfax`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Access-Pin': accessPin
+      },
+      body: JSON.stringify({ pdf: base64 })
+    });
+
+    if (res.status === 401) {
+      resultArea.innerHTML = vinError('Incorrect PIN. Open DevTools \u2192 Application \u2192 Local Storage, delete <code>vehicle_tool_pin</code>, and reload to re-enter.');
+      return;
+    }
+    if (res.status === 429) {
+      resultArea.innerHTML = vinError('Daily limit reached (20 analyses/day per IP). Try again tomorrow.');
+      return;
+    }
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      resultArea.innerHTML = vinError(err.error || `Server error (${res.status})`);
+      return;
+    }
+
+    const analysis = await res.json();
+    resultArea.innerHTML = renderCarfaxResults(analysis);
+
+  } catch (err) {
+    resultArea.innerHTML = vinError(`Failed: ${err.message}`);
+  } finally {
+    uploadArea.classList.remove('loading');
+    uploadText.textContent = 'Click to upload a different Carfax PDF';
+  }
+}
+
+function vinError(msg) {
+  return `<div style="background:var(--red-bg);border:1px solid var(--red);border-radius:8px;padding:14px;color:var(--red);font-size:0.85rem;margin-top:12px">${msg}</div>`;
+}
+
+function renderCarfaxResults(a) {
+  const risk = a.risk_rating || 'YELLOW';
+
+  let html = '<div style="margin-top:16px">';
+
+  html += `<div style="text-align:center;margin-bottom:20px">
+    <div class="risk-badge ${risk}">${risk}</div>
+    <div style="color:var(--text-dim);font-size:0.9rem;margin-top:8px">${a.risk_summary || ''}</div>
+  </div>`;
+
+  html += '<div class="stat-pills">';
+  html += `<div class="stat-pill">Title: ${a.title_status || '\u2014'}</div>`;
+  html += `<div class="stat-pill">${a.owner_count ?? '?'} Owner${a.owner_count !== 1 ? 's' : ''}</div>`;
+  html += `<div class="stat-pill">${a.accident_count ?? 0} Accident${a.accident_count !== 1 ? 's' : ''}</div>`;
+  html += `<div class="stat-pill">Usage: ${a.usage_type || '\u2014'}</div>`;
+  if (a.structural_damage) html += '<div class="stat-pill" style="background:var(--red-bg);color:var(--red)">\u26a0 Structural Damage</div>';
+  if (a.airbag_deployed)   html += '<div class="stat-pill" style="background:var(--red-bg);color:var(--red)">\u26a0 Airbag Deployed</div>';
+  if (a.flood_damage)      html += '<div class="stat-pill" style="background:var(--red-bg);color:var(--red)">\u26a0 Flood Damage</div>';
+  html += '</div>';
+
+  const reds = a.red_flags || [];
+  const greens = a.green_flags || [];
+  if (reds.length || greens.length) {
+    html += '<div class="flags-grid">';
+    reds.forEach(f => { html += `<div class="flag-item red">\u26a0 ${f}</div>`; });
+    greens.forEach(f => { html += `<div class="flag-item green">\u2713 ${f}</div>`; });
+    html += '</div>';
+  }
+
+  if (a.overall_assessment) {
+    html += `<div style="background:var(--surface2);border-radius:8px;padding:14px;margin-bottom:16px;font-size:0.88rem;line-height:1.6">${a.overall_assessment}</div>`;
+  }
+
+  if (a.seller_questions?.length) {
+    html += `<div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin-bottom:10px">Questions to Ask the Seller</div>`;
+    a.seller_questions.forEach(q => {
+      html += `<div class="checklist-item"><input type="checkbox" class="checklist-cb"><span>${q}</span></div>`;
+    });
+  }
+
+  html += '</div>';
+  return html;
+}
+
 initPin();
 setMode('compare');
 </script>
