@@ -2077,6 +2077,82 @@ async function confirmDeleteCar(id) {
   }
 }
 
+function openCarDetail(id) {
+  const car = savedCars.find(c => c.id === id);
+  if (!car) return;
+
+  const title = [car.year, car.make, car.model, car.trim].filter(Boolean).map(esc).join(' ') || 'Unnamed Car';
+  const price = car.askingPrice ? '$' + car.askingPrice.toLocaleString() : '—';
+  const mileage = car.mileage ? car.mileage.toLocaleString() + ' mi' : '—';
+
+  const listingLinks = (car.listingUrls || [])
+    .filter(u => typeof u === 'string' && (u.startsWith('https://') || u.startsWith('http://')))
+    .map(u => `<a href="${esc(u)}" target="_blank" rel="noopener" style="display:block; color:var(--accent); font-size:0.88rem; margin-bottom:4px; word-break:break-all;">${esc(u)}</a>`)
+    .join('') || '<span style="color:var(--text-dim); font-size:0.88rem;">None</span>';
+
+  const carfaxLink = car.carfaxUrl && (car.carfaxUrl.startsWith('https://') || car.carfaxUrl.startsWith('http://'))
+    ? `<a href="${esc(car.carfaxUrl)}" target="_blank" rel="noopener" style="color:var(--accent); font-size:0.88rem; word-break:break-all;">${esc(car.carfaxUrl)}</a>`
+    : '<span style="color:var(--text-dim); font-size:0.88rem;">None</span>';
+
+  function analysisSection(sectionTitle, data, borderColor) {
+    if (!data) return '';
+    const RISK_MAP = { GREEN: 'green', YELLOW: 'yellow', RED: 'red' };
+    const riskKey = data.risk_rating ? RISK_MAP[data.risk_rating.toUpperCase()] : null;
+    const trustKey = data.trust_rating ? RISK_MAP[data.trust_rating.toUpperCase()] : null;
+    const badgeKey = riskKey || trustKey;
+    const badgeLabel = esc(data.risk_rating || data.trust_rating || '');
+    const badge = badgeKey
+      ? `<span style="padding:2px 10px; border-radius:10px; font-size:0.8rem; font-weight:700; background:var(--${badgeKey}-bg); color:var(--${badgeKey}); border:1px solid var(--${badgeKey});">${badgeLabel}</span>`
+      : '';
+    const summary = esc(data.overall_assessment || data.combined_assessment || data.summary || '');
+    const flags = (data.red_flags || []).map(f => `<div style="font-size:0.83rem; color:var(--red); margin-bottom:3px;">• ${esc(f)}</div>`).join('');
+    const good = (data.green_flags || data.matches || []).map(f => `<div style="font-size:0.83rem; color:var(--green); margin-bottom:3px;">• ${esc(f)}</div>`).join('');
+    return `<details class="detail-section" style="border-left:3px solid ${borderColor}; cursor:pointer;">
+      <summary class="detail-section-title" style="list-style:none; display:flex; justify-content:space-between; align-items:center;">${esc(sectionTitle)} ${badge}</summary>
+      ${summary ? `<p style="font-size:0.88rem; color:var(--text); margin:10px 0 8px; line-height:1.5;">${summary}</p>` : ''}
+      ${flags ? `<div style="margin-bottom:8px;">${flags}</div>` : ''}
+      ${good ? `<div>${good}</div>` : ''}
+    </details>`;
+  }
+
+  document.getElementById('car-detail-content').innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; gap:12px; flex-wrap:wrap;">
+      <h3 style="font-family:'DM Sans',sans-serif; font-size:1.15rem; font-weight:700; color:var(--text); margin:0;">${title}</h3>
+      <div style="display:flex; gap:8px;">
+        <button onclick="closeCarDetail(); openAddCarModal('${esc(car.id)}')" style="padding:6px 14px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.85rem; cursor:pointer;">Edit</button>
+        <button onclick="closeCarDetail()" style="padding:6px 14px; background:none; border:1px solid var(--border); border-radius:8px; color:var(--text-dim); font-family:'DM Sans',sans-serif; font-size:0.85rem; cursor:pointer;">Close</button>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+      <div class="detail-section"><span class="detail-label">Price</span><span class="detail-value">${esc(price)}</span></div>
+      <div class="detail-section"><span class="detail-label">Mileage</span><span class="detail-value">${esc(mileage)}</span></div>
+      <div class="detail-section"><span class="detail-label">VIN</span><span class="detail-value" style="font-family:'Space Mono',monospace; font-size:0.85rem;">${car.vin ? esc(car.vin) : '—'}</span></div>
+      <div class="detail-section"><span class="detail-label">Notes</span><span class="detail-value">${car.notes ? esc(car.notes) : '—'}</span></div>
+    </div>
+
+    <div class="detail-section" style="margin-bottom:14px;">
+      <div class="detail-section-title">Listing URLs</div>
+      ${listingLinks}
+    </div>
+
+    <div class="detail-section" style="margin-bottom:14px;">
+      <div class="detail-section-title">Carfax</div>
+      ${carfaxLink}
+    </div>
+
+    ${analysisSection('Carfax Analysis', car.carfaxAnalysis, 'var(--accent)')}
+    ${analysisSection('Listing Analysis', car.listingAnalysis, 'var(--accent2)')}
+    ${analysisSection('Cross-Reference', car.combinedAnalysis, 'var(--green)')}
+  `;
+
+  document.getElementById('car-detail-modal').style.display = 'block';
+}
+
+function closeCarDetail() {
+  document.getElementById('car-detail-modal').style.display = 'none';
+}
+
 // ── VIN Decode ──
 async function decodeVIN() {
   const vin = document.getElementById('vin-input').value.trim();
