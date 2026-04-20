@@ -1914,20 +1914,20 @@ function renderCarList() {
 
     return `<div class="saved-car-card">
       <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
-        <div style="flex:1; min-width:0;" onclick="openCarDetail('${car.id}')">
+        <div style="flex:1; min-width:0;" onclick="openCarDetail('${esc(car.id)}')">
           <div class="saved-car-title">${title}${riskBadge}</div>
           ${meta ? `<div class="saved-car-meta">${meta}</div>` : ''}
           ${car.notes ? `<div class="saved-car-meta" style="font-style:italic;">"${esc(car.notes.slice(0,100))}${car.notes.length>100?'…':''}"</div>` : ''}
-          ${car.listingUrls?.length ? `<div class="saved-car-meta" style="margin-top:6px;">${car.listingUrls.slice(0,2).filter(u => typeof u === 'string' && (u.startsWith('https://') || u.startsWith('http://'))).map(u=>`<a href="${esc(u)}" target="_blank" onclick="event.stopPropagation()" style="color:var(--accent); text-decoration:none; margin-right:10px; font-size:0.8rem;">Listing ↗</a>`).join('')}</div>` : ''}
+          ${car.listingUrls?.length ? `<div class="saved-car-meta" style="margin-top:6px;">${car.listingUrls.slice(0,2).filter(u => typeof u === 'string' && (u.startsWith('https://') || u.startsWith('http://'))).map(u=>`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" style="color:var(--accent); text-decoration:none; margin-right:10px; font-size:0.8rem;">Listing ↗</a>`).join('')}</div>` : ''}
         </div>
         <div style="display:flex; flex-direction:column; gap:6px; flex-shrink:0; align-items:flex-end;">
           <div style="display:flex; gap:6px;">
-            <button class="saved-check-btn ${nicbClass}" onclick="cycleCheck('${car.id}','nicbChecked')">${nicbLabel}</button>
-            <button class="saved-check-btn ${mvdClass}" onclick="cycleCheck('${car.id}','mvdChecked')">${mvdLabel}</button>
+            <button class="saved-check-btn ${nicbClass}" onclick="cycleCheck('${esc(car.id)}','nicbChecked')">${nicbLabel}</button>
+            <button class="saved-check-btn ${mvdClass}" onclick="cycleCheck('${esc(car.id)}','mvdChecked')">${mvdLabel}</button>
           </div>
           <div style="display:flex; gap:6px;">
-            <button onclick="openAddCarModal('${car.id}')" style="padding:3px 10px; background:none; border:1px solid var(--border); border-radius:6px; color:var(--text-dim); font-size:0.78rem; cursor:pointer; font-family:'DM Sans',sans-serif;">Edit</button>
-            <button onclick="confirmDeleteCar('${car.id}')" style="padding:3px 10px; background:none; border:1px solid rgba(239,68,68,0.3); border-radius:6px; color:var(--red); font-size:0.78rem; cursor:pointer; font-family:'DM Sans',sans-serif;">Delete</button>
+            <button onclick="openAddCarModal('${esc(car.id)}')" style="padding:3px 10px; background:none; border:1px solid var(--border); border-radius:6px; color:var(--text-dim); font-size:0.78rem; cursor:pointer; font-family:'DM Sans',sans-serif;">Edit</button>
+            <button onclick="confirmDeleteCar('${esc(car.id)}')" style="padding:3px 10px; background:none; border:1px solid rgba(239,68,68,0.3); border-radius:6px; color:var(--red); font-size:0.78rem; cursor:pointer; font-family:'DM Sans',sans-serif;">Delete</button>
           </div>
         </div>
       </div>

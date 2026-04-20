@@ -422,7 +422,11 @@ async function handleCreateCar(request, env) {
     combinedAnalysis: body.combinedAnalysis || null
   };
   cars.push(car);
-  await env.SAVED_CARS.put('cars', JSON.stringify(cars));
+  try {
+    await env.SAVED_CARS.put('cars', JSON.stringify(cars));
+  } catch {
+    return jsonResponse({ error: 'Could not write car data' }, 500, env);
+  }
   return jsonResponse(car, 201, env);
 }
 
@@ -446,7 +450,11 @@ async function handleUpdateCar(request, env, id) {
     Object.entries(body).filter(([k]) => MUTABLE_FIELDS.includes(k))
   );
   cars[idx] = { ...cars[idx], ...updates, id, updatedAt: new Date().toISOString() };
-  await env.SAVED_CARS.put('cars', JSON.stringify(cars));
+  try {
+    await env.SAVED_CARS.put('cars', JSON.stringify(cars));
+  } catch {
+    return jsonResponse({ error: 'Could not write car data' }, 500, env);
+  }
   return jsonResponse(cars[idx], 200, env);
 }
 
@@ -459,7 +467,11 @@ async function handleDeleteCar(request, env, id) {
   }
   const filtered = cars.filter(c => c.id !== id);
   if (filtered.length === cars.length) return jsonResponse({ error: 'Car not found' }, 404, env);
-  await env.SAVED_CARS.put('cars', JSON.stringify(filtered));
+  try {
+    await env.SAVED_CARS.put('cars', JSON.stringify(filtered));
+  } catch {
+    return jsonResponse({ error: 'Could not write car data' }, 500, env);
+  }
   return jsonResponse({ deleted: true }, 200, env);
 }
 
