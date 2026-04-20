@@ -2153,6 +2153,33 @@ function closeCarDetail() {
   document.getElementById('car-detail-modal').style.display = 'none';
 }
 
+function importCurrentVehicle() {
+  if (!currentVinData) {
+    alert('Decode a VIN first before importing.');
+    return;
+  }
+  window._importPayload = {
+    carfaxAnalysis: carfaxAnalysisResult || null,
+    listingAnalysis: listingAnalysisResult || null,
+    combinedAnalysis: null
+  };
+  carModalEditId = null;
+  document.getElementById('car-modal-title').textContent = 'Import from VIN Check';
+  document.getElementById('cm-urls').innerHTML = '';
+  document.getElementById('cm-year').value = currentVinData.year || '';
+  document.getElementById('cm-make').value = currentVinData.make || '';
+  document.getElementById('cm-model').value = currentVinData.model || '';
+  document.getElementById('cm-trim').value = currentVinData.trim || '';
+  document.getElementById('cm-vin').value = currentVinData.vin || '';
+  document.getElementById('cm-price').value = '';
+  const lastOdo = carfaxAnalysisResult?.odometer_readings?.slice(-1)[0]?.miles;
+  document.getElementById('cm-mileage').value = lastOdo || '';
+  document.getElementById('cm-carfax-url').value = '';
+  document.getElementById('cm-notes').value = '';
+  if (typeof addListingUrlField === 'function') addListingUrlField();
+  document.getElementById('car-modal').style.display = 'block';
+}
+
 // ── VIN Decode ──
 async function decodeVIN() {
   const vin = document.getElementById('vin-input').value.trim();
@@ -2214,6 +2241,9 @@ function renderVehicleIdentity(v) {
         <div class="vin-identity-item"><div class="vin-identity-label">Drive</div><div class="vin-identity-value">${v.drive || '\u2014'}</div></div>
         <div class="vin-identity-item"><div class="vin-identity-label">Body</div><div class="vin-identity-value">${v.body || '\u2014'}</div></div>
         <div class="vin-identity-item"><div class="vin-identity-label">Assembly Plant</div><div class="vin-identity-value">${v.plant || '\u2014'}</div></div>
+      </div>
+      <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border);">
+        <button onclick="importCurrentVehicle()" style="padding:7px 16px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:600; cursor:pointer;">↓ Save to Saved Cars</button>
       </div>
     </div>`;
 }
