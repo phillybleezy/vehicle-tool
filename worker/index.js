@@ -415,11 +415,15 @@ async function handleCreateCar(request, env) {
       : [],
     carfaxUrl: body.carfaxUrl || null,
     notes: body.notes || '',
-    nicbChecked: null,
-    mvdChecked: null,
+    nicbChecked: ['pass','fail'].includes(body.nicbChecked) ? body.nicbChecked : null,
+    mvdChecked: ['pass','fail'].includes(body.mvdChecked) ? body.mvdChecked : null,
     carfaxAnalysis: body.carfaxAnalysis || null,
     listingAnalysis: body.listingAnalysis || null,
-    combinedAnalysis: body.combinedAnalysis || null
+    combinedAnalysis: body.combinedAnalysis || null,
+    vinData: body.vinData || null,
+    recallCount: typeof body.recallCount === 'number' ? body.recallCount : 0,
+    recallSummary: Array.isArray(body.recallSummary) ? body.recallSummary : [],
+    complaintCount: typeof body.complaintCount === 'number' ? body.complaintCount : 0
   };
   cars.push(car);
   try {
@@ -445,7 +449,8 @@ async function handleUpdateCar(request, env, id) {
   if (idx === -1) return jsonResponse({ error: 'Car not found' }, 404, env);
   const MUTABLE_FIELDS = ['year','make','model','trim','vin','askingPrice','mileage',
     'listingUrls','carfaxUrl','notes','nicbChecked','mvdChecked',
-    'carfaxAnalysis','listingAnalysis','combinedAnalysis'];
+    'carfaxAnalysis','listingAnalysis','combinedAnalysis',
+    'vinData','recallCount','recallSummary','complaintCount'];
   const updates = Object.fromEntries(
     Object.entries(body).filter(([k]) => MUTABLE_FIELDS.includes(k))
   );
