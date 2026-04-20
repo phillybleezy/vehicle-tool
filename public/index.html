@@ -2014,7 +2014,7 @@ async function saveCarModal() {
     mileage: parseFloat(document.getElementById('cm-mileage').value) || null,
     vin: document.getElementById('cm-vin').value.trim() || null,
     carfaxUrl: document.getElementById('cm-carfax-url').value.trim() || null,
-    notes: document.getElementById('cm-notes').value.trim(),
+    notes: document.getElementById('cm-notes').value.trim() || null,
     listingUrls: urls
   };
 
