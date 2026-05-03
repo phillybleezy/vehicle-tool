@@ -74,6 +74,30 @@ function authPinOnly(request, env) {
   return { ok: true };
 }
 
+function authPinOrScraperToken(request, env) {
+  const pinAuth = authPinOnly(request, env);
+  if (!pinAuth.error) return pinAuth;
+
+  const authHeader = request.headers.get('Authorization') || '';
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+  if (env.SCRAPER_TOKEN && token && timingSafeEqual(token, env.SCRAPER_TOKEN)) {
+    return { ok: true };
+  }
+
+  return pinAuth;
+}
+
+function timingSafeEqual(a, b) {
+  const left = String(a || '');
+  const right = String(b || '');
+  let mismatch = left.length ^ right.length;
+  const length = Math.max(left.length, right.length);
+  for (let i = 0; i < length; i++) {
+    mismatch |= (left.charCodeAt(i) || 0) ^ (right.charCodeAt(i) || 0);
+  }
+  return mismatch === 0;
+}
+
 async function authAndRateLimit(request, env) {
   const ip = request.headers.get('CF-Connecting-IP');
   if (!ip) {
@@ -491,7 +515,7 @@ async function handleUpdateCar(request, env, id) {
 }
 
 async function handleGetListings(request, env) {
-  const auth = authPinOnly(request, env);
+  const auth = authPinOrScraperToken(request, env);
   if (auth.error) return auth.error;
   try {
     const raw = await env.LISTINGS.get('listings');

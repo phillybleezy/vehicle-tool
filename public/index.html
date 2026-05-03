@@ -2194,8 +2194,13 @@ function updateSlotLabels() {
 
 function setMode(mode) {
   currentMode = mode;
+  let activeTab = null;
   document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
-  event.target.classList.add('active');
+  document.querySelectorAll('.mode-tab').forEach(t => {
+    if ((t.getAttribute('onclick') || '').includes(`setMode('${mode}')`)) activeTab = t;
+  });
+  if (!activeTab && typeof event !== 'undefined' && event.target) activeTab = event.target;
+  if (activeTab) activeTab.classList.add('active');
 
   const savedPanel = document.getElementById('saved-panel');
   savedPanel.style.display = 'none';
@@ -2650,6 +2655,10 @@ function renderCompareMulti(vehicles) {
 const API_BASE = 'https://vehicle-tool-api.wrathofkaren.workers.dev';
 
 const accessPin = '1987';
+
+var _searchListings = [];
+var _searchFilter = 'all';
+var _searchSort = { key: 'price', dir: 1 };
 
 // ── VIN Check State ──
 let currentVinData = null;
@@ -4913,13 +4922,7 @@ function adjustZoom(dir) {
 
 applyZoom();
 
-setMode('compare');
-
 // ── Car Search ──────────────────────────────────────────────────────────────
-
-let _searchListings = [];
-let _searchFilter = 'all';
-let _searchSort = { key: 'price', dir: 1 };
 
 async function loadSearchListings() {
   const tbody = document.getElementById('search-tbody');
@@ -5048,6 +5051,8 @@ function toggleSearchRow(row) {
   detail.style.display = open ? 'none' : 'table-row';
   row.style.background = open ? '' : 'rgba(99,102,241,0.06)';
 }
+
+setMode('compare');
 </script>
 
 

@@ -23,7 +23,7 @@ from scraper.config import (
     ZIP_CODE, RADIUS_MILES, PRUNE_AFTER_DAYS,
 )
 
-WORKER_URL = os.environ.get("WORKER_URL", "https://vehicle-tool-api.philcanderson.workers.dev")
+WORKER_URL = os.environ.get("WORKER_URL") or "https://vehicle-tool-api.wrathofkaren.workers.dev"
 SCRAPER_TOKEN = os.environ.get("SCRAPER_TOKEN", "")
 
 _ua = UserAgent()
