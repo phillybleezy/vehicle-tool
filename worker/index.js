@@ -19,13 +19,6 @@ export default {
       return handleCombinedAnalysis(request, env);
     }
 
-    if (url.pathname === '/api/listings' && request.method === 'GET') {
-      return handleGetListings(request, env);
-    }
-    if (url.pathname === '/api/listings' && request.method === 'POST') {
-      return handlePostListings(request, env);
-    }
-
     if (url.pathname === '/api/cars' && request.method === 'GET') {
       return handleGetCars(request, env);
     }
@@ -72,30 +65,6 @@ function authPinOnly(request, env) {
     return { error: jsonResponse({ error: 'Unauthorized' }, 401, env) };
   }
   return { ok: true };
-}
-
-function authPinOrScraperToken(request, env) {
-  const pinAuth = authPinOnly(request, env);
-  if (!pinAuth.error) return pinAuth;
-
-  const authHeader = request.headers.get('Authorization') || '';
-  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
-  if (env.SCRAPER_TOKEN && token && timingSafeEqual(token, env.SCRAPER_TOKEN)) {
-    return { ok: true };
-  }
-
-  return pinAuth;
-}
-
-function timingSafeEqual(a, b) {
-  const left = String(a || '');
-  const right = String(b || '');
-  let mismatch = left.length ^ right.length;
-  const length = Math.max(left.length, right.length);
-  for (let i = 0; i < length; i++) {
-    mismatch |= (left.charCodeAt(i) || 0) ^ (right.charCodeAt(i) || 0);
-  }
-  return mismatch === 0;
 }
 
 async function authAndRateLimit(request, env) {
@@ -512,77 +481,6 @@ async function handleUpdateCar(request, env, id) {
     return jsonResponse({ error: 'Could not write car data' }, 500, env);
   }
   return jsonResponse(cars[idx], 200, env);
-}
-
-async function handleGetListings(request, env) {
-  const auth = authPinOrScraperToken(request, env);
-  if (auth.error) return auth.error;
-  try {
-    const raw = await env.LISTINGS.get('listings');
-    const lastUpdated = await env.LISTINGS.get('listings_last_updated');
-    const listings = (raw ? JSON.parse(raw) : []).filter(isValidListing);
-    return jsonResponse({ listings, last_updated: lastUpdated || null, count: listings.length }, 200, env);
-  } catch {
-    return jsonResponse({ error: 'Could not read listings' }, 500, env);
-  }
-}
-
-async function handlePostListings(request, env) {
-  if (!env.SCRAPER_TOKEN) {
-    return jsonResponse({ error: 'Service misconfigured' }, 503, env);
-  }
-  const authHeader = request.headers.get('Authorization') || '';
-  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
-  if (!token || !timingSafeEqual(token, env.SCRAPER_TOKEN)) {
-    return jsonResponse({ error: 'Unauthorized' }, 401, env);
-  }
-  let body;
-  try { body = await request.json(); } catch {
-    return jsonResponse({ error: 'Invalid JSON body' }, 400, env);
-  }
-  if (!Array.isArray(body.listings)) {
-    return jsonResponse({ error: 'listings must be an array' }, 400, env);
-  }
-  try {
-    const listings = body.listings.filter(isValidListing);
-    await env.LISTINGS.put('listings', JSON.stringify(listings));
-    await env.LISTINGS.put('listings_last_updated', body.last_updated || new Date().toISOString());
-    return jsonResponse({ ok: true, count: listings.length }, 200, env);
-  } catch {
-    return jsonResponse({ error: 'Could not write listings' }, 500, env);
-  }
-}
-
-function isValidListing(listing) {
-  if (!listing || typeof listing !== 'object') return false;
-  const title = String(listing.title || '').trim();
-  const url = String(listing.url || '').trim();
-  const year = Number(listing.year || 0);
-  const price = Number(listing.price || 0);
-  const blockedTitles = new Set([
-    'loading...',
-    'sell',
-    'blog',
-    'store',
-    'partners',
-    'search cars',
-    'new cars',
-    'news',
-    'guides',
-    'how autotempest works',
-    'compare insurance quotes',
-    'get shipping quotes',
-    'calculate trade-in value',
-    'results beyond 100mi',
-  ]);
-
-  if (!title || blockedTitles.has(title.toLowerCase())) return false;
-  if (!url.startsWith('http')) return false;
-  if (url.includes('#') || url.includes('/tools/') || url.includes('/partners') || url.includes('/news')) return false;
-  if (url.includes('blog.autotempest.com') || url.includes('shop.autotempest.com')) return false;
-  if (year < 2019 || year > 2023) return false;
-  if (price <= 0 || price > 22000) return false;
-  return true;
 }
 
 async function handleDeleteCar(request, env, id) {
