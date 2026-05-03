@@ -74,6 +74,25 @@ def _parse_model_trim(title, make):
     trim = parts[1] if len(parts) > 1 else ""
     return model, trim
 
+def _is_valid_listing(listing):
+    title = (listing.get("title") or "").strip()
+    url = (listing.get("url") or "").strip()
+    year = listing.get("year") or 0
+    price = listing.get("price") or 0
+    make = (listing.get("make") or "").lower()
+
+    if not title or title.lower() in {"loading...", "sell", "blog", "store", "partners"}:
+        return False
+    if not url.startswith("http"):
+        return False
+    if not (YEAR_MIN <= year <= YEAR_MAX):
+        return False
+    if not (0 < price <= MAX_PRICE):
+        return False
+    if make and make.lower() not in MAKES:
+        return False
+    return True
+
 # ---------------------------------------------------------------------------
 # AutoTempest scraper
 # ---------------------------------------------------------------------------
@@ -283,10 +302,12 @@ def write_listings(listings):
 
 def merge(existing, fresh):
     now = _now_iso()
-    existing_map = {l["id"]: l for l in existing}
+    existing_map = {l["id"]: l for l in existing if _is_valid_listing(l)}
     cutoff = datetime.now(timezone.utc) - timedelta(days=PRUNE_AFTER_DAYS)
 
     for listing in fresh:
+        if not _is_valid_listing(listing):
+            continue
         lid = listing["id"]
         if lid in existing_map:
             # Update timestamps only
@@ -348,6 +369,9 @@ def main():
 
     if not fresh:
         print("[WARNING] Zero listings scraped from all sources.", file=sys.stderr)
+
+    fresh = [listing for listing in fresh if _is_valid_listing(listing)]
+    print(f"[Filter] {len(fresh)} valid listings after filtering.")
 
     if args.dry_run:
         print(f"\n{'TITLE':<45} {'PRICE':>8} {'MILES':>8}  {'SOURCE':<14} TYPE")
