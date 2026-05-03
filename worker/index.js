@@ -39,37 +39,49 @@ export default {
     if (carIdMatch && request.method === 'DELETE') {
       return handleDeleteCar(request, env, carIdMatch[1]);
     }
+    if (url.pathname === '/api/car-sections' && request.method === 'GET') {
+      return handleGetCarSections(request, env);
+    }
+    if (url.pathname === '/api/car-sections' && request.method === 'POST') {
+      return handleCreateCarSection(request, env);
+    }
+
+    if (url.pathname === '/api/analyze-vehicle' && request.method === 'POST') {
+      return handleAnalyzeVehicle(request, env);
+    }
+
+    if (url.pathname === '/api/links' && request.method === 'GET') {
+      return handleGetLinks(request, env);
+    }
+    if (url.pathname === '/api/links' && request.method === 'POST') {
+      return handleCreateLink(request, env);
+    }
+    const linkIdMatch = url.pathname.match(/^\/api\/links\/([^/]+)$/);
+    if (linkIdMatch && request.method === 'DELETE') {
+      return handleDeleteLink(request, env, linkIdMatch[1]);
+    }
 
     return jsonResponse({ error: 'Not Found' }, 404, env);
   }
 };
 
 function authPinOnly(request, env) {
-  if (!env.ACCESS_PIN) {
-    return { error: jsonResponse({ error: 'Service misconfigured' }, 503, env) };
-  }
-  const pin = request.headers.get('X-Access-Pin');
-  if (!pin || !timingSafeEqual(pin, env.ACCESS_PIN)) {
+  const pin = (request.headers.get('X-Access-Pin') || '').trim();
+  const expected = (env.ACCESS_PIN || '').trim();
+  if (!pin || pin !== expected) {
     return { error: jsonResponse({ error: 'Unauthorized' }, 401, env) };
   }
   return { ok: true };
 }
 
 async function authAndRateLimit(request, env) {
-  if (!env.ACCESS_PIN) {
-    return { error: jsonResponse({ error: 'Service misconfigured' }, 503, env) };
-  }
-  const pin = request.headers.get('X-Access-Pin');
-  if (!pin || !timingSafeEqual(pin, env.ACCESS_PIN)) {
-    return { error: jsonResponse({ error: 'Unauthorized' }, 401, env) };
-  }
   const ip = request.headers.get('CF-Connecting-IP');
   if (!ip) {
     return { error: jsonResponse({ error: 'Cannot determine client IP' }, 400, env) };
   }
   const rateResult = await checkRateLimit(ip, env);
   if (!rateResult.allowed) {
-    return { error: jsonResponse({ error: 'Rate limit exceeded. Maximum 20 analyses per day.' }, 429, env) };
+    return { error: jsonResponse({ error: 'Rate limit exceeded. Maximum 100 analyses per day.' }, 429, env) };
   }
   return { ok: true };
 }
@@ -96,11 +108,18 @@ async function callClaude(content, maxTokens, hasPdf, env) {
     return { error: 'Claude API error', detail: errText.slice(0, 300) };
   }
   const data = await res.json();
+  if (data.stop_reason === 'max_tokens') {
+    return { error: 'Response was too long — try a more specific trim or model year' };
+  }
   const text = data.content?.[0]?.text || '{}';
   try {
-    return { analysis: JSON.parse(text.replace(/```json|```/g, '').trim()) };
+    return { analysis: JSON.parse(text.replace(/```json\n?|```/g, '').trim()) };
   } catch {
-    return { error: 'Could not parse Claude response as JSON' };
+    try {
+      const match = text.match(/\{[\s\S]*\}/);
+      if (match) return { analysis: JSON.parse(match[0]) };
+    } catch {}
+    return { error: 'Could not parse Claude response as JSON', detail: text.slice(0, 200) };
   }
 }
 
@@ -430,7 +449,8 @@ async function handleCreateCar(request, env) {
     vinData: body.vinData || null,
     recallCount: typeof body.recallCount === 'number' ? body.recallCount : 0,
     recallSummary: Array.isArray(body.recallSummary) ? body.recallSummary : [],
-    complaintCount: typeof body.complaintCount === 'number' ? body.complaintCount : 0
+    complaintCount: typeof body.complaintCount === 'number' ? body.complaintCount : 0,
+    sectionId: typeof body.sectionId === 'string' && body.sectionId.trim() ? body.sectionId.trim() : null
   };
   cars.push(car);
   try {
@@ -457,7 +477,7 @@ async function handleUpdateCar(request, env, id) {
   const MUTABLE_FIELDS = ['year','make','model','trim','vin','askingPrice','mileage',
     'listingUrls','carfaxUrl','notes','nicbChecked','mvdChecked',
     'carfaxAnalysis','listingAnalysis','combinedAnalysis',
-    'vinData','recallCount','recallSummary','complaintCount'];
+    'vinData','recallCount','recallSummary','complaintCount','sectionId'];
   const updates = Object.fromEntries(
     Object.entries(body).filter(([k]) => MUTABLE_FIELDS.includes(k))
   );
@@ -525,23 +545,261 @@ async function handleDeleteCar(request, env, id) {
   return jsonResponse({ deleted: true }, 200, env);
 }
 
-async function checkRateLimit(ip, env) {
-  const key = `rate:${ip}`;
-  const existing = await env.RATE_LIMIT.get(key);
-  const count = existing ? parseInt(existing) : 0;
-  if (count >= 20) return { allowed: false };
-  await env.RATE_LIMIT.put(key, String(count + 1), { expirationTtl: 86400 });
-  return { allowed: true };
+// ── Quick Links ──
+async function getCarSectionsFromKV(env) {
+  const data = await env.SAVED_CARS.get('car_sections');
+  if (!data) return [];
+  try {
+    return JSON.parse(data);
+  } catch {
+    throw new Error('Stored section data is corrupt');
+  }
 }
 
-function timingSafeEqual(a, b) {
-  const enc = new TextEncoder();
-  const aBuf = enc.encode(a);
-  const bBuf = enc.encode(b);
-  if (aBuf.length !== bBuf.length) return false;
-  let diff = 0;
-  for (let i = 0; i < aBuf.length; i++) diff |= aBuf[i] ^ bBuf[i];
-  return diff === 0;
+async function handleGetCarSections(request, env) {
+  const auth = authPinOnly(request, env);
+  if (auth.error) return auth.error;
+  let sections;
+  try { sections = await getCarSectionsFromKV(env); } catch {
+    return jsonResponse({ error: 'Could not read section data' }, 500, env);
+  }
+  return jsonResponse(sections, 200, env);
+}
+
+async function handleCreateCarSection(request, env) {
+  const auth = authPinOnly(request, env);
+  if (auth.error) return auth.error;
+  let body;
+  try { body = await request.json(); } catch {
+    return jsonResponse({ error: 'Invalid JSON body' }, 400, env);
+  }
+  const name = typeof body.name === 'string' ? body.name.trim() : '';
+  if (!name) return jsonResponse({ error: 'Section name is required' }, 400, env);
+  if (name.length > 60) return jsonResponse({ error: 'Section name is too long' }, 400, env);
+  let sections;
+  try { sections = await getCarSectionsFromKV(env); } catch {
+    return jsonResponse({ error: 'Could not read section data' }, 500, env);
+  }
+  const section = {
+    id: crypto.randomUUID(),
+    name,
+    createdAt: new Date().toISOString()
+  };
+  sections.push(section);
+  try {
+    await env.SAVED_CARS.put('car_sections', JSON.stringify(sections));
+  } catch {
+    return jsonResponse({ error: 'Could not write section data' }, 500, env);
+  }
+  return jsonResponse(section, 201, env);
+}
+
+// Quick Links
+async function getLinksFromKV(env) {
+  try {
+    const data = await env.SAVED_CARS.get('quick_links');
+    return data ? JSON.parse(data) : [];
+  } catch { return []; }
+}
+
+async function handleGetLinks(request, env) {
+  const auth = authPinOnly(request, env);
+  if (auth.error) return auth.error;
+  return jsonResponse(await getLinksFromKV(env), 200, env);
+}
+
+async function handleCreateLink(request, env) {
+  const auth = authPinOnly(request, env);
+  if (auth.error) return auth.error;
+  let body;
+  try { body = await request.json(); } catch {
+    return jsonResponse({ error: 'Invalid JSON body' }, 400, env);
+  }
+  if (!body.url || !body.title) return jsonResponse({ error: 'url and title required' }, 400, env);
+  const links = await getLinksFromKV(env);
+  const link = {
+    id: crypto.randomUUID(),
+    createdAt: new Date().toISOString(),
+    title: String(body.title).slice(0, 200),
+    url: String(body.url).slice(0, 2000),
+    note: body.note ? String(body.note).slice(0, 500) : '',
+    section: body.section ? String(body.section).slice(0, 100) : ''
+  };
+  links.push(link);
+  try {
+    await env.SAVED_CARS.put('quick_links', JSON.stringify(links));
+  } catch {
+    return jsonResponse({ error: 'Could not save link' }, 500, env);
+  }
+  return jsonResponse(link, 201, env);
+}
+
+async function handleDeleteLink(request, env, id) {
+  const auth = authPinOnly(request, env);
+  if (auth.error) return auth.error;
+  const links = await getLinksFromKV(env);
+  const filtered = links.filter(l => l.id !== id);
+  if (filtered.length === links.length) return jsonResponse({ error: 'Link not found' }, 404, env);
+  try {
+    await env.SAVED_CARS.put('quick_links', JSON.stringify(filtered));
+  } catch {
+    return jsonResponse({ error: 'Could not delete link' }, 500, env);
+  }
+  return jsonResponse({ deleted: true }, 200, env);
+}
+
+async function handleAnalyzeVehicle(request, env) {
+  const auth = await authAndRateLimit(request, env);
+  if (auth.error) return auth.error;
+
+  let body;
+  try { body = await request.json(); } catch {
+    return jsonResponse({ error: 'Invalid JSON body' }, 400, env);
+  }
+
+  const { year, make, model, trim } = body;
+  if (!year || !make || !model) {
+    return jsonResponse({ error: 'year, make, and model are required' }, 400, env);
+  }
+
+  const makeEncoded = encodeURIComponent(make);
+  const modelEncoded = encodeURIComponent(model);
+
+  const [complaintsRes, recallsRes] = await Promise.allSettled([
+    fetch(`https://api.nhtsa.dot.gov/complaints/complaintsByVehicle?make=${makeEncoded}&model=${modelEncoded}&modelYear=${year}`),
+    fetch(`https://api.nhtsa.dot.gov/recalls/recallsByVehicle?make=${makeEncoded}&model=${modelEncoded}&modelYear=${year}`)
+  ]);
+
+  let complaints = [];
+  let recalls = [];
+
+  if (complaintsRes.status === 'fulfilled' && complaintsRes.value.ok) {
+    try { const d = await complaintsRes.value.json(); complaints = d.results || []; } catch {}
+  }
+  if (recallsRes.status === 'fulfilled' && recallsRes.value.ok) {
+    try { const d = await recallsRes.value.json(); recalls = d.results || []; } catch {}
+  }
+
+  const recallLines = recalls.slice(0, 15).map(r =>
+    `- ${r.component || 'Unknown'}: ${(r.summary || r.consequence || r.defect || '').slice(0, 200)}`
+  ).join('\n') || 'None found';
+
+  const complaintLines = complaints.slice(0, 25).map(c =>
+    `- ${c.components || 'Unknown'}: ${(c.summary || '').slice(0, 150)}`
+  ).join('\n') || 'None found';
+
+  const trimLabel = trim ? ` ${trim}` : '';
+  const vehicleLabel = `${year} ${make} ${model}${trimLabel}`;
+  const complaintCount = complaints.length;
+  const recallCount = recalls.length;
+
+  const content = [{
+    type: 'text',
+    text: `You are a comprehensive automotive expert. Provide a thorough feature breakdown for the ${vehicleLabel}. Use your training knowledge to list ALL standard and optional features for this vehicle model year. Be as specific and complete as possible — do not omit features.
+
+NHTSA DATA (incorporate into known_issues):
+Recalls (${recallCount} total):
+${recallLines}
+
+Complaints (${complaintCount} total, sample shown):
+${complaintLines}
+
+Return a JSON object with exactly these fields (replace all placeholder text with real data):
+{
+  "vehicle": "${vehicleLabel}",
+  "safety": {
+    "crash_ratings": "NHTSA and IIHS rating summary for this model year",
+    "standard_features": ["every standard safety feature — AEB, lane departure, blind spot, rear cross traffic, backup camera, etc"],
+    "optional_features": ["safety features available as options or in packages"],
+    "adas_notes": "notes on driver assistance technology suite"
+  },
+  "technology": {
+    "infotainment_system": "system name and screen size(s)",
+    "apple_carplay": true,
+    "android_auto": true,
+    "wireless_carplay": false,
+    "wireless_charging": false,
+    "standard_features": ["every standard tech feature — touchscreen, Bluetooth, USB ports, navigation, etc"],
+    "optional_features": ["optional tech features — premium audio, heads-up display, etc"],
+    "notes": "notable technology details"
+  },
+  "comfort": {
+    "seating_material": "cloth/leatherette/leather/SofTex/etc by trim",
+    "heated_front_seats": "standard/optional/not available",
+    "heated_rear_seats": "standard/optional/not available",
+    "ventilated_seats": "standard/optional/not available",
+    "sunroof_moonroof": "standard/optional/not available — specify type",
+    "cargo_volume_cuft": null,
+    "passenger_volume_cuft": null,
+    "standard_features": ["all standard comfort features — climate control, power windows, mirrors, seat adjustments, etc"],
+    "optional_features": ["optional comfort features"],
+    "notes": "cabin quality, noise, ride comfort notes"
+  },
+  "performance": {
+    "engine_options": ["each engine option with displacement, type, and output"],
+    "horsepower_range": "X–Y hp",
+    "torque_range": "X–Y lb-ft",
+    "transmission": "transmission type(s)",
+    "mpg_city": null,
+    "mpg_highway": null,
+    "mpg_combined": null,
+    "drivetrain_options": ["FWD", "AWD"],
+    "towing_capacity_lbs": null,
+    "ground_clearance_inches": null,
+    "notes": "performance character notes"
+  },
+  "exterior": {
+    "body_style": "SUV/Sedan/Truck/etc",
+    "length_inches": null,
+    "width_inches": null,
+    "height_inches": null,
+    "wheelbase_inches": null,
+    "wheel_size_range": "XY–ZW inch",
+    "standard_features": ["standard exterior features — LED headlights, fog lights, roof rails, etc"],
+    "optional_features": ["optional exterior features"],
+    "notes": "styling notes"
+  },
+  "reliability": {
+    "predicted_reliability": "Above Average/Average/Below Average/Unknown",
+    "consumer_reports_rating": "score out of 5 or null",
+    "jd_power_score": "score out of 100 or null",
+    "common_reported_issues": ["specific commonly reported owner issues for this model year"],
+    "notes": "overall reliability context and model year specific notes"
+  },
+  "known_issues": {
+    "nhtsa_complaint_count": ${complaintCount},
+    "nhtsa_recall_count": ${recallCount},
+    "recall_details": ["list recall component and brief description from the NHTSA data above"],
+    "top_complaint_areas": ["the component categories with the most NHTSA complaints"],
+    "known_problems": ["specific well-documented problems with this model year from owner forums and TSBs"],
+    "tsb_notes": "notable technical service bulletins if known",
+    "severity": "Minor/Moderate/Serious",
+    "notes": "context on whether issues are widespread or isolated"
+  },
+  "overall_summary": "2-3 sentence overview covering what this vehicle does well and key concerns"
+}
+Use the exact numbers ${complaintCount} and ${recallCount} for nhtsa_complaint_count and nhtsa_recall_count. Return ONLY valid JSON. No markdown, no backticks, no explanation.`
+  }];
+
+  const result = await callClaude(content, 8192, false, env);
+  if (result.error) return jsonResponse({ error: result.error, ...(result.detail ? { detail: result.detail } : {}) }, 502, env);
+
+  if (result.analysis.known_issues) {
+    result.analysis.known_issues.nhtsa_complaint_count = complaintCount;
+    result.analysis.known_issues.nhtsa_recall_count = recallCount;
+  }
+
+  return jsonResponse(result.analysis, 200, env);
+}
+
+async function checkRateLimit(ip, env) {
+  const today = new Date().toISOString().slice(0, 10); // "YYYY-MM-DD" UTC
+  const key = `rate:${ip}:${today}`;
+  const existing = await env.RATE_LIMIT.get(key);
+  const count = existing ? parseInt(existing) : 0;
+  if (count >= 100) return { allowed: false };
+  await env.RATE_LIMIT.put(key, String(count + 1), { expirationTtl: 172800 }); // 48h ensures key outlives the day
+  return { allowed: true };
 }
 
 function corsHeaders(env) {

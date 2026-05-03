@@ -28,6 +28,10 @@
     --rav4-bg: rgba(79, 143, 255, 0.08);
     --crv: #ff6b4f;
     --crv-bg: rgba(255, 107, 79, 0.08);
+    --corolla: #10b981;
+    --corolla-bg: rgba(16, 185, 129, 0.08);
+    --camry: #f59e0b;
+    --camry-bg: rgba(245, 158, 11, 0.08);
   }
   
   body {
@@ -101,6 +105,8 @@
   
   .selector-group.rav4-border { border-color: rgba(79, 143, 255, 0.3); }
   .selector-group.crv-border { border-color: rgba(255, 107, 79, 0.3); }
+  .selector-group.corolla-border { border-color: rgba(16, 185, 129, 0.3); }
+  .selector-group.camry-border { border-color: rgba(245, 158, 11, 0.3); }
   
   .selector-label {
     font-family: 'Space Mono', monospace;
@@ -112,6 +118,8 @@
   
   .selector-label.rav4-color { color: var(--rav4); }
   .selector-label.crv-color { color: var(--crv); }
+  .selector-label.corolla-color { color: var(--corolla); }
+  .selector-label.camry-color { color: var(--camry); }
   
   .select-row { display: flex; gap: 10px; }
   
@@ -202,6 +210,8 @@
   .feature-table th:first-child { text-align: left; width: 35%; }
   .feature-table th.rav4-th { color: var(--rav4); }
   .feature-table th.crv-th { color: var(--crv); }
+  .feature-table th.corolla-th { color: var(--corolla); }
+  .feature-table th.camry-th { color: var(--camry); }
   .feature-table th.edge-th { color: var(--yellow); width: 22%; }
   .feature-table th.single-th { color: var(--accent); }
   
@@ -298,18 +308,6 @@
     body { padding: 12px; }
   }
 
-  /* ── PIN Overlay ── */
-  #pin-overlay { position:fixed; inset:0; background:rgba(15,17,23,0.97); display:flex; align-items:center; justify-content:center; z-index:9999; }
-  #pin-overlay.hidden { display:none; }
-  .pin-card { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:40px; text-align:center; max-width:360px; width:100%; }
-  .pin-card h2 { font-family:'Space Mono',monospace; font-size:1.1rem; margin-bottom:8px; color:var(--accent); }
-  .pin-card p { color:var(--text-dim); font-size:0.85rem; margin-bottom:24px; }
-  #pin-input { width:100%; padding:12px 16px; border-radius:8px; border:1px solid var(--border); background:var(--surface2); color:var(--text); font-family:'Space Mono',monospace; font-size:1.1rem; text-align:center; letter-spacing:4px; margin-bottom:16px; }
-  #pin-input:focus { outline:none; border-color:var(--accent); }
-  #pin-submit { width:100%; padding:12px; border-radius:8px; border:none; background:var(--accent); color:#fff; font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600; cursor:pointer; transition:opacity 0.2s; }
-  #pin-submit:hover { opacity:0.85; }
-  #pin-error { color:var(--red); font-size:0.85rem; margin-top:10px; min-height:20px; }
-
   /* ── VIN Check Tab ── */
   #vin-panel { display:none; }
   .vin-input-row { display:flex; gap:12px; margin-bottom:28px; max-width:600px; margin-left:auto; margin-right:auto; }
@@ -321,19 +319,19 @@
   @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
 
   /* Cards */
-  .vin-section { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin-bottom:16px; animation:fadeIn 0.3s ease; box-shadow:0 2px 12px rgba(0,0,0,0.2); }
+  .vin-section { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:22px 24px; margin-bottom:28px; animation:fadeIn 0.3s ease; box-shadow:0 2px 12px rgba(0,0,0,0.2); overflow:hidden; }
 
-  /* Section heading — bright, readable, clearly a title */
-  .vin-section-title { font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:700; color:var(--text); margin-bottom:16px; letter-spacing:0; }
+  /* Section heading — full-width header bar at top of card */
+  .vin-section-title { font-family:'DM Sans',sans-serif; font-size:1.2rem; font-weight:700; color:var(--text); letter-spacing:0; margin:-22px -24px 22px; padding:14px 24px; background:rgba(255,255,255,0.035); border-bottom:1px solid var(--border); }
 
-  /* Collapsible cards */
-  details.vin-section > summary { cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center; padding:2px 0; border-radius:6px; transition:opacity 0.15s; }
-  details.vin-section > summary:hover { opacity:0.75; }
+  /* Collapsible cards — summary is the header bar */
+  details.vin-section > summary { cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center; margin:-22px -24px; padding:14px 24px; background:rgba(255,255,255,0.035); transition:opacity 0.15s; }
+  details.vin-section > summary:hover { opacity:0.8; }
   details.vin-section > summary::-webkit-details-marker { display:none; }
   details.vin-section > summary::after { content:'\25BC'; font-size:0.58rem; color:var(--accent); transition:transform 0.2s; margin-left:10px; flex-shrink:0; }
   details.vin-section[open] > summary::after { transform:rotate(180deg); }
-  details.vin-section > summary .vin-section-title { margin:0; }
-  details.vin-section[open] > summary { margin-bottom:16px; border-bottom:1px solid var(--border); padding-bottom:16px; }
+  details.vin-section > summary .vin-section-title { margin:0; padding:0; background:none; border:none; font-size:1.2rem; }
+  details.vin-section[open] > summary { margin-bottom:22px; border-bottom:1px solid var(--border); }
 
   /* Sub-labels inside cards (small monospace labels) */
   .vin-sub-label { font-family:'Space Mono',monospace; font-size:0.68rem; text-transform:uppercase; letter-spacing:2px; color:var(--text-dim); margin-bottom:10px; }
@@ -391,7 +389,10 @@
   #vin-nicb-card { border-left:3px solid var(--text-dim); }
   #vin-recalls-card { border-left:3px solid var(--yellow); }
   #vin-complaints-card { border-left:3px solid var(--text-dim); }
-  #vin-uploads-card { border-left:3px solid var(--accent); }
+  #vin-carfax-card { border-left:3px solid var(--accent); }
+  #vin-listing-card { border-left:3px solid var(--accent2, #a78bfa); }
+  #vin-combined-card { border-left:3px solid var(--green); }
+  #vin-final-card { border-left:3px solid var(--yellow); }
   #vin-price-card { border-left:3px solid var(--accent2); }
   #vin-checklist-card { border-left:3px solid var(--green); }
 
@@ -404,35 +405,80 @@
 
 /* ── Saved Cars ── */
 .car-modal-box { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px; width:100%; max-width:620px; margin:0 auto; box-sizing:border-box; }
-.car-modal-field { margin-bottom:14px; }
-.car-modal-label { font-size:0.82rem; color:var(--text-dim); margin-bottom:4px; display:block; font-family:'DM Sans',sans-serif; }
-.car-modal-input { width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.9rem; box-sizing:border-box; }
+.car-modal-field { margin-bottom:18px; }
+.car-modal-label { font-size:0.95rem; font-weight:600; color:var(--text); margin-bottom:6px; display:block; font-family:'DM Sans',sans-serif; }
+.car-modal-input { width:100%; padding:12px 16px; background:var(--surface2); border:1.5px solid var(--border); border-radius:10px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:1rem; box-sizing:border-box; }
 .car-modal-input:focus { outline:none; border-color:var(--accent); }
-.saved-car-card { background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:16px 18px; margin-bottom:10px; cursor:pointer; transition:border-color 0.15s; }
-.saved-car-card:hover { border-color:var(--accent); }
-.saved-car-title { font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600; color:var(--text); margin-bottom:4px; }
-.saved-car-meta { font-size:0.83rem; color:var(--text-dim); margin-bottom:2px; }
-.saved-check-btn { padding:4px 10px; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:var(--text-dim); font-size:0.78rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s; white-space:nowrap; }
-.saved-check-btn.pass { border-color:var(--green); background:var(--green-bg); color:var(--green); }
-.saved-check-btn.fail { border-color:var(--red); background:var(--red-bg); color:var(--red); }
+.saved-car-card { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:11px 14px; margin-bottom:6px; cursor:pointer; transition:border-color 0.15s; }
+.saved-car-card:hover { border-color:var(--accent); background:rgba(79,143,255,0.03); }
+.saved-car-title { font-family:'DM Sans',sans-serif; font-size:0.97rem; font-weight:700; color:var(--text); margin-bottom:3px; line-height:1.3; }
+.saved-car-meta { font-size:0.83rem; color:var(--text-dim); margin-bottom:0; line-height:1.4; }
+.saved-check-btn { padding:4px 10px; border-radius:6px; border:1px solid var(--border); background:var(--surface); color:var(--text-dim); font-size:0.78rem; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s; white-space:nowrap; font-weight:500; }
+.saved-check-btn.pass { border-color:var(--green); background:var(--green-bg); color:var(--green); font-weight:700; }
+.saved-check-btn.fail { border-color:var(--red); background:var(--red-bg); color:var(--red); font-weight:700; }
+.saved-section { margin-bottom:18px; }
+.saved-section-header { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 2px; border-bottom:1px solid var(--border); margin-bottom:8px; }
+.saved-section-title { font-family:'DM Sans',sans-serif; font-size:0.92rem; font-weight:700; color:var(--text); }
+.saved-section-count { font-family:'Space Mono',monospace; font-size:0.76rem; color:var(--text-dim); }
+.saved-section-empty { color:var(--text-dim); font-size:0.86rem; padding:12px 2px; }
+.saved-section-select { padding:4px 8px; background:var(--surface); border:1px solid var(--border); border-radius:6px; color:var(--text-dim); font-size:0.75rem; font-family:'DM Sans',sans-serif; cursor:pointer; max-width:130px; }
 .detail-section { background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin-bottom:12px; }
 .detail-section-title { font-family:'DM Sans',sans-serif; font-size:0.85rem; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:10px; }
 .detail-label { font-size:0.78rem; color:var(--text-dim); font-family:'DM Sans',sans-serif; margin-bottom:2px; display:block; }
 .detail-value { font-size:0.92rem; color:var(--text); font-family:'DM Sans',sans-serif; }
+/* ── VIN check pass/fail toggles ── */
+.vin-check-toggle { padding:6px 16px; border-radius:8px; border:1.5px solid var(--green); background:var(--surface2); color:var(--green); font-size:0.88rem; font-weight:600; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.15s; }
+.vin-check-toggle.fail { border-color:var(--red); color:var(--red); }
+.vin-check-toggle.active-pass { background:var(--green-bg); border-color:var(--green); color:var(--green); box-shadow:0 0 0 2px var(--green); }
+.vin-check-toggle.active-fail { background:var(--red-bg); border-color:var(--red); color:var(--red); box-shadow:0 0 0 2px var(--red); }
+/* ── Vehicle Search ── */
+.vs-category { background:var(--surface2); border:1px solid var(--border); border-radius:12px; margin-bottom:10px; overflow:hidden; }
+.vs-category summary { padding:13px 16px; cursor:pointer; list-style:none; display:flex; justify-content:space-between; align-items:center; font-family:'DM Sans',sans-serif; font-size:0.95rem; font-weight:700; color:var(--text); }
+.vs-category summary::-webkit-details-marker { display:none; }
+.vs-category[open] summary { border-bottom:1px solid var(--border); }
+.vs-category-body { padding:14px 16px; }
+.vs-feat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+.vs-feat-item { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:9px 12px; }
+.vs-feat-label { font-size:0.75rem; color:var(--text-dim); font-family:'DM Sans',sans-serif; margin-bottom:3px; }
+.vs-feat-value { font-size:0.88rem; color:var(--text); font-family:'DM Sans',sans-serif; font-weight:500; }
+.vs-feat-value.good { color:var(--green); }
+.vs-feat-value.bad { color:var(--red); }
+.vs-list { list-style:none; padding:0; margin:0; }
+.vs-list li { font-size:0.85rem; color:var(--text); font-family:'DM Sans',sans-serif; padding:4px 0; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; gap:8px; }
+.vs-list li:last-child { border-bottom:none; }
+.vs-list li::before { content:'•'; color:var(--accent); flex-shrink:0; margin-top:1px; }
+.vs-list.issues li::before { content:'⚠'; color:var(--yellow); }
+.vs-list.recalls li::before { content:'!'; color:var(--red); font-weight:700; }
+.vs-section-label { font-size:0.78rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.05em; font-weight:700; margin:12px 0 6px; font-family:'DM Sans',sans-serif; }
+.vs-known-issues { background:var(--surface2); border:1px solid rgba(251,191,36,0.4); border-radius:12px; padding:16px; margin-bottom:10px; }
+.vs-badge { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; border-radius:20px; font-size:0.78rem; font-weight:700; font-family:'DM Sans',sans-serif; }
+@media(max-width:560px) { .vs-feat-grid { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>Vehicle Comparison Tool</h1>
-  <p class="subtitle">RAV4 &amp; CR-V — 2019–2023 | Phase 1: LE/XLE &amp; LX/EX trims</p>
+  <div style="position:relative;">
+    <h1>Vehicle Comparison Tool</h1>
+    <p class="subtitle">RAV4 &amp; CR-V — 2019–2023 | Phase 1: LE/XLE &amp; LX/EX trims</p>
+    <div style="position:absolute; top:0; right:0; display:flex; align-items:center; gap:6px; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:5px 10px;">
+      <span style="font-size:0.72rem; color:var(--text-dim); font-family:'DM Sans',sans-serif; white-space:nowrap;">Zoom</span>
+      <button onclick="adjustZoom(-1)" title="Zoom out" style="width:28px; height:28px; background:none; border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:1rem; font-weight:700; cursor:pointer; line-height:1; display:flex; align-items:center; justify-content:center;">−</button>
+      <span id="zoom-label" style="font-size:0.8rem; color:var(--text); font-family:'Space Mono',monospace; min-width:36px; text-align:center;">100%</span>
+      <button onclick="adjustZoom(1)" title="Zoom in" style="width:28px; height:28px; background:none; border:1px solid var(--border); border-radius:6px; color:var(--text); font-size:1rem; font-weight:700; cursor:pointer; line-height:1; display:flex; align-items:center; justify-content:center;">+</button>
+      <button onclick="adjustZoom(0)" title="Reset zoom" style="height:28px; padding:0 8px; background:none; border:1px solid var(--border); border-radius:6px; color:var(--text-dim); font-size:0.72rem; cursor:pointer; font-family:'DM Sans',sans-serif;">Reset</button>
+    </div>
+  </div>
   
   <div class="mode-tabs">
-    <button class="mode-tab" onclick="setMode(&#39;compare&#39;)">Compare Two Vehicles</button>
+    <button class="mode-tab" onclick="setMode(&#39;compare&#39;)">Compare Vehicles</button>
     <button class="mode-tab" onclick="setMode(&#39;single&#39;)">Single Vehicle Lookup</button>
-    <button class="mode-tab" onclick="setMode(&#39;vin&#39;)">VIN Check</button>
+    <button class="mode-tab" onclick="setMode(&#39;vin&#39;)">Analysis</button>
     <button class="mode-tab" onclick="setMode('saved')">Saved Cars</button>
     <button class="mode-tab" onclick="setMode('search')">Car Search</button>
+    <button class="mode-tab" onclick="setMode('links')">Quick Links</button>
+    <button class="mode-tab" onclick="setMode('carfax-scan')" style="border-color:var(--accent); color:var(--accent);">Carfax Scan</button>
+    <button class="mode-tab" onclick="setMode('vehicle-search')">Vehicle Search</button>
   </div>
   
   <div id="compare-selectors" class="selectors" style="flex-direction:column;align-items:center;">
@@ -455,6 +501,7 @@
         oninput="this.value=this.value.toUpperCase().replace(/[^A-HJ-NPR-Z0-9]/g,'')"
         onkeydown="if(event.key==='Enter')decodeVIN()" />
       <button class="vin-check-btn" onclick="decodeVIN()">Check VIN</button>
+      <button class="vin-check-btn" onclick="loadWithoutVin()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);font-size:0.85rem;padding:13px 16px;">I don't have the VIN</button>
     </div>
     <div id="vin-results"></div>
   </div>
@@ -465,6 +512,7 @@
     <h2 style="font-family:'DM Sans',sans-serif; font-size:1.4rem; font-weight:700; color:var(--text); margin:0;">Saved Cars</h2>
     <div style="display:flex; gap:10px; align-items:center;">
       <span id="saved-sync-indicator" style="font-size:0.8rem; color:var(--text-dim);"></span>
+      <button onclick="createSavedSection()" style="padding:8px 16px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:600; cursor:pointer;">+ New Section</button>
       <button onclick="openAddCarModal(null)" style="padding:8px 16px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:600; cursor:pointer;">+ Add Car</button>
     </div>
   </div>
@@ -515,23 +563,173 @@
   </div>
   <div id="search-count" style="margin-top:10px; font-size:0.82rem; color:var(--text-dim);"></div>
 </div>
+<!-- Quick Links Panel -->
+<div id="links-panel" style="display:none; max-width:900px; margin:24px auto; padding:0 16px;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+    <h2 style="font-family:'DM Sans',sans-serif; font-size:1.4rem; font-weight:700; color:var(--text); margin:0;">Quick Links</h2>
+    <button onclick="openAddLinkModal()" style="padding:8px 16px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:600; cursor:pointer;">+ Add Link</button>
+  </div>
+  <div id="links-content"></div>
+</div>
+
+<!-- Carfax Scan Panel -->
+<div id="carfax-scan-panel" style="display:none; max-width:760px; margin:24px auto; padding:0 16px;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; flex-wrap:wrap; gap:10px;">
+    <h2 style="font-family:'DM Sans',sans-serif; font-size:1.4rem; font-weight:700; color:var(--text); margin:0;">Quick Carfax Scan</h2>
+    <button onclick="clearCarfaxScan()" style="padding:6px 14px; background:none; border:1px solid var(--border); border-radius:8px; color:var(--text-dim); font-family:'DM Sans',sans-serif; font-size:0.85rem; cursor:pointer;">Clear</button>
+  </div>
+  <p style="font-family:'DM Sans',sans-serif; font-size:0.88rem; color:var(--text-dim); margin:0 0 20px;">Paste or upload a Carfax report to get an instant AI analysis — no VIN entry needed. You can save the results to Saved Cars afterward.</p>
+
+  <div class="vin-section" style="margin-bottom:16px;">
+    <div class="vin-section-title">Carfax Report</div>
+    <div style="display:flex; gap:8px; margin-bottom:14px;">
+      <button id="cs-tab-paste" onclick="csSwitch('paste')" style="padding:6px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;">Paste Text</button>
+      <button id="cs-tab-upload" onclick="csSwitch('upload')" style="padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer;">Upload PDF</button>
+    </div>
+    <div id="cs-mode-paste">
+      <textarea id="cs-paste-input" placeholder="Paste Carfax report text here…" style="width:100%;min-height:180px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;line-height:1.5;resize:vertical;outline:none;box-sizing:border-box;"></textarea>
+      <button onclick="runCarfaxScan('text')" style="margin-top:10px;padding:10px 24px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.92rem;font-weight:600;cursor:pointer;" id="cs-analyze-paste-btn">Analyze Carfax</button>
+    </div>
+    <div id="cs-mode-upload" style="display:none;">
+      <div class="upload-area" id="cs-upload-area" onclick="document.getElementById('cs-file-input').click()">
+        <div class="upload-icon">📄</div>
+        <div class="upload-text" id="cs-upload-text">Click to upload Carfax PDF (max 10MB)</div>
+      </div>
+      <input type="file" id="cs-file-input" accept=".pdf" style="display:none;" onchange="csHandleFile(this.files[0])">
+      <button onclick="runCarfaxScan('pdf')" id="cs-analyze-upload-btn" style="margin-top:10px;padding:10px 24px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:'DM Sans',sans-serif;font-size:0.92rem;font-weight:600;cursor:pointer;" disabled>Analyze PDF</button>
+    </div>
+  </div>
+
+  <div id="cs-result-area"></div>
+
+  <div id="cs-save-bar" style="display:none; margin-top:16px; background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:14px 18px; display:none; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+    <div style="font-family:'DM Sans',sans-serif; font-size:0.9rem; color:var(--text);">Want to save this to your list?</div>
+    <button onclick="saveCarfaxScanToList()" style="padding:9px 20px; background:var(--green); border:none; border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.9rem; font-weight:700; cursor:pointer; box-shadow:0 2px 8px rgba(52,211,153,0.3);">↓ Add to Saved Cars</button>
+  </div>
+</div>
+
+<!-- Vehicle Search Panel -->
+<div id="vehicle-search-panel" style="display:none; max-width:800px; margin:24px auto; padding:0 16px;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; flex-wrap:wrap; gap:10px;">
+    <h2 style="font-family:'DM Sans',sans-serif; font-size:1.4rem; font-weight:700; color:var(--text); margin:0;">Vehicle Search</h2>
+  </div>
+  <p style="font-family:'DM Sans',sans-serif; font-size:0.88rem; color:var(--text-dim); margin:0 0 20px;">Enter a year, make, and model to get a full feature breakdown, specs, reliability data, and known issues pulled from NHTSA and AI analysis.</p>
+
+  <div class="vin-section" style="margin-bottom:20px;">
+    <div class="vin-section-title">Search Vehicle</div>
+    <div style="margin-bottom:14px;">
+      <label style="font-size:0.78rem; color:var(--text-dim); display:block; margin-bottom:4px; font-family:'DM Sans',sans-serif;">VIN (optional — auto-fills fields below)</label>
+      <div style="display:flex; gap:8px;">
+        <input id="vs-vin" type="text" placeholder="17-character VIN" maxlength="17" style="flex:1; padding:9px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'Space Mono',monospace; font-size:0.9rem; letter-spacing:1px; text-transform:uppercase; outline:none; box-sizing:border-box;" oninput="this.value=this.value.toUpperCase()" onkeydown="if(event.key==='Enter')decodeVsVin()">
+        <button onclick="decodeVsVin()" id="vs-vin-btn" style="padding:9px 16px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:600; cursor:pointer; white-space:nowrap; flex-shrink:0;">Decode VIN</button>
+      </div>
+      <div id="vs-vin-status" style="margin-top:5px; font-size:0.8rem; min-height:1.1em; font-family:'DM Sans',sans-serif;"></div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:10px; margin-bottom:12px;">
+      <div>
+        <label style="font-size:0.78rem; color:var(--text-dim); display:block; margin-bottom:4px; font-family:'DM Sans',sans-serif;">Year *</label>
+        <input id="vs-year" type="text" placeholder="2021" maxlength="4" style="width:100%; padding:9px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; box-sizing:border-box;" onkeydown="if(event.key==='Enter')searchVehicle()">
+      </div>
+      <div>
+        <label style="font-size:0.78rem; color:var(--text-dim); display:block; margin-bottom:4px; font-family:'DM Sans',sans-serif;">Make *</label>
+        <input id="vs-make" type="text" placeholder="Toyota" style="width:100%; padding:9px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; box-sizing:border-box;" onkeydown="if(event.key==='Enter')searchVehicle()">
+      </div>
+      <div>
+        <label style="font-size:0.78rem; color:var(--text-dim); display:block; margin-bottom:4px; font-family:'DM Sans',sans-serif;">Model *</label>
+        <input id="vs-model" type="text" placeholder="RAV4" style="width:100%; padding:9px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; box-sizing:border-box;" onkeydown="if(event.key==='Enter')searchVehicle()">
+      </div>
+      <div>
+        <label style="font-size:0.78rem; color:var(--text-dim); display:block; margin-bottom:4px; font-family:'DM Sans',sans-serif;">Trim (optional)</label>
+        <input id="vs-trim" type="text" placeholder="XLE" style="width:100%; padding:9px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; box-sizing:border-box;" onkeydown="if(event.key==='Enter')searchVehicle()">
+      </div>
+    </div>
+    <button onclick="searchVehicle()" id="vs-search-btn" style="padding:10px 28px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.92rem; font-weight:600; cursor:pointer;">Search</button>
+  </div>
+
+  <div id="vs-result-area"></div>
+</div>
+
+<!-- Add Link Modal -->
+<div id="link-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000; overflow-y:auto; padding:40px 16px; box-sizing:border-box;">
+  <div class="car-modal-box" style="max-width:500px;">
+    <h3 style="font-family:'DM Sans',sans-serif; color:var(--text); margin:0 0 20px; font-size:1.1rem; font-weight:700;">Add Custom Link</h3>
+    <div class="car-modal-field"><label class="car-modal-label" for="lm-title">Title <span style="color:var(--red)">*</span></label><input id="lm-title" class="car-modal-input" type="text" placeholder="e.g. Craigslist RAV4 Phoenix"></div>
+    <div class="car-modal-field"><label class="car-modal-label" for="lm-url">URL <span style="color:var(--red)">*</span></label><input id="lm-url" class="car-modal-input" type="url" placeholder="https://..."></div>
+    <div class="car-modal-field"><label class="car-modal-label" for="lm-section">Section (optional)</label><input id="lm-section" class="car-modal-input" type="text" placeholder="e.g. Craigslist, Facebook, Other"></div>
+    <div class="car-modal-field"><label class="car-modal-label" for="lm-note">Note (optional)</label><input id="lm-note" class="car-modal-input" type="text" placeholder="What this link shows…"></div>
+    <div style="display:flex; gap:10px; margin-top:20px; justify-content:flex-end;">
+      <button onclick="closeLinkModal()" style="padding:8px 18px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; cursor:pointer;">Cancel</button>
+      <button onclick="saveLinkModal()" style="padding:8px 18px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-weight:600; cursor:pointer;">Save Link</button>
+    </div>
+  </div>
+</div>
 
 <!-- Add / Edit Car Modal -->
-<div id="car-modal" onclick="if(event.target===this)closeCarModal()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000; overflow-y:auto; padding:40px 16px; box-sizing:border-box;">
+<div id="car-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1000; overflow-y:auto; padding:40px 16px; box-sizing:border-box;">
   <div class="car-modal-box">
     <h3 id="car-modal-title" style="font-family:'DM Sans',sans-serif; color:var(--text); margin:0 0 20px; font-size:1.15rem; font-weight:700;"></h3>
+
+    <!-- VIN first — with lookup button -->
+    <div class="car-modal-field">
+      <label class="car-modal-label" for="cm-vin">VIN <span style="color:var(--text-dim); font-weight:400;">(optional — enter to auto-fill details)</span></label>
+      <div style="display:flex; gap:8px;">
+        <input id="cm-vin" class="car-modal-input" type="text" placeholder="17-character VIN" maxlength="17" oninput="updateModalVinChecks()" onkeydown="if(event.key==='Enter')checkModalVin()" style="flex:1;">
+        <button onclick="checkModalVin()" id="cm-vin-btn" style="padding:8px 14px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:600; cursor:pointer; white-space:nowrap; flex-shrink:0;">Check VIN</button>
+      </div>
+      <div id="cm-vin-status" style="margin-top:6px; font-size:0.8rem; min-height:1.1em;"></div>
+    </div>
+
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:0 16px;">
       <div class="car-modal-field"><label class="car-modal-label" for="cm-year">Year</label><input id="cm-year" class="car-modal-input" type="text" placeholder="2021"></div>
       <div class="car-modal-field"><label class="car-modal-label" for="cm-make">Make</label><input id="cm-make" class="car-modal-input" type="text" placeholder="Toyota"></div>
       <div class="car-modal-field"><label class="car-modal-label" for="cm-model">Model</label><input id="cm-model" class="car-modal-input" type="text" placeholder="RAV4"></div>
       <div class="car-modal-field"><label class="car-modal-label" for="cm-trim">Trim</label><input id="cm-trim" class="car-modal-input" type="text" placeholder="XLE"></div>
-      <div class="car-modal-field"><label class="car-modal-label" for="cm-price">Asking Price ($)</label><input id="cm-price" class="car-modal-input" type="number" placeholder="28500"></div>
+      <div class="car-modal-field"><label id="cm-price-label" class="car-modal-label" for="cm-price">Asking Price ($)</label><input id="cm-price" class="car-modal-input" type="number" placeholder="28500"></div>
       <div class="car-modal-field"><label class="car-modal-label" for="cm-mileage">Mileage</label><input id="cm-mileage" class="car-modal-input" type="number" placeholder="45000"></div>
     </div>
-    <div class="car-modal-field"><label class="car-modal-label" for="cm-vin">VIN</label><input id="cm-vin" class="car-modal-input" type="text" placeholder="17-character VIN" maxlength="17"></div>
-    <div class="car-modal-field"><label class="car-modal-label" for="cm-carfax-url">Carfax URL (optional)</label><input id="cm-carfax-url" class="car-modal-input" type="url" placeholder="https://"></div>
+
+    <!-- NICB / AZ MVD checks — shown when VIN is entered -->
+    <div id="cm-vincheck-section" style="display:none; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; margin-bottom:18px;">
+      <div style="font-size:0.9rem; font-weight:700; color:var(--text); margin-bottom:12px;">Title &amp; History Checks</div>
+      <div style="margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid var(--border);">
+        <div style="font-size:0.82rem; color:var(--text-dim); margin-bottom:8px;">NICB — Stolen / Total Loss</div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <a href="https://www.nicb.org/vincheck" target="_blank" rel="noopener" class="nicb-btn" style="font-size:0.82rem; padding:6px 12px;">Check NICB ↗</a>
+          <button onclick="copyModalVin('vin')" style="padding:5px 12px; background:none; border:1px solid var(--border); border-radius:6px; color:var(--text-dim); font-size:0.8rem; cursor:pointer; font-family:'DM Sans',sans-serif;">Copy VIN</button>
+          <button id="cm-nicb-pass" onclick="setModalCheck('nicb','pass')" class="vin-check-toggle" style="font-size:0.8rem; padding:5px 12px;">&#10003; Pass</button>
+          <button id="cm-nicb-fail" onclick="setModalCheck('nicb','fail')" class="vin-check-toggle fail" style="font-size:0.8rem; padding:5px 12px;">&#10007; Fail</button>
+          <span id="cm-nicb-status" style="font-size:0.8rem; color:var(--text-dim);"></span>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.82rem; color:var(--text-dim); margin-bottom:8px;">AZ MVD — Title Check (enter VIN + Make on site)</div>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+          <a href="https://azmvdnow.gov/titleregistration/title/search" target="_blank" rel="noopener" class="nicb-btn" style="font-size:0.82rem; padding:6px 12px;">Check AZ MVD ↗</a>
+          <button onclick="copyModalVin('vin')" style="padding:5px 12px; background:none; border:1px solid var(--border); border-radius:6px; color:var(--text-dim); font-size:0.8rem; cursor:pointer; font-family:'DM Sans',sans-serif;">Copy VIN</button>
+          <button id="cm-mvd-pass" onclick="setModalCheck('mvd','pass')" class="vin-check-toggle" style="font-size:0.8rem; padding:5px 12px;">&#10003; Pass</button>
+          <button id="cm-mvd-fail" onclick="setModalCheck('mvd','fail')" class="vin-check-toggle fail" style="font-size:0.8rem; padding:5px 12px;">&#10007; Fail</button>
+          <span id="cm-mvd-status" style="font-size:0.8rem; color:var(--text-dim);"></span>
+        </div>
+      </div>
+    </div>
+
+    <div class="car-modal-field"><label id="cm-carfax-url-label" class="car-modal-label" for="cm-carfax-url">Carfax URL (optional)</label><input id="cm-carfax-url" class="car-modal-input" type="url" placeholder="https://"></div>
+    <div id="cm-carfax-text-section" class="car-modal-field">
+      <label class="car-modal-label" for="cm-carfax-text">Paste Carfax Text (optional)</label>
+      <div style="font-size:0.82rem; color:var(--text-dim); margin-bottom:8px;">Paste your Carfax report text — AI will analyze it when you save the car.</div>
+      <textarea id="cm-carfax-text" class="car-modal-input" rows="4" placeholder="Paste Carfax text here…" style="resize:vertical;"></textarea>
+    </div>
+    <div id="cm-carfax-done-section" class="car-modal-field" style="display:none;">
+      <div style="display:flex; align-items:center; gap:10px; background:var(--green-bg); border:1px solid var(--green); border-radius:8px; padding:10px 14px;">
+        <span style="font-size:1.1rem;">&#10003;</span>
+        <div>
+          <div style="font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:700; color:var(--green);">Carfax Analysis Complete</div>
+          <div style="font-size:0.78rem; color:var(--green); opacity:0.8;">Results from VIN Check will be saved with this car.</div>
+        </div>
+      </div>
+    </div>
     <div class="car-modal-field">
-      <label class="car-modal-label">Listing URL(s)</label>
+      <label id="cm-urls-label" class="car-modal-label">Listing URL(s)</label>
       <div id="cm-urls"></div>
       <button onclick="addListingUrlField()" style="margin-top:6px; background:none; border:1px dashed var(--border); border-radius:6px; color:var(--text-dim); padding:5px 12px; cursor:pointer; font-family:'DM Sans',sans-serif; font-size:0.83rem;">+ Add URL</button>
     </div>
@@ -539,6 +737,44 @@
     <div style="display:flex; gap:10px; margin-top:20px; justify-content:flex-end;">
       <button onclick="closeCarModal()" style="padding:8px 18px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; cursor:pointer;">Cancel</button>
       <button onclick="saveCarModal()" style="padding:8px 18px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-weight:600; cursor:pointer;">Save Car</button>
+    </div>
+  </div>
+</div>
+
+<!-- Verify Checks Modal (NICB + AZ MVD) -->
+<div id="verify-modal" onclick="if(event.target===this)closeVerifyModal()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:1010; overflow-y:auto; padding:40px 16px; box-sizing:border-box;">
+  <div class="car-modal-box" style="max-width:500px;">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:18px; gap:10px;">
+      <div>
+        <h3 id="verify-modal-title" style="font-family:'DM Sans',sans-serif; color:var(--text); margin:0 0 4px; font-size:1.05rem; font-weight:700;"></h3>
+        <div id="verify-modal-vin" style="font-family:'Space Mono',monospace; font-size:0.82rem; color:var(--text-dim); margin-bottom:4px;"></div>
+        <a id="verify-modal-days-link" href="#" target="_blank" rel="noopener" style="font-size:0.78rem; color:var(--yellow); text-decoration:none; font-weight:500;">Days on Lot ↗ CarGurus</a>
+      </div>
+      <button onclick="closeVerifyModal()" style="background:none; border:none; color:var(--text-dim); font-size:1.2rem; cursor:pointer; padding:2px 6px; flex-shrink:0;">✕</button>
+    </div>
+    <!-- NICB -->
+    <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:12px;">
+      <div style="font-size:0.88rem; font-weight:700; color:var(--text); margin-bottom:4px;">NICB — Stolen / Total Loss Check</div>
+      <div style="font-size:0.78rem; color:var(--text-dim); margin-bottom:12px;">Free check — enter the VIN on the NICB site and mark the result below.</div>
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <a href="https://www.nicb.org/vincheck" target="_blank" rel="noopener" class="nicb-btn" style="font-size:0.84rem; padding:7px 14px;">Go to NICB ↗</a>
+        <button onclick="copyVerifyVin('vin')" style="padding:6px 12px; background:none; border:1px solid var(--border); border-radius:6px; color:var(--text-dim); font-size:0.82rem; cursor:pointer; font-family:'DM Sans',sans-serif;">Copy VIN</button>
+        <button id="vm-nicb-pass" onclick="setVerifyCheck('nicbChecked','pass')" class="vin-check-toggle" style="font-size:0.84rem; padding:6px 14px;">&#10003; Pass</button>
+        <button id="vm-nicb-fail" onclick="setVerifyCheck('nicbChecked','fail')" class="vin-check-toggle fail" style="font-size:0.84rem; padding:6px 14px;">&#10007; Fail</button>
+      </div>
+      <div id="vm-nicb-status" style="margin-top:8px; font-size:0.8rem; color:var(--text-dim);"></div>
+    </div>
+    <!-- AZ MVD -->
+    <div style="background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:16px;">
+      <div style="font-size:0.88rem; font-weight:700; color:var(--text); margin-bottom:4px;">AZ MVD — Title &amp; Lien Check</div>
+      <div style="font-size:0.78rem; color:var(--text-dim); margin-bottom:12px;">Enter VIN on the AZ MVD site — copy VIN + Make for the search fields.</div>
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <a href="https://azmvdnow.gov/titleregistration/title/search" target="_blank" rel="noopener" class="nicb-btn" style="font-size:0.84rem; padding:7px 14px;">Go to AZ MVD ↗</a>
+        <button onclick="copyVerifyVin('vin')" style="padding:6px 12px; background:none; border:1px solid var(--border); border-radius:6px; color:var(--text-dim); font-size:0.82rem; cursor:pointer; font-family:'DM Sans',sans-serif;">Copy VIN</button>
+        <button id="vm-mvd-pass" onclick="setVerifyCheck('mvdChecked','pass')" class="vin-check-toggle" style="font-size:0.84rem; padding:6px 14px;">&#10003; Pass</button>
+        <button id="vm-mvd-fail" onclick="setVerifyCheck('mvdChecked','fail')" class="vin-check-toggle fail" style="font-size:0.84rem; padding:6px 14px;">&#10007; Fail</button>
+      </div>
+      <div id="vm-mvd-status" style="margin-top:8px; font-size:0.8rem; color:var(--text-dim);"></div>
     </div>
   </div>
 </div>
@@ -551,21 +787,18 @@
 </div>
 </div>
 
-<div id="pin-overlay">
-  <div class="pin-card">
-    <h2>Vehicle Tool</h2>
-    <p>Enter your access PIN to continue</p>
-    <input id="pin-input" type="password" placeholder="••••••••"
-      onkeydown="if(event.key==='Enter')submitPin()" />
-    <button id="pin-submit" onclick="submitPin()">Enter</button>
-    <div id="pin-error"></div>
-  </div>
-</div>
 
 <script>
+const MAKE_META = {
+  rav4:    { name: 'Toyota RAV4',    color: 'rav4'    },
+  crv:     { name: 'Honda CR-V',     color: 'crv'     },
+  corolla: { name: 'Toyota Corolla', color: 'corolla' },
+  camry:   { name: 'Toyota Camry',   color: 'camry'   }
+};
+
 const DB = {
   rav4: {
-    years: {2018:['LE','XLE','Limited'], 2019:['LE','XLE','XLE Premium','Limited'], 2020:['LE','XLE','XLE Premium','Limited'], 2021:['LE','XLE','XLE Premium','Limited'], 2022:['LE','XLE','XLE Premium','Limited'], 2023:['LE','XLE','XLE Premium','Limited']},
+    years: {2018:['LE','XLE','Limited'], 2019:['LE','LE Hybrid','XLE','XLE Premium','Limited'], 2020:['LE','XLE','XLE Premium','Limited'], 2021:['LE','XLE','XLE Premium','Limited'], 2022:['LE','XLE','XLE Premium','Limited'], 2023:['LE','XLE','XLE Premium','Limited']},
     data: {
       "2018-LE": {
         engine:"2.5L 4-cyl, 176hp", transmission:"6-speed automatic", mpg_combined_fwd:"26 mpg", mpg_combined_awd:"25 mpg",
@@ -630,6 +863,22 @@ const DB = {
         reliability_rating:"4.0/5.0", avg_repair_cost:"$429/year", resale_value:"Higher than CR-V",
         known_issues:"TSB: battery drain & transmission — verify performed", roof_rail_leak:"Yes (defective seals)",
         infotainment_system:"Entune 3.0", used_price:"$17,000–$19,000", fits_20k_budget:"Yes"
+      },
+      "2019-LE Hybrid": {
+        engine:"2.5L 4-cyl Hybrid, 219hp combined", transmission:"e-CVT (electronic continuously variable)", mpg_combined_fwd:"N/A (AWD standard)", mpg_combined_awd:"39 mpg (41 city / 37 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No (optional pkg)", rear_cross_traffic_alert:"No (optional)",
+        safety_sense_version:"TSS 2.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes", android_auto:"No", touchscreen:"7-inch", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"Yes",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"98.9 cu ft", cargo_space:"37.6 cu ft",
+        wheels:"17-inch alloy", roof_rails:"No", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Standard E-AWD (rear electric motor)", hybrid_available:"Yes — this IS the hybrid",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$350/year (lower than gas model)", resale_value:"Excellent — hybrids hold value very well",
+        known_issues:"Check hybrid battery health; AZ heat can stress battery long-term — verify no warning lights", roof_rail_leak:"Yes (same body — verify seals)",
+        infotainment_system:"Entune 3.0, 7-inch", used_price:"$19,000–$24,000", fits_20k_budget:"Tight/Yes"
       },
       "2019-XLE": {
         engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic", mpg_combined_fwd:"30 mpg", mpg_combined_awd:"28 mpg",
@@ -1325,6 +1574,520 @@ const DB = {
         infotainment_system:"9-inch touchscreen (wireless CarPlay) + Bose 12-speaker + nav + wireless charging", used_price:"$26,000–$30,000", fits_20k_budget:"No"
       }
     }
+  },
+  corolla: {
+    years: {2023:['LE','SE','XSE'], 2024:['LE','SE','XSE'], 2025:['LE','SE','XSE'], 2026:['LE','SE','XSE']},
+    data: {
+      "2023-LE": {
+        engine:"2.0L 4-cyl (Dynamic Force), 169hp", transmission:"Direct-Shift CVT (DS-CVT)",
+        mpg_combined_fwd:"35 mpg (31 city / 38 hwy)", mpg_combined_awd:"N/A (FWD only — no AWD on gas sedan)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No (not available on LE)", rear_cross_traffic_alert:"No",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"8-inch", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"97.5 cu ft (sedan)", cargo_space:"13.1 cu ft (trunk)",
+        wheels:"16-inch steel", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"No (FWD only)", hybrid_available:"Yes (Corolla Hybrid — separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$370/year", resale_value:"Good",
+        known_issues:"Generally very reliable; minor infotainment software quirks on early builds",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch", used_price:"$19,000–$22,000", fits_20k_budget:"Yes"
+      },
+      "2023-SE": {
+        engine:"2.0L 4-cyl (Dynamic Force), 169hp", transmission:"Direct-Shift CVT (DS-CVT)",
+        mpg_combined_fwd:"34 mpg (30 city / 38 hwy)", mpg_combined_awd:"N/A (FWD only)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"8-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth (sport)", interior_volume:"97.5 cu ft (sedan)", cargo_space:"13.1 cu ft (trunk)",
+        wheels:"17-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED (DRL)",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"No (FWD only)", hybrid_available:"Yes (Corolla Hybrid — separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$370/year", resale_value:"Good",
+        known_issues:"Sport-tuned suspension firmer than LE; otherwise very reliable",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch", used_price:"$21,000–$24,000", fits_20k_budget:"Tight/No"
+      },
+      "2023-XSE": {
+        engine:"2.0L 4-cyl (Dynamic Force), 169hp", transmission:"Direct-Shift CVT (DS-CVT)",
+        mpg_combined_fwd:"34 mpg (30 city / 38 hwy)", mpg_combined_awd:"N/A (FWD only)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"8-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (optional pkg)", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Leatherette (sport pkg available)", interior_volume:"97.5 cu ft (sedan)", cargo_space:"13.1 cu ft (trunk)",
+        wheels:"18-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"No (FWD only)", hybrid_available:"Yes (Corolla Hybrid — separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$370/year", resale_value:"Good",
+        known_issues:"Firm sport suspension; 18-inch wheels reduce ride comfort; otherwise excellent",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch", used_price:"$23,000–$26,000", fits_20k_budget:"No"
+      },
+      "2024-LE": {
+        engine:"2.0L 4-cyl (Dynamic Force), 169hp", transmission:"Direct-Shift CVT (DS-CVT)",
+        mpg_combined_fwd:"35 mpg (31 city / 38 hwy)", mpg_combined_awd:"N/A (FWD only)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No (not available on LE)", rear_cross_traffic_alert:"No",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"8-inch", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"97.5 cu ft (sedan)", cargo_space:"13.1 cu ft (trunk)",
+        wheels:"16-inch steel", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"No (FWD only)", hybrid_available:"Yes (Corolla Hybrid — separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$370/year", resale_value:"Good",
+        known_issues:"No wireless CarPlay on LE; otherwise same as 2023 LE; very reliable",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch", used_price:"$20,000–$23,000", fits_20k_budget:"Yes"
+      },
+      "2024-SE": {
+        engine:"2.0L 4-cyl (Dynamic Force), 169hp", transmission:"Direct-Shift CVT (DS-CVT)",
+        mpg_combined_fwd:"34 mpg (30 city / 38 hwy)", mpg_combined_awd:"N/A (FWD only)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"8-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth (sport)", interior_volume:"97.5 cu ft (sedan)", cargo_space:"13.1 cu ft (trunk)",
+        wheels:"17-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED (DRL)",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"No (FWD only)", hybrid_available:"Yes (Corolla Hybrid — separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$370/year", resale_value:"Good",
+        known_issues:"Wireless CarPlay added this year; sport suspension firmer; excellent reliability",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch (wireless CarPlay)", used_price:"$22,000–$25,000", fits_20k_budget:"Tight/No"
+      },
+      "2024-XSE": {
+        engine:"2.0L 4-cyl (Dynamic Force), 169hp", transmission:"Direct-Shift CVT (DS-CVT)",
+        mpg_combined_fwd:"34 mpg (30 city / 38 hwy)", mpg_combined_awd:"N/A (FWD only)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"8-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (optional pkg)", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Leatherette (sport pkg available)", interior_volume:"97.5 cu ft (sedan)", cargo_space:"13.1 cu ft (trunk)",
+        wheels:"18-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"No (FWD only)", hybrid_available:"Yes (Corolla Hybrid — separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$370/year", resale_value:"Good",
+        known_issues:"Firm sport suspension; wireless CarPlay added; overall excellent",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch (wireless CarPlay)", used_price:"$24,000–$27,000", fits_20k_budget:"No"
+      },
+      "2025-LE": {
+        engine:"2.0L 4-cyl (Dynamic Force), 169hp", transmission:"Direct-Shift CVT (DS-CVT)",
+        mpg_combined_fwd:"35 mpg (31 city / 38 hwy)", mpg_combined_awd:"N/A (FWD only)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No (not available on LE)", rear_cross_traffic_alert:"No",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"8-inch", wireless_carplay:"Yes",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"97.5 cu ft (sedan)", cargo_space:"13.1 cu ft (trunk)",
+        wheels:"16-inch steel", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"No (FWD only)", hybrid_available:"Yes (Corolla Hybrid — separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$370/year", resale_value:"Good",
+        known_issues:"Wireless CarPlay now standard on LE; same reliable platform",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch (wireless CarPlay)", used_price:"$21,000–$24,000", fits_20k_budget:"Tight/Yes"
+      },
+      "2025-SE": {
+        engine:"2.0L 4-cyl (Dynamic Force), 169hp", transmission:"Direct-Shift CVT (DS-CVT)",
+        mpg_combined_fwd:"34 mpg (30 city / 38 hwy)", mpg_combined_awd:"N/A (FWD only)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"8-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth (sport)", interior_volume:"97.5 cu ft (sedan)", cargo_space:"13.1 cu ft (trunk)",
+        wheels:"17-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED (DRL)",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"No (FWD only)", hybrid_available:"Yes (Corolla Hybrid — separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$370/year", resale_value:"Good",
+        known_issues:"Wireless CarPlay standard; sport suspension firmer; great reliability",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch (wireless CarPlay)", used_price:"$23,000–$26,000", fits_20k_budget:"No"
+      },
+      "2025-XSE": {
+        engine:"2.0L 4-cyl (Dynamic Force), 169hp", transmission:"Direct-Shift CVT (DS-CVT)",
+        mpg_combined_fwd:"34 mpg (30 city / 38 hwy)", mpg_combined_awd:"N/A (FWD only)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"10.5-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (optional pkg)", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Leatherette (sport pkg)", interior_volume:"97.5 cu ft (sedan)", cargo_space:"13.1 cu ft (trunk)",
+        wheels:"18-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"No (FWD only)", hybrid_available:"Yes (Corolla Hybrid — separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$370/year", resale_value:"Good",
+        known_issues:"10.5-inch screen added; sport suspension stiff; sporty aesthetics over practicality",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 10.5-inch (wireless CarPlay)", used_price:"$25,000–$28,000", fits_20k_budget:"No"
+      },
+      "2026-LE": {
+        engine:"2.0L 4-cyl (Dynamic Force), 169hp", transmission:"Direct-Shift CVT (DS-CVT)",
+        mpg_combined_fwd:"35 mpg (31 city / 38 hwy)", mpg_combined_awd:"N/A (FWD only)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No (not available on LE)", rear_cross_traffic_alert:"No",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"8-inch", wireless_carplay:"Yes",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"97.5 cu ft (sedan)", cargo_space:"13.1 cu ft (trunk)",
+        wheels:"16-inch steel", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"No (FWD only)", hybrid_available:"Yes (Corolla Hybrid — separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$370/year", resale_value:"Good",
+        known_issues:"Same as 2025 LE; proven and reliable compact sedan",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch (wireless CarPlay)", used_price:"$22,000–$25,000", fits_20k_budget:"Tight/Yes"
+      },
+      "2026-SE": {
+        engine:"2.0L 4-cyl (Dynamic Force), 169hp", transmission:"Direct-Shift CVT (DS-CVT)",
+        mpg_combined_fwd:"34 mpg (30 city / 38 hwy)", mpg_combined_awd:"N/A (FWD only)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"8-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth (sport)", interior_volume:"97.5 cu ft (sedan)", cargo_space:"13.1 cu ft (trunk)",
+        wheels:"17-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED (DRL)",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"No (FWD only)", hybrid_available:"Yes (Corolla Hybrid — separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$370/year", resale_value:"Good",
+        known_issues:"Same as 2025 SE; sport suspension firmer; excellent compact",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch (wireless CarPlay)", used_price:"$24,000–$27,000", fits_20k_budget:"No"
+      },
+      "2026-XSE": {
+        engine:"2.0L 4-cyl (Dynamic Force), 169hp", transmission:"Direct-Shift CVT (DS-CVT)",
+        mpg_combined_fwd:"34 mpg (30 city / 38 hwy)", mpg_combined_awd:"N/A (FWD only)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"10.5-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (optional pkg)", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Leatherette (sport pkg)", interior_volume:"97.5 cu ft (sedan)", cargo_space:"13.1 cu ft (trunk)",
+        wheels:"18-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"No (FWD only)", hybrid_available:"Yes (Corolla Hybrid — separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$370/year", resale_value:"Good",
+        known_issues:"Same as 2025 XSE; 10.5-inch screen, sport look; sporty over practical",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 10.5-inch (wireless CarPlay)", used_price:"$26,000–$29,000", fits_20k_budget:"No"
+      }
+    }
+  },
+  camry: {
+    years: {2023:['LE','SE','XLE','XSE'], 2024:['LE','SE','XLE','XSE'], 2025:['LE','SE','XLE','XSE'], 2026:['LE','SE','XLE','XSE']},
+    data: {
+      "2023-LE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic",
+        mpg_combined_fwd:"32 mpg (28 city / 39 hwy)", mpg_combined_awd:"30 mpg (27 city / 37 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No (not standard on LE)", rear_cross_traffic_alert:"No",
+        safety_sense_version:"TSS 2.5+", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"8-inch", wireless_carplay:"No",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"16-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (Dynamic Torque Control AWD, ~$1,400)", hybrid_available:"Yes (Camry Hybrid — separate model 2023-24)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$388/year", resale_value:"Excellent",
+        known_issues:"Gas-only last years (2025+ all hybrid); transmission hesitation at low speeds; very reliable",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch", used_price:"$24,000–$27,000", fits_20k_budget:"No"
+      },
+      "2023-SE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic",
+        mpg_combined_fwd:"32 mpg (28 city / 39 hwy)", mpg_combined_awd:"30 mpg (27 city / 37 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.5+", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"8-inch", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No (optional pkg)", power_driver_seat:"No", moonroof:"No (optional pkg)", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth (sport)", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"18-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (~$1,400)", hybrid_available:"Yes (Camry Hybrid — separate model 2023-24)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$388/year", resale_value:"Excellent",
+        known_issues:"Gas-only; sport suspension firmer; transmission hesitation; reliable overall",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch", used_price:"$26,000–$29,000", fits_20k_budget:"No"
+      },
+      "2023-XLE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic",
+        mpg_combined_fwd:"32 mpg (28 city / 39 hwy)", mpg_combined_awd:"30 mpg (27 city / 37 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.5+", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"9-inch (JBL audio pkg)", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (front standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Yes (standard)", seat_material:"Leather", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"18-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (~$1,400)", hybrid_available:"Yes (Camry Hybrid XLE — separate model 2023-24)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$388/year", resale_value:"Excellent",
+        known_issues:"Premium trim; gas-only before 2025 redesign; well-equipped mid-size",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 9-inch (JBL audio)", used_price:"$29,000–$33,000", fits_20k_budget:"No"
+      },
+      "2023-XSE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic",
+        mpg_combined_fwd:"32 mpg (28 city / 39 hwy)", mpg_combined_awd:"30 mpg (27 city / 37 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.5+", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wired)", android_auto:"Yes (wired)", touchscreen:"9-inch (sport JBL pkg)", wireless_carplay:"No",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (optional pkg)", power_driver_seat:"No (optional)", moonroof:"Yes (optional sport pkg)", dual_zone_climate:"No",
+        heated_steering_wheel:"No (optional)", seat_material:"Sport SofTex (synthetic leather)", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"18-inch alloy (sport)", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (~$1,400)", hybrid_available:"Yes (Camry Hybrid XSE — separate model 2023-24)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$388/year", resale_value:"Excellent",
+        known_issues:"Sporty look but firmer ride; gas-only before 2025 hybrid-only redesign",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 9-inch sport (JBL optional)", used_price:"$29,000–$33,000", fits_20k_budget:"No"
+      },
+      "2024-LE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic",
+        mpg_combined_fwd:"32 mpg (28 city / 39 hwy)", mpg_combined_awd:"30 mpg (27 city / 37 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"No (not standard on LE)", rear_cross_traffic_alert:"No",
+        safety_sense_version:"TSS 2.5+", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"8-inch", wireless_carplay:"Yes",
+        push_button_start:"No", smart_key_entry:"No", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"16-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"Halogen",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (~$1,400)", hybrid_available:"Yes (Camry Hybrid — final separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$388/year", resale_value:"Excellent",
+        known_issues:"Final year gas-only; wireless CarPlay added; 2025 goes all-hybrid",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch (wireless CarPlay)", used_price:"$26,000–$29,000", fits_20k_budget:"No"
+      },
+      "2024-SE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic",
+        mpg_combined_fwd:"32 mpg (28 city / 39 hwy)", mpg_combined_awd:"30 mpg (27 city / 37 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.5+", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"8-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No (optional pkg)", power_driver_seat:"No", moonroof:"No (optional pkg)", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth (sport)", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"18-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (~$1,400)", hybrid_available:"Yes (Camry Hybrid — final separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$388/year", resale_value:"Excellent",
+        known_issues:"Final year gas; wireless CarPlay added; sport suspension firmer; reliable",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch (wireless CarPlay)", used_price:"$28,000–$31,000", fits_20k_budget:"No"
+      },
+      "2024-XLE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic",
+        mpg_combined_fwd:"32 mpg (28 city / 39 hwy)", mpg_combined_awd:"30 mpg (27 city / 37 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.5+", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"9-inch (JBL pkg)", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (front standard)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Yes (standard)", seat_material:"Leather", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"18-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (~$1,400)", hybrid_available:"Yes (Camry Hybrid XLE — final separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$388/year", resale_value:"Excellent",
+        known_issues:"Final year gas; premium trim; wireless CarPlay now standard",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 9-inch wireless CarPlay (JBL audio)", used_price:"$31,000–$35,000", fits_20k_budget:"No"
+      },
+      "2024-XSE": {
+        engine:"2.5L 4-cyl, 203hp", transmission:"8-speed automatic",
+        mpg_combined_fwd:"32 mpg (28 city / 39 hwy)", mpg_combined_awd:"30 mpg (27 city / 37 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 2.5+", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"9-inch (sport JBL pkg)", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (optional pkg)", power_driver_seat:"No (optional)", moonroof:"Yes (optional sport pkg)", dual_zone_climate:"No",
+        heated_steering_wheel:"No (optional)", seat_material:"Sport SofTex (synthetic leather)", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"18-inch alloy (sport)", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (~$1,400)", hybrid_available:"Yes (Camry Hybrid XSE — final separate model)",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"$388/year", resale_value:"Excellent",
+        known_issues:"Final year gas; sporty look; wireless CarPlay added; firmer ride",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 9-inch wireless CarPlay (sport JBL)", used_price:"$31,000–$35,000", fits_20k_budget:"No"
+      },
+      "2025-LE": {
+        engine:"2.5L hybrid, 225hp combined (FWD)", transmission:"eCVT (electronic CVT)",
+        mpg_combined_fwd:"51 mpg (48 city / 53 hwy)", mpg_combined_awd:"47 mpg (44 city / 49 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard — all trims 2025+)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"8-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes (standard all trims)", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"17-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (hybrid AWD option)", hybrid_available:"Yes — ALL trims are hybrid-only from 2025",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"~$300/year (hybrid drivetrain lowers maintenance)", resale_value:"Excellent",
+        known_issues:"First year 9th gen redesign — monitor for early build issues; huge improvement over 2024",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch (wireless CarPlay)", used_price:"$30,000–$33,000", fits_20k_budget:"No"
+      },
+      "2025-SE": {
+        engine:"2.5L hybrid, 225hp combined (FWD)", transmission:"eCVT (electronic CVT)",
+        mpg_combined_fwd:"50 mpg (47 city / 53 hwy)", mpg_combined_awd:"46 mpg (43 city / 49 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard all trims)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"8-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (front standard on SE)", power_driver_seat:"No", moonroof:"No (optional)", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth (sport)", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"18-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (hybrid AWD option)", hybrid_available:"Yes — all trims hybrid-only",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"~$300/year", resale_value:"Excellent",
+        known_issues:"First year 9th gen; sport-tuned but firmer ride; heated seats standard on SE",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch (wireless CarPlay)", used_price:"$33,000–$36,000", fits_20k_budget:"No"
+      },
+      "2025-XLE": {
+        engine:"2.5L hybrid, 225hp combined (FWD) / 232hp (AWD)", transmission:"eCVT (electronic CVT)",
+        mpg_combined_fwd:"50 mpg (47 city / 53 hwy)", mpg_combined_awd:"46 mpg (43 city / 49 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard all trims)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"12.3-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (front and rear)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Yes", seat_material:"Leather", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"18-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED (projector)",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (hybrid AWD option)", hybrid_available:"Yes — all trims hybrid-only",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"~$300/year", resale_value:"Excellent",
+        known_issues:"First year 9th gen; 12.3-inch screen and leather — significant upgrade from 2024 XLE",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 12.3-inch (wireless CarPlay + JBL audio)", used_price:"$37,000–$41,000", fits_20k_budget:"No"
+      },
+      "2025-XSE": {
+        engine:"2.5L hybrid, 225hp combined (FWD) / 232hp (AWD)", transmission:"eCVT (electronic CVT)",
+        mpg_combined_fwd:"50 mpg (47 city / 53 hwy)", mpg_combined_awd:"46 mpg (43 city / 49 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard all trims)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"12.3-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (sport-style front)", power_driver_seat:"No", moonroof:"Yes (optional sport pkg)", dual_zone_climate:"No",
+        heated_steering_wheel:"No (optional)", seat_material:"Sport SofTex (synthetic leather)", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"18-inch alloy (sport)", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (hybrid AWD option)", hybrid_available:"Yes — all trims hybrid-only",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"~$300/year", resale_value:"Excellent",
+        known_issues:"First year 9th gen; sport trim; no leather but great hybrid mpg with sporty look",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 12.3-inch sport (wireless CarPlay)", used_price:"$37,000–$41,000", fits_20k_budget:"No"
+      },
+      "2026-LE": {
+        engine:"2.5L hybrid, 225hp combined (FWD)", transmission:"eCVT (electronic CVT)",
+        mpg_combined_fwd:"51 mpg (48 city / 53 hwy)", mpg_combined_awd:"47 mpg (44 city / 49 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard all trims)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"8-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"No", power_driver_seat:"No", moonroof:"No", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"17-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (hybrid AWD option)", hybrid_available:"Yes — all trims hybrid-only",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"~$300/year", resale_value:"Excellent",
+        known_issues:"Same as 2025; proven 9th gen hybrid; excellent fuel economy and reliability",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch (wireless CarPlay)", used_price:"$31,000–$35,000", fits_20k_budget:"No"
+      },
+      "2026-SE": {
+        engine:"2.5L hybrid, 225hp combined (FWD)", transmission:"eCVT (electronic CVT)",
+        mpg_combined_fwd:"50 mpg (47 city / 53 hwy)", mpg_combined_awd:"46 mpg (43 city / 49 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard all trims)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"8-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (front standard on SE)", power_driver_seat:"No", moonroof:"No (optional)", dual_zone_climate:"No",
+        heated_steering_wheel:"No", seat_material:"Cloth (sport)", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"18-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (hybrid AWD option)", hybrid_available:"Yes — all trims hybrid-only",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"~$300/year", resale_value:"Excellent",
+        known_issues:"Same as 2025 SE; sport suspension firmer; heated seats standard",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 8-inch (wireless CarPlay)", used_price:"$34,000–$37,000", fits_20k_budget:"No"
+      },
+      "2026-XLE": {
+        engine:"2.5L hybrid, 225hp combined (FWD) / 232hp (AWD)", transmission:"eCVT (electronic CVT)",
+        mpg_combined_fwd:"50 mpg (47 city / 53 hwy)", mpg_combined_awd:"46 mpg (43 city / 49 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard all trims)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"12.3-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (front and rear)", power_driver_seat:"Yes (8-way)", moonroof:"Yes", dual_zone_climate:"Yes",
+        heated_steering_wheel:"Yes", seat_material:"Leather", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"18-inch alloy", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED (projector)",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (hybrid AWD option)", hybrid_available:"Yes — all trims hybrid-only",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"~$300/year", resale_value:"Excellent",
+        known_issues:"Same as 2025 XLE; premium proven hybrid; excellent all-around sedan",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 12.3-inch (wireless CarPlay + JBL audio)", used_price:"$38,000–$43,000", fits_20k_budget:"No"
+      },
+      "2026-XSE": {
+        engine:"2.5L hybrid, 225hp combined (FWD) / 232hp (AWD)", transmission:"eCVT (electronic CVT)",
+        mpg_combined_fwd:"50 mpg (47 city / 53 hwy)", mpg_combined_awd:"46 mpg (43 city / 49 hwy)",
+        auto_emergency_braking:"Yes", adaptive_cruise_control:"Yes", lane_departure_warning:"Yes", lane_keep_assist:"Yes",
+        pedestrian_detection:"Yes", blind_spot_monitoring:"Yes (standard all trims)", rear_cross_traffic_alert:"Yes",
+        safety_sense_version:"TSS 3.0", nhtsa_rating:"5 stars", iihs_rating:"Top Safety Pick+",
+        apple_carplay:"Yes (wireless)", android_auto:"Yes (wireless)", touchscreen:"12.3-inch", wireless_carplay:"Yes",
+        push_button_start:"Yes", smart_key_entry:"Yes", remote_start:"No", wifi_hotspot:"No",
+        heated_seats:"Yes (sport-style front)", power_driver_seat:"No", moonroof:"Yes (optional sport pkg)", dual_zone_climate:"No",
+        heated_steering_wheel:"No (optional)", seat_material:"Sport SofTex (synthetic leather)", interior_volume:"100.4 cu ft (sedan)", cargo_space:"15.1 cu ft (trunk)",
+        wheels:"18-inch alloy (sport)", roof_rails:"N/A (sedan)", fog_lights:"No", headlights:"LED",
+        hood_insulation:"No", illuminated_switches:"No",
+        awd_available:"Yes (hybrid AWD option)", hybrid_available:"Yes — all trims hybrid-only",
+        reliability_rating:"4.5/5.0", avg_repair_cost:"~$300/year", resale_value:"Excellent",
+        known_issues:"Same as 2025 XSE; great hybrid mpg with sporty aesthetics",
+        roof_rail_leak:"N/A (sedan)",
+        infotainment_system:"Toyota Audio Multimedia, 12.3-inch sport (wireless CarPlay)", used_price:"$38,000–$43,000", fits_20k_budget:"No"
+      }
+    }
   }
 };
 
@@ -1384,6 +2147,8 @@ function addVehicleSlot() {
         <option value="">Make</option>
         <option value="rav4">Toyota RAV4</option>
         <option value="crv">Honda CR-V</option>
+        <option value="corolla">Toyota Corolla</option>
+        <option value="camry">Toyota Camry</option>
       </select>
       <select id="year-${id}" onchange="compare();">
         <option value="">Year</option>
@@ -1439,6 +2204,15 @@ function setMode(mode) {
   const searchPanel = document.getElementById('search-panel');
   searchPanel.style.display = 'none';
 
+  const linksPanel = document.getElementById('links-panel');
+  linksPanel.style.display = 'none';
+
+  const carfaxScanPanel = document.getElementById('carfax-scan-panel');
+  carfaxScanPanel.style.display = 'none';
+
+  const vehicleSearchPanel = document.getElementById('vehicle-search-panel');
+  vehicleSearchPanel.style.display = 'none';
+
   const compareSelectors = document.getElementById('compare-selectors');
   const resultsDiv = document.getElementById('results');
   const vinPanel = document.getElementById('vin-panel');
@@ -1469,6 +2243,31 @@ function setMode(mode) {
     return;
   }
 
+  if (mode === 'links') {
+    compareSelectors.style.display = 'none';
+    resultsDiv.style.display = 'none';
+    vinPanel.style.display = 'none';
+    linksPanel.style.display = 'block';
+    fetchCustomLinks();
+    return;
+  }
+
+  if (mode === 'carfax-scan') {
+    compareSelectors.style.display = 'none';
+    resultsDiv.style.display = 'none';
+    vinPanel.style.display = 'none';
+    carfaxScanPanel.style.display = 'block';
+    return;
+  }
+
+  if (mode === 'vehicle-search') {
+    compareSelectors.style.display = 'none';
+    resultsDiv.style.display = 'none';
+    vinPanel.style.display = 'none';
+    vehicleSearchPanel.style.display = 'block';
+    return;
+  }
+
   compareSelectors.style.display = '';
   resultsDiv.style.display = '';
   vinPanel.style.display = 'none';
@@ -1493,6 +2292,8 @@ function setMode(mode) {
           <option value="">Make</option>
           <option value="rav4">Toyota RAV4</option>
           <option value="crv">Honda CR-V</option>
+          <option value="corolla">Toyota Corolla</option>
+          <option value="camry">Toyota Camry</option>
         </select>
         <select id="year-${id}" style="display:none;" onchange="compare();">
           <option value="">Year</option>
@@ -1525,7 +2326,7 @@ function updateTrims(id) {
   if (!make || !DB[make]) return;
   
   const group = document.getElementById(`group-${id}`);
-  group.className = 'selector-group ' + (make === 'rav4' ? 'rav4-border' : 'crv-border');
+  group.className = 'selector-group ' + (MAKE_META[make]?.color || make) + '-border';
   
   if (currentMode === 'single') {
     const allTrims = new Set();
@@ -1564,8 +2365,8 @@ function getVehicle(id) {
   const key = `${year}-${trim}`;
   const data = DB[make].data[key];
   if (!data) return null;
-  const name = make === 'rav4' ? 'Toyota RAV4' : 'Honda CR-V';
-  return { make, year, trim, name: `${year} ${name} ${trim}`, data, color: make === 'rav4' ? 'rav4' : 'crv' };
+  const meta = MAKE_META[make] || { name: make, color: make };
+  return { make, year, trim, name: `${year} ${meta.name} ${trim}`, data, color: meta.color };
 }
 
 function valClass(val) {
@@ -1615,6 +2416,18 @@ const YEAR_NOTES = {
     2022: "2022: Roof rail leak issue fixed (redesigned). XLE gets Bi-LED projector headlights (upgraded from reflector LED). Illuminated interior switches added on XLE+. Fog lights REMOVED from XLE. New wheel colors. Power passenger seat added on Limited.",
     2023: "2023: Major tech refresh — new 8-inch touchscreen (was 7-inch), wireless Apple CarPlay and Android Auto, new multimedia system with OTA updates, Toyota Safety Sense upgraded to TSS 2.5 (adds intersection turn assist, improved pedestrian detection). 7-inch digital instrument cluster. Roof rail leak fully resolved."
   },
+  corolla: {
+    2023: "2023: 12th gen Corolla (mid-cycle). 2.0L Dynamic Force 169hp with Direct-Shift CVT. Toyota Safety Sense 3.0 standard all trims — AEB, ACC, lane keep, pedestrian detection. CarPlay and Android Auto standard (wired). 8-inch touchscreen. LE: no BSM, 16-inch steel wheels, halogen lights. SE: BSM, push-button start, 17-inch alloy, LED lights. XSE: 18-inch alloy, sportier look, heated seats optional. FWD only on gas sedan.",
+    2024: "2024: No major changes from 2023. Wireless Apple CarPlay/Android Auto added to SE and XSE trims (LE remains wired). Minor color and trim updates. LE unchanged. Strong reliability record continues. Good value compact sedan.",
+    2025: "2025: Wireless Apple CarPlay and Android Auto now standard ALL trims including LE. XSE gets upgraded 10.5-inch touchscreen (was 8-inch). Minor exterior styling refinements. TSS 3.0 maintained. Most tech-complete Corolla to date.",
+    2026: "2026: Continued from 2025 refresh — no major changes. Same powertrain, same wireless connectivity. Very reliable and fuel efficient compact. Good used buy when priced under $25k."
+  },
+  camry: {
+    2023: "2023: 8th gen Camry (gas). 2.5L 4-cyl 203hp, 8-speed auto. TSS 2.5+ standard all trims. Wired CarPlay/Android Auto. LE: no BSM, no push-button start. SE/XLE/XSE: BSM standard, push-button start, LED lights, 18-inch alloy. XLE: leather, moonroof, heated seats, dual-zone climate, 9-inch screen. AWD available all trims. Last years before gas engine discontinued.",
+    2024: "2024: Final year of gas-only Camry — GAS ENGINE DISCONTINUED after 2024. Wireless CarPlay/Android Auto now standard all trims. Otherwise same 2.5L 203hp powertrain. Good value used buy if you prefer gas over hybrid. AWD available.",
+    2025: "2025: COMPLETE REDESIGN — 9th generation, ALL-HYBRID ONLY (gas discontinued). 2.5L hybrid 225hp (FWD) or 232hp (AWD). eCVT. LE: 51 mpg combined. TSS 3.0 upgraded. BSM standard ALL trims. Wireless CarPlay/Android Auto standard all trims. Push-button start standard all trims. XLE/XSE: 12.3-inch screen. Major improvement in tech and efficiency.",
+    2026: "2026: Second year of all-hybrid 9th gen. No major changes from 2025 launch. Hybrid powertrain proven. 49-51 mpg combined depending on trim. Excellent value at used prices versus 2025."
+  },
   crv: {
     2018: "2018: 5th generation (2nd year). LX has older 2.4L engine (184hp, no turbo) and NO Honda Sensing safety suite — no auto braking, no adaptive cruise, no lane keep. EX and above get 1.5L turbo (190hp) and Honda Sensing. Apple CarPlay and Android Auto standard on EX+. Some oil dilution reports on 1.5T engine. No hybrid option. LX is very bare bones.",
     2019: "2019: No significant changes from 2018. LX still has 2.4L engine and NO Honda Sensing. EX-L with Navigation trim eliminated (nav now Touring-only, use CarPlay instead). Oil dilution issues mostly resolved. Still no hybrid option.",
@@ -1626,8 +2439,7 @@ const YEAR_NOTES = {
 };
 
 function renderSingleAllYears(make, trim) {
-  const makeName = make === 'rav4' ? 'Toyota RAV4' : 'Honda CR-V';
-  const color = make === 'rav4' ? 'rav4' : 'crv';
+  const { name: makeName, color } = MAKE_META[make] || { name: make, color: make };
   
   // Gather all years that have this trim
   const allYears = [];
@@ -1707,6 +2519,7 @@ function renderSingleAllYears(make, trim) {
   html += '<div id="yoy-notes" style="background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;padding:16px">';
   
   const makeNotes = YEAR_NOTES[make];
+  if (!makeNotes) { html += '</div></div>'; document.getElementById('results').innerHTML = html; return; }
   const noteYears = Object.keys(makeNotes).map(Number).sort();
   noteYears.forEach(ny => {
     const note = makeNotes[ny];
@@ -1805,10 +2618,11 @@ function renderCompareMulti(vehicles) {
   
   const makes = new Set(vehicles.map(v => v.make));
   makes.forEach(make => {
-    const makeName = make === 'rav4' ? 'Toyota RAV4' : 'Honda CR-V';
+    const { name: makeName, color: makeColor } = MAKE_META[make] || { name: make, color: make };
     const makeNotes = YEAR_NOTES[make];
+    if (!makeNotes) return;
     const noteYears = Object.keys(makeNotes).map(Number).sort();
-    html += `<div style="margin-top:8px"><div style="font-family:'Space Mono',monospace;font-size:0.8rem;color:${make==='rav4'?'var(--rav4)':'var(--crv)'};margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">${makeName} Changes</div>`;
+    html += `<div style="margin-top:8px"><div style="font-family:'Space Mono',monospace;font-size:0.8rem;color:var(--${makeColor});margin-bottom:10px;text-transform:uppercase;letter-spacing:1px">${makeName} Changes</div>`;
     noteYears.forEach(ny => {
       const note = makeNotes[ny];
       const matchingVehicles = vehicles.filter(v => v.make === make && parseInt(v.year) === ny);
@@ -1835,29 +2649,7 @@ function renderCompareMulti(vehicles) {
 // ── Config ──
 const API_BASE = 'https://vehicle-tool-api.wrathofkaren.workers.dev';
 
-// ── PIN System ──
-const PIN_KEY = 'vehicle_tool_pin';
-let accessPin = '';
-
-function initPin() {
-  const stored = localStorage.getItem(PIN_KEY);
-  if (stored) {
-    accessPin = stored;
-    document.getElementById('pin-overlay').classList.add('hidden');
-  }
-}
-
-function submitPin() {
-  const val = document.getElementById('pin-input').value.trim();
-  if (!val) {
-    document.getElementById('pin-error').textContent = 'Please enter a PIN.';
-    return;
-  }
-  accessPin = val;
-  localStorage.setItem(PIN_KEY, val);
-  document.getElementById('pin-overlay').classList.add('hidden');
-  document.getElementById('pin-error').textContent = '';
-}
+const accessPin = '1987';
 
 // ── VIN Check State ──
 let currentVinData = null;
@@ -1875,22 +2667,34 @@ function esc(s) {
 
 // ── Saved Cars State ──
 let savedCars = [];
+let carSections = [];
 let carPollingInterval = null;
 let carModalEditId = null;
+let vehicleSearchResult = null;
+let customLinks = [];
+
+// ── VIN Check State ──
+let nicbVinResult = null;
+let mvdVinResult = null;
+let vinRecallData = [];
+let vinComplaintCount = 0;
+
+// ── Add Car Modal Check State ──
+let modalNicbResult = null;
+let modalMvdResult = null;
 
 async function fetchCars() {
-  if (!accessPin) return;
   const indicator = document.getElementById('saved-sync-indicator');
   try {
-    const res = await fetch(`${API_BASE}/api/cars`, {
-      headers: { 'X-Access-Pin': accessPin }
-    });
-    if (res.status === 401) {
-      if (indicator) indicator.textContent = 'Auth error — check PIN';
-      return;
-    }
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    savedCars = await res.json();
+    const headers = { 'X-Access-Pin': accessPin };
+    const [carsRes, sectionsRes] = await Promise.all([
+      fetch(`${API_BASE}/api/cars`, { headers }),
+      fetch(`${API_BASE}/api/car-sections`, { headers })
+    ]);
+    if (!carsRes.ok) throw new Error(`HTTP ${carsRes.status}`);
+    if (!sectionsRes.ok) throw new Error(`HTTP ${sectionsRes.status}`);
+    savedCars = await carsRes.json();
+    carSections = await sectionsRes.json();
     renderCarList();
     if (indicator) indicator.textContent = 'Synced ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   } catch (e) {
@@ -1932,14 +2736,24 @@ function renderCarList() {
   else if (sort === 'year-desc') cars.sort((a, b) => (Number(b.year) || 0) - (Number(a.year) || 0));
   else cars.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
 
-  if (cars.length === 0) {
+  if (cars.length === 0 && (search || carSections.length === 0)) {
     el.innerHTML = '<div style="text-align:center; color:var(--text-dim); padding:40px 0; font-size:0.95rem;">' +
-      (savedCars.length === 0 ? 'No saved cars yet. Add one above or import from VIN Check.' : 'No results match your search.') +
+      (savedCars.length === 0 && carSections.length === 0 ? 'No saved cars yet. Add one above or import from VIN Check.' : 'No results match your search.') +
       '</div>';
     return;
   }
 
-  el.innerHTML = cars.map(car => {
+  const sectionDefs = [
+    ...carSections,
+    { id: null, name: 'Saved Cars' }
+  ];
+
+  const moveOptions = (currentSectionId) => sectionDefs.map(section => {
+    const value = section.id || '';
+    return `<option value="${esc(value)}" ${value === (currentSectionId || '') ? 'selected' : ''}>${esc(section.name)}</option>`;
+  }).join('');
+
+  const renderCarCard = (car) => {
     const title = [car.year, car.make, car.model, car.trim].filter(Boolean).map(esc).join(' ') || 'Unnamed Car';
     const price = car.askingPrice ? '$' + car.askingPrice.toLocaleString() : null;
     const mileage = car.mileage ? car.mileage.toLocaleString() + ' mi' : null;
@@ -1953,34 +2767,99 @@ function renderCarList() {
       ? `<span style="display:inline-block; padding:1px 8px; border-radius:10px; font-size:0.72rem; font-weight:700; margin-left:8px; background:var(--${riskKey}-bg); color:var(--${riskKey}); border:1px solid var(--${riskKey});">${esc(risk)}</span>`
       : '';
 
-    const nicbState = car.nicbChecked;
-    const mvdState = car.mvdChecked;
-    const nicbLabel = nicbState === 'pass' ? '✓ NICB' : nicbState === 'fail' ? '✗ NICB' : 'NICB?';
-    const mvdLabel = mvdState === 'pass' ? '✓ AZ MVD' : mvdState === 'fail' ? '✗ AZ MVD' : 'AZ MVD?';
-    const nicbClass = nicbState === 'pass' ? 'pass' : nicbState === 'fail' ? 'fail' : '';
-    const mvdClass = mvdState === 'pass' ? 'pass' : mvdState === 'fail' ? 'fail' : '';
+    const allPass = car.nicbChecked === 'pass' && car.mvdChecked === 'pass';
+    const anyFail = car.nicbChecked === 'fail' || car.mvdChecked === 'fail';
+    const anyChecked = car.nicbChecked || car.mvdChecked;
+    const checkBtnLabel = allPass ? '✓ Verified' : anyFail ? '✗ Issues' : 'Info Needed';
+    const checkBtnStyle = allPass
+      ? 'border-color:var(--green);background:var(--green-bg);color:var(--green);'
+      : anyFail
+        ? 'border-color:var(--red);background:var(--red-bg);color:var(--red);'
+        : 'border-color:var(--yellow);color:var(--yellow);';
 
+    const recallBadge = (car.recallCount > 0)
+      ? `<span style="display:inline-block;padding:0 6px;border-radius:8px;font-size:0.68rem;font-weight:700;margin-left:6px;background:var(--yellow-bg);color:var(--yellow);border:1px solid var(--yellow);">\u26a0 ${car.recallCount}R</span>`
+      : '';
+    const hasVinData = !!car.vinData;
+    const listingLinkHtml = (car.listingUrls || [])
+      .slice(0,2)
+      .filter(u => typeof u === 'string' && (u.startsWith('https://') || u.startsWith('http://')))
+      .map(u=>`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" style="color:var(--accent);text-decoration:none;font-size:0.78rem;margin-left:8px;">↗ Listing</a>`)
+      .join('');
     return `<div class="saved-car-card">
-      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
         <div style="flex:1; min-width:0;" onclick="openCarDetail('${esc(car.id)}')">
-          <div class="saved-car-title">${title}${riskBadge}</div>
-          ${meta ? `<div class="saved-car-meta">${meta}</div>` : ''}
-          ${car.notes ? `<div class="saved-car-meta" style="font-style:italic;">"${esc(car.notes.slice(0,100))}${car.notes.length>100?'…':''}"</div>` : ''}
-          ${car.listingUrls?.length ? `<div class="saved-car-meta" style="margin-top:6px;">${car.listingUrls.slice(0,2).filter(u => typeof u === 'string' && (u.startsWith('https://') || u.startsWith('http://'))).map(u=>`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()" style="color:var(--accent); text-decoration:none; margin-right:10px; font-size:0.8rem;">Listing ↗</a>`).join('')}</div>` : ''}
+          <div class="saved-car-title">${title}${riskBadge}${recallBadge}</div>
+          <div class="saved-car-meta">${[meta, car.notes ? `"${esc(car.notes.slice(0,60))}${car.notes.length>60?'…':''}"` : ''].filter(Boolean).join(' · ')}${listingLinkHtml}</div>
         </div>
-        <div style="display:flex; flex-direction:column; gap:6px; flex-shrink:0; align-items:flex-end;">
-          <div style="display:flex; gap:6px;">
-            <button class="saved-check-btn ${nicbClass}" onclick="cycleCheck('${esc(car.id)}','nicbChecked')">${nicbLabel}</button>
-            <button class="saved-check-btn ${mvdClass}" onclick="cycleCheck('${esc(car.id)}','mvdChecked')">${mvdLabel}</button>
-          </div>
-          <div style="display:flex; gap:6px;">
-            <button onclick="openAddCarModal('${esc(car.id)}')" style="padding:3px 10px; background:none; border:1px solid var(--border); border-radius:6px; color:var(--text-dim); font-size:0.78rem; cursor:pointer; font-family:'DM Sans',sans-serif;">Edit</button>
-            <button onclick="confirmDeleteCar('${esc(car.id)}')" style="padding:3px 10px; background:none; border:1px solid rgba(239,68,68,0.3); border-radius:6px; color:var(--red); font-size:0.78rem; cursor:pointer; font-family:'DM Sans',sans-serif;">Delete</button>
-          </div>
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+          <button onclick="event.stopPropagation();openVerifyModal('${esc(car.id)}')" style="padding:4px 10px;border-radius:6px;border:1px solid;background:none;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;${checkBtnStyle}">${checkBtnLabel}</button>
+          ${hasVinData ? `<button onclick="event.stopPropagation();openCarDetail('${esc(car.id)}',true)" style="padding:4px 9px;background:var(--accent);border:none;border-radius:6px;color:#fff;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;" title="Full VIN Review">Review</button>` : ''}
+          <select class="saved-section-select" title="Move to section" onclick="event.stopPropagation()" onchange="event.stopPropagation();moveCarToSection('${esc(car.id)}', this.value)">${moveOptions(car.sectionId)}</select>
+          <button onclick="event.stopPropagation();openAddCarModal('${esc(car.id)}')" style="padding:4px 9px;background:none;border:1px solid var(--border);border-radius:6px;color:var(--text-dim);font-size:0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif;">Edit</button>
+          <button onclick="event.stopPropagation();confirmDeleteCar('${esc(car.id)}')" style="padding:4px 9px;background:none;border:1px solid rgba(239,68,68,0.25);border-radius:6px;color:var(--red);font-size:0.75rem;cursor:pointer;font-family:'DM Sans',sans-serif;">Del</button>
         </div>
       </div>
     </div>`;
+  };
+
+  el.innerHTML = sectionDefs.map(section => {
+    const sectionCars = cars.filter(car => (car.sectionId || '') === (section.id || ''));
+    if (search && sectionCars.length === 0) return '';
+    const body = sectionCars.length
+      ? sectionCars.map(renderCarCard).join('')
+      : '<div class="saved-section-empty">No cars in this section yet.</div>';
+    return `<section class="saved-section">
+      <div class="saved-section-header">
+        <div class="saved-section-title">${esc(section.name)}</div>
+        <div class="saved-section-count">${sectionCars.length} car${sectionCars.length === 1 ? '' : 's'}</div>
+      </div>
+      ${body}
+    </section>`;
   }).join('');
+}
+
+async function createSavedSection() {
+  const name = prompt('Name this saved-cars section:');
+  if (!name || !name.trim()) return;
+  try {
+    const res = await fetch(`${API_BASE}/api/car-sections`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Access-Pin': accessPin },
+      body: JSON.stringify({ name: name.trim() })
+    });
+    if (!res.ok) throw new Error('create failed');
+    const section = await res.json();
+    carSections.push(section);
+    renderCarList();
+  } catch {
+    alert('Could not create section. Please try again.');
+  }
+}
+
+async function moveCarToSection(id, sectionId) {
+  const nextSectionId = sectionId || null;
+  const car = savedCars.find(c => c.id === id);
+  if (!car || (car.sectionId || null) === nextSectionId) return;
+  const previousSectionId = car.sectionId || null;
+  car.sectionId = nextSectionId;
+  renderCarList();
+  try {
+    const res = await fetch(`${API_BASE}/api/cars/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Access-Pin': accessPin },
+      body: JSON.stringify({ sectionId: nextSectionId })
+    });
+    if (!res.ok) throw new Error('update failed');
+    const updated = await res.json();
+    const idx = savedCars.findIndex(c => c.id === id);
+    if (idx !== -1) savedCars[idx] = updated;
+    renderCarList();
+  } catch {
+    car.sectionId = previousSectionId;
+    renderCarList();
+    alert('Could not move car. Please try again.');
+  }
 }
 
 async function cycleCheck(id, field) {
@@ -2004,6 +2883,82 @@ async function cycleCheck(id, field) {
   }
 }
 
+// ── Verify Checks Modal ──
+let verifyModalCarId = null;
+
+function openVerifyModal(id) {
+  const car = savedCars.find(c => c.id === id);
+  if (!car) return;
+  verifyModalCarId = id;
+  const title = [car.year, car.make, car.model, car.trim].filter(Boolean).join(' ') || 'Unnamed Car';
+  document.getElementById('verify-modal-title').textContent = title;
+  document.getElementById('verify-modal-vin').textContent = car.vin ? 'VIN: ' + car.vin : 'No VIN on file';
+  const daysLinkEl = document.getElementById('verify-modal-days-link');
+  if (daysLinkEl) {
+    if (car.vin) {
+      daysLinkEl.href = `https://www.cargurus.com/Cars/new/nl#listing=&vin=${encodeURIComponent(car.vin)}`;
+      daysLinkEl.style.display = '';
+    } else {
+      daysLinkEl.style.display = 'none';
+    }
+  }
+  updateVerifyModalButtons(car);
+  document.getElementById('verify-modal').style.display = 'block';
+}
+
+function closeVerifyModal() {
+  document.getElementById('verify-modal').style.display = 'none';
+  verifyModalCarId = null;
+}
+
+function updateVerifyModalButtons(car) {
+  const nicb = car.nicbChecked;
+  const mvd = car.mvdChecked;
+  const nicbPass = document.getElementById('vm-nicb-pass');
+  const nicbFail = document.getElementById('vm-nicb-fail');
+  const mvdPass = document.getElementById('vm-mvd-pass');
+  const mvdFail = document.getElementById('vm-mvd-fail');
+  if (nicbPass) { nicbPass.classList.toggle('active-pass', nicb === 'pass'); nicbPass.classList.remove('active-fail'); }
+  if (nicbFail) { nicbFail.classList.toggle('active-fail', nicb === 'fail'); nicbFail.classList.remove('active-pass'); }
+  if (mvdPass)  { mvdPass.classList.toggle('active-pass', mvd === 'pass');   mvdPass.classList.remove('active-fail'); }
+  if (mvdFail)  { mvdFail.classList.toggle('active-fail', mvd === 'fail');   mvdFail.classList.remove('active-pass'); }
+  const nicbStatus = document.getElementById('vm-nicb-status');
+  const mvdStatus = document.getElementById('vm-mvd-status');
+  if (nicbStatus) nicbStatus.textContent = nicb === 'pass' ? '✓ Marked as Pass — no stolen/total loss records' : nicb === 'fail' ? '✗ Marked as Fail — review before proceeding' : 'Not yet verified';
+  if (mvdStatus)  mvdStatus.textContent  = mvd  === 'pass' ? '✓ Marked as Pass — title & lien check clear'   : mvd  === 'fail' ? '✗ Marked as Fail — review before proceeding' : 'Not yet verified';
+  if (nicbStatus) nicbStatus.style.color = nicb === 'pass' ? 'var(--green)' : nicb === 'fail' ? 'var(--red)' : 'var(--text-dim)';
+  if (mvdStatus)  mvdStatus.style.color  = mvd  === 'pass' ? 'var(--green)' : mvd  === 'fail' ? 'var(--red)' : 'var(--text-dim)';
+}
+
+async function setVerifyCheck(field, val) {
+  if (!verifyModalCarId) return;
+  const car = savedCars.find(c => c.id === verifyModalCarId);
+  if (!car) return;
+  const next = car[field] === val ? null : val; // toggle off if already set
+  try {
+    const res = await fetch(`${API_BASE}/api/cars/${verifyModalCarId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Access-Pin': accessPin },
+      body: JSON.stringify({ [field]: next })
+    });
+    if (!res.ok) throw new Error('update failed');
+    const updated = await res.json();
+    const idx = savedCars.findIndex(c => c.id === verifyModalCarId);
+    if (idx !== -1) savedCars[idx] = updated;
+    updateVerifyModalButtons(updated);
+    renderCarList();
+  } catch {
+    alert('Could not update. Please try again.');
+  }
+}
+
+function copyVerifyVin(type) {
+  const car = savedCars.find(c => c.id === verifyModalCarId);
+  if (!car || !car.vin) { alert('No VIN saved for this car.'); return; }
+  const text = car.vin;
+  navigator.clipboard?.writeText(text).catch(() => prompt('Copy this:', text));
+}
+
 // ── Car Modal (Add / Edit / Delete) ──
 function addListingUrlField(value) {
   value = value || '';
@@ -2014,10 +2969,37 @@ function addListingUrlField(value) {
   container.appendChild(div);
 }
 
+function resetModalCheckState() {
+  modalNicbResult = null;
+  modalMvdResult = null;
+  ['cm-nicb-pass','cm-nicb-fail','cm-mvd-pass','cm-mvd-fail'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.classList.remove('active-pass','active-fail'); }
+  });
+  ['cm-nicb-status','cm-mvd-status'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '';
+  });
+}
+
 function openAddCarModal(id) {
   carModalEditId = id || null;
   document.getElementById('car-modal-title').textContent = id ? 'Edit Car' : 'Add Car';
   document.getElementById('cm-urls').innerHTML = '';
+  document.getElementById('cm-carfax-text').value = '';
+  const vinStatus = document.getElementById('cm-vin-status');
+  if (vinStatus) { vinStatus.textContent = ''; vinStatus.dataset.decoded = ''; }
+  // Reset carfax section to default state
+  const carfaxTextSec = document.getElementById('cm-carfax-text-section');
+  const carfaxDoneSec = document.getElementById('cm-carfax-done-section');
+  if (carfaxTextSec) carfaxTextSec.style.display = '';
+  if (carfaxDoneSec) carfaxDoneSec.style.display = 'none';
+  // Reset yellow import labels
+  ['cm-price-label','cm-carfax-url-label','cm-urls-label'].forEach(lid => {
+    const el = document.getElementById(lid);
+    if (el) el.style.color = '';
+  });
+  resetModalCheckState();
 
   if (id) {
     const car = savedCars.find(c => c.id === id);
@@ -2033,12 +3015,16 @@ function openAddCarModal(id) {
     document.getElementById('cm-notes').value = car.notes || '';
     (car.listingUrls || []).forEach(u => addListingUrlField(u));
     if (!(car.listingUrls && car.listingUrls.length)) addListingUrlField();
+    // Restore check states for edit
+    if (car.nicbChecked) setModalCheck('nicb', car.nicbChecked);
+    if (car.mvdChecked) setModalCheck('mvd', car.mvdChecked);
   } else {
     ['cm-year','cm-make','cm-model','cm-trim','cm-price','cm-mileage','cm-vin','cm-carfax-url','cm-notes']
       .forEach(fid => { document.getElementById(fid).value = ''; });
     addListingUrlField();
   }
 
+  updateModalVinChecks();
   document.getElementById('car-modal').style.display = 'block';
 }
 
@@ -2046,6 +3032,106 @@ function closeCarModal() {
   document.getElementById('car-modal').style.display = 'none';
   carModalEditId = null;
   window._importPayload = null;
+  resetModalCheckState();
+}
+
+function updateModalVinChecks() {
+  const vin = document.getElementById('cm-vin')?.value.trim() || '';
+  const section = document.getElementById('cm-vincheck-section');
+  if (section) section.style.display = vin.length >= 5 ? '' : 'none';
+  // Clear status when user edits VIN
+  const status = document.getElementById('cm-vin-status');
+  if (status && status.dataset.decoded === 'true') {
+    status.textContent = '';
+    status.dataset.decoded = '';
+  }
+}
+
+async function checkModalVin() {
+  const vinInput = document.getElementById('cm-vin');
+  const vin = vinInput?.value.trim().toUpperCase() || '';
+  const status = document.getElementById('cm-vin-status');
+  const btn = document.getElementById('cm-vin-btn');
+  if (vin.length !== 17) {
+    if (status) { status.textContent = 'VIN must be exactly 17 characters.'; status.style.color = 'var(--red)'; }
+    return;
+  }
+  if (btn) { btn.disabled = true; btn.textContent = 'Looking up…'; }
+  if (status) { status.textContent = 'Fetching from NHTSA…'; status.style.color = 'var(--text-dim)'; }
+  try {
+    const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${vin}?format=json`);
+    if (!res.ok) throw new Error(`NHTSA error ${res.status}`);
+    const data = await res.json();
+    const v = data.Results?.[0];
+    if (!v || !v.Make) throw new Error('No data returned for this VIN');
+    const year  = v.ModelYear || '';
+    const make  = v.Make      || '';
+    const model = v.Model     || '';
+    const trim  = v.Trim      || '';
+    if (!make && !model) throw new Error('VIN not recognised — check the number and try again');
+    // Fill fields (don't overwrite if already has a value from import)
+    const set = (id, val) => { const el = document.getElementById(id); if (el && !el.value && val) el.value = val; };
+    set('cm-year',  year);
+    set('cm-make',  make);
+    set('cm-model', model);
+    set('cm-trim',  trim);
+    if (status) {
+      status.textContent = `✓ ${[year, make, model, trim].filter(Boolean).join(' ')}`;
+      status.style.color = 'var(--green)';
+      status.dataset.decoded = 'true';
+    }
+    if (vinInput) vinInput.value = vin; // normalise to uppercase
+    updateModalVinChecks();
+  } catch (err) {
+    if (status) { status.textContent = '✗ ' + err.message; status.style.color = 'var(--red)'; }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Check VIN'; }
+  }
+}
+
+function setModalCheck(field, val) {
+  if (field === 'nicb') {
+    modalNicbResult = modalNicbResult === val ? null : val;
+    document.getElementById('cm-nicb-pass')?.classList.toggle('active-pass', modalNicbResult === 'pass');
+    document.getElementById('cm-nicb-fail')?.classList.toggle('active-fail', modalNicbResult === 'fail');
+    const s = document.getElementById('cm-nicb-status');
+    if (s) s.textContent = modalNicbResult === 'pass' ? '\u2714 Pass' : modalNicbResult === 'fail' ? '\u2716 Fail' : '';
+  } else {
+    modalMvdResult = modalMvdResult === val ? null : val;
+    document.getElementById('cm-mvd-pass')?.classList.toggle('active-pass', modalMvdResult === 'pass');
+    document.getElementById('cm-mvd-fail')?.classList.toggle('active-fail', modalMvdResult === 'fail');
+    const s = document.getElementById('cm-mvd-status');
+    if (s) s.textContent = modalMvdResult === 'pass' ? '\u2714 Pass' : modalMvdResult === 'fail' ? '\u2716 Fail' : '';
+  }
+}
+
+async function copyModalVin(type) {
+  const vin = document.getElementById('cm-vin')?.value.trim() || '';
+  const make = document.getElementById('cm-make')?.value.trim() || '';
+  const text = vin;
+  try {
+    await navigator.clipboard.writeText(text);
+    const btn = event.currentTarget;
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  } catch {
+    prompt('Copy this:', text);
+  }
+}
+
+async function copyCarVin(id) {
+  const car = savedCars.find(c => c.id === id);
+  if (!car?.vin) return;
+  try {
+    await navigator.clipboard.writeText(car.vin);
+    const btn = event.currentTarget;
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => { btn.textContent = orig; }, 1200);
+  } catch {
+    prompt('Copy VIN:', car.vin);
+  }
 }
 
 async function saveCarModal() {
@@ -2066,14 +3152,40 @@ async function saveCarModal() {
     listingUrls: urls
   };
 
+  // Modal check state (for manual adds — overridden below if from VIN import)
+  payload.nicbChecked = modalNicbResult;
+  payload.mvdChecked = modalMvdResult;
+
   if (window._importPayload && !carModalEditId) {
-    payload.carfaxAnalysis = window._importPayload.carfaxAnalysis;
-    payload.listingAnalysis = window._importPayload.listingAnalysis;
-    payload.combinedAnalysis = window._importPayload.combinedAnalysis;
+    const p = window._importPayload;
+    payload.carfaxAnalysis = p.carfaxAnalysis;
+    payload.listingAnalysis = p.listingAnalysis;
+    payload.combinedAnalysis = p.combinedAnalysis;
+    payload.nicbChecked = p.nicbChecked;
+    payload.mvdChecked = p.mvdChecked;
+    payload.vinData = p.vinData;
+    payload.recallCount = p.recallCount;
+    payload.recallSummary = p.recallSummary;
+    payload.complaintCount = p.complaintCount;
     window._importPayload = null;
   }
 
   const saveBtn = document.querySelector('#car-modal button[onclick="saveCarModal()"]');
+
+  // Run Carfax text analysis if text is present and no analysis yet
+  const carfaxText = document.getElementById('cm-carfax-text')?.value.trim();
+  if (carfaxText && !payload.carfaxAnalysis) {
+    if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Analyzing Carfax\u2026'; }
+    try {
+      const res = await fetch(`${API_BASE}/api/analyze-carfax`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Access-Pin': accessPin },
+        body: JSON.stringify({ text: carfaxText })
+      });
+      if (res.ok) payload.carfaxAnalysis = await res.json();
+    } catch { /* save without analysis on error */ }
+  }
+
   if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; }
 
   try {
@@ -2125,7 +3237,7 @@ async function confirmDeleteCar(id) {
   }
 }
 
-function openCarDetail(id) {
+function openCarDetail(id, showVin) {
   const car = savedCars.find(c => c.id === id);
   if (!car) return;
 
@@ -2192,9 +3304,54 @@ function openCarDetail(id) {
     ${analysisSection('Carfax Analysis', car.carfaxAnalysis, 'var(--accent)')}
     ${analysisSection('Listing Analysis', car.listingAnalysis, 'var(--accent2)')}
     ${analysisSection('Cross-Reference', car.combinedAnalysis, 'var(--green)')}
+    ${car.vinData ? vinDetailSection(car, showVin) : ''}
   `;
 
   document.getElementById('car-detail-modal').style.display = 'block';
+  if (showVin) {
+    const vinSec = document.getElementById('car-detail-vin-section');
+    if (vinSec) vinSec.open = true;
+  }
+}
+
+function vinDetailSection(car, open) {
+  const v = car.vinData;
+  const fields = [
+    ['Year', v.year], ['Make', v.make], ['Model', v.model], ['Trim', v.trim],
+    ['Engine', v.engine], ['Transmission', v.transmission], ['Drive', v.drive],
+    ['Body', v.body], ['Assembly Plant', v.plant]
+  ].filter(([,val]) => val);
+
+  const recallItems = (car.recallSummary || []).map(r =>
+    `<div style="padding:8px 0; border-bottom:1px solid var(--border);">
+      <div style="font-weight:500; font-size:0.88rem; color:var(--text); margin-bottom:2px;">${esc(r.Component || 'Unknown Component')}</div>
+      <div style="font-size:0.83rem; color:var(--text-dim);">${esc(r.Summary || r.Consequence || '')}</div>
+    </div>`
+  ).join('');
+
+  const recallCount = car.recallCount || 0;
+  const complaintCount = car.complaintCount || 0;
+
+  return `<details class="detail-section" id="car-detail-vin-section" style="border-left:3px solid var(--accent); margin-top:4px;" ${open ? 'open' : ''}>
+    <summary class="detail-section-title" style="list-style:none; cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
+      Full VIN Review
+      <span style="font-size:0.8rem; font-weight:400; color:var(--text-dim);">VIN: <span style="font-family:'Space Mono',monospace;">${esc(v.vin || '')}</span></span>
+    </summary>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:12px; margin-bottom:14px;">
+      ${fields.map(([label, val]) => `<div><span class="detail-label">${esc(label)}</span><span class="detail-value">${esc(val)}</span></div>`).join('')}
+    </div>
+    <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+      <div style="background:${recallCount>0?'var(--yellow-bg)':'var(--green-bg)'}; border:1px solid ${recallCount>0?'var(--yellow)':'var(--green)'}; border-radius:8px; padding:8px 16px; text-align:center;">
+        <div style="font-size:1.4rem; font-weight:700; color:${recallCount>0?'var(--yellow)':'var(--green)'};">${recallCount}</div>
+        <div style="font-size:0.78rem; color:var(--text-dim);">NHTSA Recalls</div>
+      </div>
+      <div style="background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:8px 16px; text-align:center;">
+        <div style="font-size:1.4rem; font-weight:700; color:var(--text);">${complaintCount}</div>
+        <div style="font-size:0.78rem; color:var(--text-dim);">NHTSA Complaints</div>
+      </div>
+    </div>
+    ${recallCount > 0 ? `<div style="font-size:0.82rem; font-weight:700; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:8px;">Recall Details</div>${recallItems}` : ''}
+  </details>`;
 }
 
 function closeCarDetail() {
@@ -2206,11 +3363,30 @@ function importCurrentVehicle() {
     alert('Decode a VIN first before importing.');
     return;
   }
+
+  const missing = [];
+  if (!nicbVinResult) missing.push('NICB VINCheck');
+  if (!mvdVinResult) missing.push('AZ MVD');
+  if (missing.length > 0) {
+    const proceed = confirm(
+      `You haven't marked a result for: ${missing.join(' and ')}.\n\n` +
+      'It\'s recommended to complete those checks before saving.\n\nContinue anyway?'
+    );
+    if (!proceed) return;
+  }
+
   window._importPayload = {
     carfaxAnalysis: carfaxAnalysisResult || null,
     listingAnalysis: listingAnalysisResult || null,
-    combinedAnalysis: null
+    combinedAnalysis: null,
+    nicbChecked: nicbVinResult,
+    mvdChecked: mvdVinResult,
+    vinData: currentVinData,
+    recallCount: vinRecallData.length,
+    recallSummary: vinRecallData,
+    complaintCount: vinComplaintCount
   };
+
   carModalEditId = null;
   document.getElementById('car-modal-title').textContent = 'Import from VIN Check';
   document.getElementById('cm-urls').innerHTML = '';
@@ -2225,7 +3401,69 @@ function importCurrentVehicle() {
   document.getElementById('cm-carfax-url').value = '';
   document.getElementById('cm-notes').value = '';
   if (typeof addListingUrlField === 'function') addListingUrlField();
+
+  // Show green "done" if Carfax was already analyzed; otherwise show paste area
+  const carfaxTextSec = document.getElementById('cm-carfax-text-section');
+  const carfaxDoneSec = document.getElementById('cm-carfax-done-section');
+  if (carfaxAnalysisResult) {
+    if (carfaxTextSec) carfaxTextSec.style.display = 'none';
+    if (carfaxDoneSec) carfaxDoneSec.style.display = '';
+  } else {
+    if (carfaxTextSec) carfaxTextSec.style.display = '';
+    if (carfaxDoneSec) carfaxDoneSec.style.display = 'none';
+  }
+
+  // Yellow labels for fields not collected in VIN Check
+  ['cm-price-label','cm-carfax-url-label','cm-urls-label'].forEach(lid => {
+    const el = document.getElementById(lid);
+    if (el) el.style.color = 'var(--yellow)';
+  });
+
   document.getElementById('car-modal').style.display = 'block';
+}
+
+// ── No-VIN manual entry ──
+function loadWithoutVin() {
+  currentVinData = null;
+  carfaxAnalysisResult = null;
+  listingAnalysisResult = null;
+  nicbVinResult = null;
+  mvdVinResult = null;
+  vinRecallData = [];
+  vinComplaintCount = 0;
+  combinedAnalysisResult = null;
+
+  const inputStyle = 'width:100%;padding:10px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:\'DM Sans\',sans-serif;font-size:0.9rem;box-sizing:border-box;';
+  document.getElementById('vin-results').innerHTML = `
+    <div class="vin-section">
+      <div class="vin-section-title">Enter Vehicle Details</div>
+      <div style="color:var(--text-dim);font-size:0.88rem;margin-bottom:18px">No VIN? Enter the details below. You can still run Carfax and listing analysis, price assessment, and buyer's checklist. Recall data requires a VIN.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 16px;">
+        <div style="margin-bottom:14px;"><label style="font-size:0.88rem;color:var(--text-dim);margin-bottom:5px;display:block;">Year</label><input id="nv-year" type="text" placeholder="2021" style="${inputStyle}"></div>
+        <div style="margin-bottom:14px;"><label style="font-size:0.88rem;color:var(--text-dim);margin-bottom:5px;display:block;">Make</label><input id="nv-make" type="text" placeholder="Toyota" style="${inputStyle}"></div>
+        <div style="margin-bottom:14px;"><label style="font-size:0.88rem;color:var(--text-dim);margin-bottom:5px;display:block;">Model <span style="color:var(--red)">*</span></label><input id="nv-model" type="text" placeholder="RAV4" style="${inputStyle}" onkeydown="if(event.key==='Enter')loadManualDetails()"></div>
+        <div style="margin-bottom:14px;"><label style="font-size:0.88rem;color:var(--text-dim);margin-bottom:5px;display:block;">Trim</label><input id="nv-trim" type="text" placeholder="XLE" style="${inputStyle}"></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:4px;">
+        <button onclick="loadManualDetails()" class="vin-check-btn">Continue \u2192</button>
+        <button onclick="document.getElementById('vin-results').innerHTML=''" style="padding:13px 18px;border-radius:10px;border:1px solid var(--border);background:none;color:var(--text-dim);font-family:'DM Sans',sans-serif;font-size:0.88rem;cursor:pointer;">Cancel</button>
+      </div>
+    </div>`;
+}
+
+function loadManualDetails() {
+  const year = document.getElementById('nv-year')?.value.trim() || '';
+  const make = document.getElementById('nv-make')?.value.trim() || '';
+  const model = document.getElementById('nv-model')?.value.trim() || '';
+  const trim = document.getElementById('nv-trim')?.value.trim() || '';
+  if (!model) { alert('Please enter at least the Model.'); return; }
+
+  currentVinData = { vin: null, year, make, model, trim, engine: '', transmission: '', drive: '', body: '', plant: '' };
+  document.getElementById('vin-results').innerHTML = '';
+  renderVehicleIdentity(currentVinData);
+  renderUploadsSection('');
+  renderPriceAssessment(currentVinData);
+  renderBuyersChecklist(currentVinData);
 }
 
 // ── VIN Decode ──
@@ -2241,6 +3479,11 @@ async function decodeVIN() {
   currentVinData = null;
   carfaxAnalysisResult = null;
   listingAnalysisResult = null;
+  nicbVinResult = null;
+  mvdVinResult = null;
+  vinRecallData = [];
+  vinComplaintCount = 0;
+  combinedAnalysisResult = null;
 
   try {
     const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${vin}?format=json`);
@@ -2291,7 +3534,7 @@ function renderVehicleIdentity(v) {
         <div class="vin-identity-item"><div class="vin-identity-label">Assembly Plant</div><div class="vin-identity-value">${v.plant || '\u2014'}</div></div>
       </div>
       <div style="margin-top:14px; padding-top:12px; border-top:1px solid var(--border);">
-        <button onclick="importCurrentVehicle()" style="padding:7px 16px; background:var(--accent); border:none; border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:600; cursor:pointer;">↓ Save to Saved Cars</button>
+        <button onclick="importCurrentVehicle()" style="padding:9px 20px; background:var(--green); border:none; border-radius:8px; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.95rem; font-weight:700; cursor:pointer; box-shadow:0 2px 8px rgba(52,211,153,0.3);">↓ Save to Saved Cars</button>
       </div>
     </div>`;
 }
@@ -2307,6 +3550,7 @@ async function fetchRecalls(v) {
     const res = await fetch(`https://api.nhtsa.gov/recalls/recallsByVehicle?make=${encodeURIComponent(v.make)}&model=${encodeURIComponent(v.model)}&modelYear=${encodeURIComponent(v.year)}`);
     const data = await res.json();
     const recalls = data.results || [];
+    vinRecallData = recalls;
     const badge = document.getElementById('vin-recalls-badge');
     const body = document.getElementById('vin-recalls-body');
     if (recalls.length === 0) {
@@ -2334,6 +3578,7 @@ async function fetchComplaints(v) {
     const res = await fetch(`https://api.nhtsa.gov/complaints/complaintsByVehicle?make=${encodeURIComponent(v.make)}&model=${encodeURIComponent(v.model)}&modelYear=${encodeURIComponent(v.year)}`);
     const data = await res.json();
     const complaints = data.results || [];
+    vinComplaintCount = complaints.length;
     const byComp = {};
     complaints.forEach(c => { const k = c.components || 'Unknown'; byComp[k] = (byComp[k]||0)+1; });
     const badge = document.getElementById('vin-complaints-badge');
@@ -2362,83 +3607,126 @@ function renderNICBLink(vin) {
 
       <div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin-bottom:8px">NICB \u2014 Stolen / Total Loss</div>
       <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:10px">Checks if this vehicle has been reported stolen or declared a total loss.</div>
-      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:6px">
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:10px">
         <a class="nicb-btn" href="https://www.nicb.org/vincheck" target="_blank" rel="noopener">Check on NICB VINCheck \u2197</a>
         <span style="color:var(--text-dim);font-size:0.82rem">VIN: <span style="font-family:'Space Mono',monospace;color:var(--text)">${vin}</span></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+        <span style="color:var(--text-dim);font-size:0.82rem;font-family:'DM Sans',sans-serif;">After checking, mark result:</span>
+        <button id="nicb-pass-btn" onclick="setVinCheck('nicb','pass')" class="vin-check-toggle">&#10003; Pass</button>
+        <button id="nicb-fail-btn" onclick="setVinCheck('nicb','fail')" class="vin-check-toggle fail">&#10007; Fail</button>
+        <span id="nicb-status" style="font-size:0.82rem;color:var(--text-dim);"></span>
       </div>
 
       <div style="border-top:1px solid var(--border);margin:18px 0"></div>
 
       <div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin-bottom:8px">Arizona MVD \u2014 Title Check</div>
       <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:10px">Checks title brands (salvage, rebuilt, flood) and active liens. Enter the VIN and Make below on the AZ MVD site.</div>
-      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:8px">
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:10px">
         <a class="nicb-btn" href="https://azmvdnow.gov/titleregistration/title/search" target="_blank" rel="noopener">Check on AZ MVD Now \u2197</a>
       </div>
-      <div style="display:flex;gap:24px;flex-wrap:wrap">
+      <div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:10px">
         <span style="color:var(--text-dim);font-size:0.82rem">VIN: <span style="font-family:'Space Mono',monospace;color:var(--text)">${vin}</span></span>
         <span style="color:var(--text-dim);font-size:0.82rem">Make: <span style="font-family:'Space Mono',monospace;color:var(--text)">${make || '\u2014'}</span></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+        <span style="color:var(--text-dim);font-size:0.82rem;font-family:'DM Sans',sans-serif;">After checking, mark result:</span>
+        <button id="mvd-pass-btn" onclick="setVinCheck('mvd','pass')" class="vin-check-toggle">&#10003; Pass</button>
+        <button id="mvd-fail-btn" onclick="setVinCheck('mvd','fail')" class="vin-check-toggle fail">&#10007; Fail</button>
+        <span id="mvd-status" style="font-size:0.82rem;color:var(--text-dim);"></span>
       </div>
     </div>`);
 }
 
+function setVinCheck(field, val) {
+  if (field === 'nicb') {
+    nicbVinResult = nicbVinResult === val ? null : val;
+    const passBtn = document.getElementById('nicb-pass-btn');
+    const failBtn = document.getElementById('nicb-fail-btn');
+    const status = document.getElementById('nicb-status');
+    if (passBtn) passBtn.classList.toggle('active-pass', nicbVinResult === 'pass');
+    if (failBtn) failBtn.classList.toggle('active-fail', nicbVinResult === 'fail');
+    if (status) status.textContent = nicbVinResult === 'pass' ? '\u2714 Marked Pass' : nicbVinResult === 'fail' ? '\u2716 Marked Fail' : '';
+  } else {
+    mvdVinResult = mvdVinResult === val ? null : val;
+    const passBtn = document.getElementById('mvd-pass-btn');
+    const failBtn = document.getElementById('mvd-fail-btn');
+    const status = document.getElementById('mvd-status');
+    if (passBtn) passBtn.classList.toggle('active-pass', mvdVinResult === 'pass');
+    if (failBtn) failBtn.classList.toggle('active-fail', mvdVinResult === 'fail');
+    if (status) status.textContent = mvdVinResult === 'pass' ? '\u2714 Marked Pass' : mvdVinResult === 'fail' ? '\u2716 Marked Fail' : '';
+  }
+}
+
 // ── Uploads Section ──
 function renderUploadsSection(vin) {
-  document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
-    <div class="vin-section" id="vin-uploads-card">
-      <div class="vin-section-title">Documents &amp; Reports <span style="background:var(--accent);color:#fff;font-size:0.65rem;padding:2px 8px;border-radius:10px;vertical-align:middle;margin-left:6px">AI \u2014 Sonnet</span></div>
-      <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:20px">Upload your Carfax and car listing for AI-powered analysis. Each is analyzed independently, then cross-referenced together when both are provided. Your access PIN is required.</div>
+  const aiBadge = `<span style="background:var(--accent);color:#fff;font-size:0.62rem;padding:2px 8px;border-radius:10px;vertical-align:middle;margin-left:8px;font-weight:600;">AI \u2014 Sonnet</span>`;
 
-      <div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin-bottom:10px">Carfax Report</div>
-      <div style="margin-bottom:12px"><a class="nicb-btn" href="https://www.google.com/search?q=carfax+%22${vin}%22" target="_blank" rel="noopener">Search Google for Carfax \u2197</a></div>
+  // Card 1: Carfax Report
+  document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
+    <div class="vin-section" id="vin-carfax-card">
+      <div class="vin-section-title">Carfax Report ${aiBadge}</div>
+      <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:16px">Upload your Carfax PDF (or paste text) for accident, ownership, and title history analysis.</div>
+      <div style="margin-bottom:14px"><a class="nicb-btn" href="https://www.google.com/search?q=carfax+%22${vin}%22" target="_blank" rel="noopener">Search Google for Carfax \u2197</a></div>
       <div style="display:flex;gap:8px;margin-bottom:14px">
-        <button id="carfax-tab-upload" onclick="switchCarfaxMode('upload')" style="padding:6px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer">Upload PDF</button>
-        <button id="carfax-tab-paste" onclick="switchCarfaxMode('paste')" style="padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer">Paste Text</button>
+        <button id="carfax-tab-paste" onclick="switchCarfaxMode('paste')" style="padding:6px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer">Paste Text</button>
+        <button id="carfax-tab-upload" onclick="switchCarfaxMode('upload')" style="padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer">Upload PDF</button>
       </div>
-      <div id="carfax-mode-upload">
-        <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:12px">Upload your Carfax PDF for accident, ownership, and title history analysis. Max 10MB.</div>
-        <div class="upload-area" id="carfax-upload-area" onclick="document.getElementById('carfax-file-input').click()">
-          <div class="upload-icon">\ud83d\udcc4</div>
-          <div class="upload-text" id="carfax-upload-text">Click to upload Carfax PDF</div>
-          <input type="file" id="carfax-file-input" accept=".pdf,application/pdf" style="display:none" onchange="handleCarfaxUpload(event)" />
-        </div>
-      </div>
-      <div id="carfax-mode-paste" style="display:none">
+      <div id="carfax-mode-paste">
         <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:12px">Copy and paste all text from your Carfax report.</div>
         <textarea id="carfax-paste-input" placeholder="Paste Carfax report text here\u2026" style="width:100%;min-height:180px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;line-height:1.5;resize:vertical;outline:none"></textarea>
         <button onclick="handleCarfaxTextAnalysis()" style="margin-top:10px;padding:10px 24px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;cursor:pointer">Analyze Carfax</button>
       </div>
-      <div id="carfax-analysis-result"></div>
-
-      <div style="border-top:1px solid var(--border);margin:24px 0"></div>
-
-      <div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin-bottom:10px">Car Listing</div>
-      <div style="display:flex;gap:8px;margin-bottom:14px">
-        <button id="listing-tab-upload" onclick="switchListingMode('upload')" style="padding:6px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer">Upload Files</button>
-        <button id="listing-tab-paste" onclick="switchListingMode('paste')" style="padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer">Paste Text</button>
+      <div id="carfax-mode-upload" style="display:none">
+        <div class="upload-area" id="carfax-upload-area" onclick="document.getElementById('carfax-file-input').click()">
+          <div class="upload-icon">\ud83d\udcc4</div>
+          <div class="upload-text" id="carfax-upload-text">Click to upload Carfax PDF (max 10MB)</div>
+          <input type="file" id="carfax-file-input" accept=".pdf,application/pdf" style="display:none" onchange="handleCarfaxUpload(event)" />
+        </div>
       </div>
-      <div id="listing-mode-upload">
-        <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:12px">Upload the listing as PDFs or screenshots. For multi-tab listings, save or screenshot each tab and upload them all together. Max 10 files, 10MB each.</div>
+      <div id="carfax-analysis-result"></div>
+    </div>`);
+
+  // Card 2: Listing Analysis
+  document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
+    <div class="vin-section" id="vin-listing-card">
+      <div class="vin-section-title">Listing Analysis ${aiBadge}</div>
+      <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:16px">Upload the car listing (PDF or screenshots) or paste the listing text for AI analysis of pricing, condition claims, and seller credibility.</div>
+      <div style="display:flex;gap:8px;margin-bottom:14px">
+        <button id="listing-tab-paste" onclick="switchListingMode('paste')" style="padding:6px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer">Paste Text</button>
+        <button id="listing-tab-upload" onclick="switchListingMode('upload')" style="padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);font-family:'DM Sans',sans-serif;font-size:0.85rem;cursor:pointer">Upload Files</button>
+      </div>
+      <div id="listing-mode-paste">
+        <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:12px">Copy and paste all text from the listing \u2014 you can include multiple tabs in one paste.</div>
+        <textarea id="listing-paste-input" placeholder="Paste listing text here\u2026" style="width:100%;min-height:180px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;line-height:1.5;resize:vertical;outline:none"></textarea>
+        <button onclick="handleListingTextAnalysis()" style="margin-top:10px;padding:10px 24px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;cursor:pointer">Analyze Listing</button>
+      </div>
+      <div id="listing-mode-upload" style="display:none">
+        <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:12px">For multi-tab listings, save or screenshot each tab and upload them all together. Max 10 files, 10MB each.</div>
         <div class="upload-area" id="listing-upload-area" onclick="document.getElementById('listing-file-input').click()">
           <div class="upload-icon">\ud83d\udccb</div>
           <div class="upload-text" id="listing-upload-text">Click to upload listing files (PDF or images)</div>
           <input type="file" id="listing-file-input" accept=".pdf,application/pdf,image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" multiple style="display:none" onchange="handleListingUpload(event)" />
         </div>
       </div>
-      <div id="listing-mode-paste" style="display:none">
-        <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:12px">Copy and paste all text from the listing \u2014 you can include multiple tabs in one paste.</div>
-        <textarea id="listing-paste-input" placeholder="Paste listing text here\u2026" style="width:100%;min-height:180px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.88rem;line-height:1.5;resize:vertical;outline:none"></textarea>
-        <button onclick="handleListingTextAnalysis()" style="margin-top:10px;padding:10px 24px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;cursor:pointer">Analyze Listing</button>
-      </div>
       <div id="listing-analysis-result"></div>
+    </div>`);
 
-      <div id="combined-analysis-section" style="display:none">
-        <div style="border-top:1px solid var(--border);margin:24px 0"></div>
-        <div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin-bottom:8px">Cross-Reference Analysis</div>
-        <div style="color:var(--text-dim);font-size:0.82rem;margin-bottom:14px">Both documents are ready. Run a combined analysis to verify the listing claims against Carfax and surface any discrepancies.</div>
-        <div id="combined-analysis-result">
-          <button onclick="handleCombinedAnalysis()" style="padding:10px 24px;border-radius:8px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:500;cursor:pointer">\u2194 Compare &amp; Verify Both Documents</button>
-        </div>
+  // Card 3: Cross-Reference (hidden until both analyses done)
+  document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
+    <div class="vin-section" id="vin-combined-card" style="display:none">
+      <div class="vin-section-title">Cross-Reference Analysis ${aiBadge}</div>
+      <div style="color:var(--text-dim);font-size:0.85rem;margin-bottom:16px">Both documents are ready. Run a combined analysis to verify the listing claims against Carfax and surface any discrepancies.</div>
+      <div id="combined-analysis-result">
+        <button onclick="handleCombinedAnalysis()" style="padding:10px 24px;border-radius:8px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer">\u2194 Compare &amp; Verify Both Documents</button>
       </div>
+    </div>`);
+
+  // Card 4: Final Review (hidden until combined analysis done)
+  document.getElementById('vin-results').insertAdjacentHTML('beforeend', `
+    <div class="vin-section" id="vin-final-card" style="display:none">
+      <div class="vin-section-title">\u2b50 Final Review Analysis</div>
+      <div id="final-review-result"></div>
     </div>`);
 }
 
@@ -2637,11 +3925,64 @@ function renderBuyersChecklist(v) {
 }
 
 // ── Cross-Reference ──
+let combinedAnalysisResult = null;
+
 function checkBothDone() {
   if (carfaxAnalysisResult && listingAnalysisResult) {
-    const sec = document.getElementById('combined-analysis-section');
+    const sec = document.getElementById('vin-combined-card');
     if (sec) sec.style.display = '';
   }
+}
+
+function renderFinalReview(combined) {
+  const finalCard = document.getElementById('vin-final-card');
+  if (!finalCard) return;
+  finalCard.style.display = '';
+
+  const c = carfaxAnalysisResult || {};
+  const m = combined || {};
+
+  // Worst-case risk from carfax + combined
+  const carfaxRisk = (c.risk_rating || '').toUpperCase();
+  const combinedTrust = (m.trust_rating || '').toUpperCase();
+  const trustToRisk = { HIGH: 'GREEN', MEDIUM: 'YELLOW', LOW: 'RED' };
+  const combinedRisk = trustToRisk[combinedTrust] || 'YELLOW';
+  const worstRisk = [carfaxRisk, combinedRisk].includes('RED') ? 'RED'
+    : [carfaxRisk, combinedRisk].includes('YELLOW') ? 'YELLOW' : 'GREEN';
+
+  const verdicts = { GREEN: '\u2713 Looks Good', YELLOW: '\u26a0 Review Carefully', RED: '\u26a0 Major Concerns Found' };
+
+  // Collect all red flags
+  const allRedFlags = [
+    ...(c.red_flags || []),
+    ...(m.combined_red_flags || []),
+    ...(m.discrepancies || [])
+  ].filter(Boolean);
+
+  const actions = (m.recommended_actions || []).filter(Boolean);
+  const summary = m.combined_assessment || c.overall_assessment || '';
+
+  let html = `<div style="text-align:center;margin-bottom:20px">
+    <div class="risk-badge ${worstRisk}">${verdicts[worstRisk]}</div>
+  </div>`;
+
+  if (summary) {
+    html += `<div style="background:var(--surface2);border-radius:10px;padding:18px;margin-bottom:20px;font-size:0.95rem;line-height:1.65;color:var(--text)">${summary}</div>`;
+  }
+
+  if (allRedFlags.length > 0) {
+    html += `<div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--red);margin-bottom:10px">Major Concerns</div>`;
+    allRedFlags.forEach(f => { html += `<div class="flag-item red" style="margin-bottom:8px">\u26a0 ${f}</div>`; });
+  } else {
+    html += `<div style="color:var(--green);font-size:0.9rem;margin-bottom:16px">\u2713 No major red flags found across all analyses.</div>`;
+  }
+
+  if (actions.length > 0) {
+    html += `<div style="font-family:'Space Mono',monospace;font-size:0.72rem;text-transform:uppercase;letter-spacing:2px;color:var(--text-dim);margin:20px 0 10px">Recommended Actions Before Buying</div>`;
+    actions.forEach(r => { html += `<div class="checklist-item"><input type="checkbox" class="checklist-cb"><span>${r}</span></div>`; });
+  }
+
+  document.getElementById('final-review-result').innerHTML = html;
 }
 
 async function handleCombinedAnalysis() {
@@ -2657,7 +3998,9 @@ async function handleCombinedAnalysis() {
     if (res.status === 429) { resultArea.innerHTML = vinError('Daily limit reached (20 analyses/day). Try again tomorrow.'); return; }
     if (!res.ok) { const err = await res.json().catch(()=>({})); resultArea.innerHTML = vinError(err.error || `Server error (${res.status})`); return; }
     const analysis = await res.json();
+    combinedAnalysisResult = analysis;
     resultArea.innerHTML = renderCombinedResults(analysis);
+    renderFinalReview(analysis);
   } catch (err) {
     resultArea.innerHTML = vinError(`Failed: ${err.message}`);
   }
@@ -2976,7 +4319,600 @@ function renderCarfaxResults(a) {
   return html;
 }
 
-initPin();
+// ── Quick Links ──
+
+const STATIC_LINKS = [
+  {
+    section: 'Desert Financial — Financing',
+    links: [
+      { title: 'Desert Financial — Toyota RAV4', url: 'https://desertfinancial.cudlautosmart.com/Search?Makes=Toyota&MakeModel=Toyota%7CRAV4&Condition=Used&Distance=75&ZipCode=85224&MinPrice=0&MaxPrice=25000&MinYear=2019&MaxYear=2027&MaxMiles=125000&SortBy=PriceLowToHigh', note: 'Used · 2019+ · Under $25K · 125K mi · 75mi radius · Low to High' },
+      { title: 'Desert Financial — Honda CR-V', url: 'https://desertfinancial.cudlautosmart.com/Search?Makes=Honda&MakeModel=Honda%7CCR-V&Condition=Used&Distance=75&ZipCode=85224&MinPrice=0&MaxPrice=25000&MinYear=2020&MaxYear=2027&MaxMiles=125000', note: 'Used · 2020+ · Under $25K · 125K mi · 75mi radius' },
+    ]
+  },
+  {
+    section: 'CarMax',
+    links: [
+      { title: 'CarMax — Toyota RAV4', url: 'https://www.carmax.com/cars/toyota/rav4?year=2019-2026&price=25000', note: '2019–2026 · Under $25K' },
+      { title: 'CarMax — Honda CR-V', url: 'https://www.carmax.com/cars/honda/cr-v?year=2020-2026&price=25000', note: '2020–2026 · Under $25K' },
+    ]
+  },
+  {
+    section: 'Carvana',
+    links: [
+      { title: 'Carvana — RAV4 & CR-V (Filtered)', url: 'https://www.carvana.com/cars/filters?cvnaid=eyJmaWx0ZXJzIjp7Im1ha2VzIjpbeyJuYW1lIjoiSG9uZGEiLCJwYXJlbnRNb2RlbHMiOlt7Im5hbWUiOiJDUi1WIiwidHJpbXMiOlsiRVgiLCJFWC1MIiwiRVgtTCB3L05hdmlnYXRpb24iLCJTRSIsIlNwZWNpYWwgRWRpdGlvbiIsIlRvdXJpbmciXX1dfSx7Im5hbWUiOiJUb3lvdGEiLCJwYXJlbnRNb2RlbHMiOlt7Im5hbWUiOiJSQVY0IiwidHJpbXMiOlsiWExFIiwiWExFIFByZW1pdW0iLCJUUkQgT2ZmLVJvYWQiXX1dfV0sInByaWNlIjp7Im1heCI6MjUwMDB9LCJ5ZWFyIjp7Im1pbiI6MjAxOX19fQ', note: 'RAV4 XLE/XLE Premium/TRD · CR-V EX/EX-L/Touring · 2019+ · Under $25K' },
+    ]
+  },
+  {
+    section: 'Toyota Dealers',
+    links: [
+      { title: 'Big Two Toyota — RAV4', url: 'https://www.bigtwotoyota.com/used-inventory/index.htm?make=Toyota&model=RAV4&year=2023&year=2024&year=2022&year=2021&year=2020&year=2019&year=2018&year=2017', note: '2017–2024' },
+      { title: 'Big Two Toyota — CR-V', url: 'https://www.bigtwotoyota.com/used-inventory/index.htm?make=Honda&model=CR-V&year=2023&year=2024&year=2022&year=2021&year=2020&year=2019&year=2018&year=2017', note: '2017–2024' },
+      { title: 'AutoNation Toyota Tempe — RAV4', url: 'https://www.autonationtoyotatempe.com/used-inventory/index.htm?year=2019-2026&make=Toyota&model=RAV4&internetPrice=15000-25000', note: '2019–2026 · $15K–$25K' },
+      { title: 'AutoNation Toyota Tempe — CR-V', url: 'https://www.autonationtoyotatempe.com/used-inventory/index.htm?year=2019-2026&make=Honda&model=CR-V&internetPrice=15000-25000', note: '2019–2026 · $15K–$25K' },
+      { title: 'Berge Toyota — RAV4 (Certified/Used)', url: 'https://www.bergetoyota.com/used-vehicles/?_dFR%5Bmake%5D%5B0%5D=Toyota&_dFR%5Bmodel%5D%5B0%5D=RAV4&_dFR%5Btype%5D%5B0%5D=Certified%2520Used&_dFR%5Btype%5D%5B1%5D=Used', note: 'Certified Used & Used' },
+      { title: 'Earnhardt Toyota — RAV4', url: 'https://www.earnhardttoyota.com/searchused.aspx?Make=Toyota&pricerange=15000-25000&ModelAndTrim=RAV4', note: '$15K–$25K' },
+      { title: 'Earnhardt Toyota — CR-V', url: 'https://www.earnhardttoyota.com/searchused.aspx?Make=Honda&pricerange=15000-25000&ModelAndTrim=CR-V', note: '$15K–$25K' },
+      { title: 'Camelback Toyota — RAV4', url: 'https://www.camelbacktoyota.com/used-inventory/index.htm?year=2020&year=2019&year=2021&year=2022&year=2023&make=Toyota&model=RAV4&internetPrice=10000-35000', note: '2019–2023 · $10K–$35K' },
+      { title: 'Camelback Toyota — CR-V', url: 'https://www.camelbacktoyota.com/used-inventory/index.htm?year=2020&year=2019&year=2021&year=2022&year=2023&make=Honda&model=CR-V&internetPrice=10000-35000', note: '2019–2023 · $10K–$35K' },
+      { title: 'Right Toyota — RAV4 & CR-V', url: 'https://www.righttoyota.com/inventory/used?make=toyota,honda&model=rav4,cr-v&paymenttype=cash&years=2023,2019,2020,2021,2022&intransit=false&instock=false&inproduction=false', note: '2019–2023 · In Stock' },
+      { title: 'Avondale Toyota — RAV4 & CR-V', url: 'https://www.avondaletoyota.com/used-inventory/index.htm?make=Toyota&make=Honda&model=RAV4&model=CR-V&internetPrice=10000-25000', note: '$10K–$25K' },
+      { title: 'Bell Road Toyota — RAV4 & CR-V', url: 'https://www.bellroadtoyota.com/searchused.aspx?yearrange=2019-2023&Make=Toyota,Honda&ModelAndTrim=CR-V!RAV4&pricerange=10000-25000', note: '2019–2023 · $10K–$25K' },
+      { title: 'Larry Miller Toyota — RAV4 & CR-V', url: 'https://www.larrymillertoyota.com/used-inventory/index.htm?year=2019-2023&model=RAV4&model=CR-V', note: '2019–2023' },
+      { title: 'Toyota of Surprise', url: 'https://smartpath.toyotaofsurprise.com/inventory/search?dealerCd=02054&source=t3&zipcode=85388&type=used', note: 'Used inventory — Surprise, AZ' },
+    ]
+  },
+  {
+    section: 'Honda Dealers',
+    links: [
+      { title: 'Earnhardt Honda — RAV4', url: 'https://www.earnhardthonda.com/searchused.aspx?Make=Toyota&pricerange=15000-25000&ModelAndTrim=RAV4', note: '$15K–$25K' },
+      { title: 'Earnhardt Honda — CR-V', url: 'https://www.earnhardthonda.com/searchused.aspx?Make=Honda&pricerange=15000-25000&ModelAndTrim=CR-V', note: '$15K–$25K' },
+      { title: 'Bell Honda — RAV4 & CR-V', url: 'https://www.bellhonda.com/used-inventory/index.htm?year=2019&year=2020&year=2021&year=2022&year=2023&make=Toyota&make=Honda&model=CR-V&model=RAV4', note: '2019–2023' },
+      { title: 'AutoNation Honda Chandler — RAV4 & CR-V', url: 'https://www.autonationhondachandler.com/used-inventory/index.htm?year=2019-2023&make=Toyota&make=Honda&model=CR-V&model=RAV4', note: '2019–2023' },
+      { title: 'Right Honda — RAV4 & CR-V', url: 'https://www.righthonda.com/inventory/used?make=toyota,honda&model=rav4,cr-v&paymenttype=cash&years=2023,2019,2020,2021,2022&intransit=false&instock=false&inproduction=false', note: '2019–2023 · In Stock' },
+      { title: 'Showcase Honda — CR-V', url: 'https://www.showcasehonda.com/used-inventory/index.htm?year=2019&year=2020&year=2021&year=2022&year=2023&make=Honda&make=Toyota&model=CR-V', note: '2019–2023' },
+      { title: 'Superstition Honda — CR-V', url: 'https://www.supershonda.com/searchused.aspx?yearrange=2019-2023&Make=Toyota,Honda&ModelAndTrim=CR-V', note: '2019–2023' },
+    ]
+  },
+  {
+    section: 'Vehicle History & Checks',
+    links: [
+      { title: 'NICB VIN Check (Stolen/Salvage)', url: 'https://www.nicb.org/vincheck', note: 'Free stolen/salvage check' },
+      { title: 'AZ MVD — Title Check', url: 'https://azmvdnow.gov/titleregistration/title/search', note: 'Arizona title & lien check' },
+      { title: 'NHTSA Recall Search', url: 'https://www.nhtsa.gov/vehicle/recalls', note: 'Official recall database' },
+      { title: 'Carfax Report', url: 'https://www.carfax.com/value/', note: '' },
+      { title: 'Carfax VIN Lookup', url: '__carfax_vin__', note: 'Enter a VIN to open the Carfax report directly' },
+    ]
+  },
+];
+
+async function fetchCustomLinks() {
+  try {
+    const res = await fetch(`${API_BASE}/api/links`, {
+      headers: { 'X-Access-Pin': accessPin }
+    });
+    if (res.ok) customLinks = await res.json();
+  } catch { /* render with whatever we have */ }
+  renderLinksPanel();
+}
+
+function renderLinksPanel() {
+  const el = document.getElementById('links-content');
+  if (!el) return;
+
+  let html = '';
+
+  STATIC_LINKS.forEach(group => {
+    html += `<div style="margin-bottom:24px;">
+      <div style="font-family:'Space Mono',monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:2px; color:var(--text-dim); margin-bottom:10px;">${esc(group.section)}</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px;">`;
+    group.links.forEach(link => {
+      if (link.url === '__carfax_vin__') {
+        html += `<div onclick="openCarfaxVinPrompt()" style="display:block; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:12px 14px; text-decoration:none; transition:border-color 0.15s; cursor:pointer;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-family:'DM Sans',sans-serif; font-size:0.92rem; font-weight:600; color:var(--accent); margin-bottom:${link.note ? 4 : 0}px;">${esc(link.title)} ↗</div>
+          ${link.note ? `<div style="font-size:0.78rem; color:var(--text-dim);">${esc(link.note)}</div>` : ''}
+        </div>`;
+      } else {
+        html += `<a href="${esc(link.url)}" target="_blank" rel="noopener noreferrer" style="display:block; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:12px 14px; text-decoration:none; transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+          <div style="font-family:'DM Sans',sans-serif; font-size:0.92rem; font-weight:600; color:var(--accent); margin-bottom:${link.note ? 4 : 0}px;">${esc(link.title)}</div>
+          ${link.note ? `<div style="font-size:0.78rem; color:var(--text-dim);">${esc(link.note)}</div>` : ''}
+        </a>`;
+      }
+    });
+    html += `</div></div>`;
+  });
+
+  if (customLinks.length > 0) {
+    const bySection = {};
+    customLinks.forEach(l => {
+      const sec = l.section || 'My Links';
+      if (!bySection[sec]) bySection[sec] = [];
+      bySection[sec].push(l);
+    });
+    Object.entries(bySection).forEach(([sec, links]) => {
+      html += `<div style="margin-bottom:24px;">
+        <div style="font-family:'Space Mono',monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:2px; color:var(--text-dim); margin-bottom:10px;">${esc(sec)}</div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:10px;">`;
+      links.forEach(link => {
+        html += `<div style="position:relative; background:var(--surface2); border:1px solid var(--border); border-radius:10px; padding:12px 14px; border-left:3px solid var(--accent2);">
+          <a href="${esc(link.url)}" target="_blank" rel="noopener noreferrer" style="text-decoration:none; display:block;">
+            <div style="font-family:'DM Sans',sans-serif; font-size:0.92rem; font-weight:600; color:var(--accent); margin-bottom:${link.note ? 4 : 0}px; padding-right:24px;">${esc(link.title)}</div>
+            ${link.note ? `<div style="font-size:0.78rem; color:var(--text-dim);">${esc(link.note)}</div>` : ''}
+          </a>
+          <button onclick="deleteCustomLink('${esc(link.id)}')" title="Delete" style="position:absolute; top:8px; right:8px; background:none; border:none; color:var(--text-dim); cursor:pointer; font-size:1rem; line-height:1; padding:2px 5px; border-radius:4px;" onmouseover="this.style.color='var(--red)'" onmouseout="this.style.color='var(--text-dim)'">✕</button>
+        </div>`;
+      });
+      html += `</div></div>`;
+    });
+  }
+
+  if (!customLinks.length && !STATIC_LINKS.length) {
+    html = '<div style="text-align:center; color:var(--text-dim); padding:40px 0;">No links yet.</div>';
+  }
+
+  el.innerHTML = html;
+}
+
+function openCarfaxVinPrompt() {
+  const vin = prompt('Enter VIN to look up on Carfax:', '');
+  if (!vin || !vin.trim()) return;
+  const clean = vin.trim().toUpperCase();
+  window.open(`https://www.carfax.com/VehicleHistory/ar20/p/report/vin/${clean}`, '_blank', 'noopener,noreferrer');
+}
+
+function openAddLinkModal() {
+  ['lm-title','lm-url','lm-section','lm-note'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = '';
+  });
+  document.getElementById('link-modal').style.display = 'block';
+}
+
+function closeLinkModal() {
+  document.getElementById('link-modal').style.display = 'none';
+}
+
+async function saveLinkModal() {
+  const title = document.getElementById('lm-title')?.value.trim();
+  const url = document.getElementById('lm-url')?.value.trim();
+  const section = document.getElementById('lm-section')?.value.trim();
+  const note = document.getElementById('lm-note')?.value.trim();
+  if (!title || !url) { alert('Title and URL are required.'); return; }
+  const saveBtn = document.querySelector('#link-modal button[onclick="saveLinkModal()"]');
+  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Saving…'; }
+  try {
+    const res = await fetch(`${API_BASE}/api/links`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Access-Pin': accessPin },
+      body: JSON.stringify({ title, url, section, note })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const link = await res.json();
+    customLinks.push(link);
+    closeLinkModal();
+    renderLinksPanel();
+  } catch (e) {
+    alert('Could not save link. Please try again.');
+  } finally {
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Save Link'; }
+  }
+}
+
+async function deleteCustomLink(id) {
+  const link = customLinks.find(l => l.id === id);
+  if (!confirm(`Delete "${link?.title || 'this link'}"?`)) return;
+  try {
+    const res = await fetch(`${API_BASE}/api/links/${id}`, {
+      method: 'DELETE',
+      headers: { 'X-Access-Pin': accessPin }
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    customLinks = customLinks.filter(l => l.id !== id);
+    renderLinksPanel();
+  } catch (e) {
+    alert('Could not delete link. Please try again.');
+  }
+}
+
+// ── Quick Carfax Scan ──
+let quickCarfaxResult = null;
+let quickCarfaxPdfData = null;
+
+function csSwitch(mode) {
+  const isUpload = mode === 'upload';
+  document.getElementById('cs-mode-paste').style.display = isUpload ? 'none' : '';
+  document.getElementById('cs-mode-upload').style.display = isUpload ? '' : 'none';
+  const activeStyle = 'padding:6px 14px;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-family:"DM Sans",sans-serif;font-size:0.85rem;cursor:pointer;';
+  const inactiveStyle = 'padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text-dim);font-family:"DM Sans",sans-serif;font-size:0.85rem;cursor:pointer;';
+  document.getElementById('cs-tab-paste').style.cssText = isUpload ? inactiveStyle : activeStyle;
+  document.getElementById('cs-tab-upload').style.cssText = isUpload ? activeStyle : inactiveStyle;
+}
+
+function csHandleFile(file) {
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) { alert('File too large — maximum 10MB.'); return; }
+  document.getElementById('cs-upload-text').textContent = file.name;
+  const reader = new FileReader();
+  reader.onload = e => {
+    quickCarfaxPdfData = e.target.result.split(',')[1];
+    document.getElementById('cs-analyze-upload-btn').disabled = false;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function runCarfaxScan(mode) {
+  const resultArea = document.getElementById('cs-result-area');
+  const saveBar = document.getElementById('cs-save-bar');
+  saveBar.style.display = 'none';
+  quickCarfaxResult = null;
+
+  let body;
+  if (mode === 'text') {
+    const text = document.getElementById('cs-paste-input').value.trim();
+    if (!text) { alert('Please paste Carfax text first.'); return; }
+    body = { text };
+  } else {
+    if (!quickCarfaxPdfData) { alert('Please select a PDF first.'); return; }
+    body = { pdf: quickCarfaxPdfData };
+  }
+
+  const btn = document.getElementById(mode === 'text' ? 'cs-analyze-paste-btn' : 'cs-analyze-upload-btn');
+  btn.disabled = true;
+  btn.textContent = 'Analyzing…';
+  resultArea.innerHTML = '<div class="vin-section"><div style="color:var(--text-dim);font-size:0.9rem;">Analyzing Carfax report…</div></div>';
+
+  try {
+    const res = await fetch(`${API_BASE}/api/analyze-carfax`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Access-Pin': accessPin },
+      body: JSON.stringify(body)
+    });
+    if (res.status === 401) { resultArea.innerHTML = vinError('Incorrect PIN.'); return; }
+    if (res.status === 429) { resultArea.innerHTML = vinError('Daily limit reached (100 analyses/day). Try again tomorrow.'); return; }
+    if (!res.ok) { const err = await res.json().catch(()=>({})); resultArea.innerHTML = vinError(err.error || `Server error (${res.status})`); return; }
+    quickCarfaxResult = await res.json();
+    resultArea.innerHTML = renderCarfaxResults(quickCarfaxResult);
+    saveBar.style.display = 'flex';
+  } catch (err) {
+    resultArea.innerHTML = vinError(`Failed: ${err.message}`);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = mode === 'text' ? 'Analyze Carfax' : 'Analyze PDF';
+  }
+}
+
+function clearCarfaxScan() {
+  quickCarfaxResult = null;
+  quickCarfaxPdfData = null;
+  document.getElementById('cs-paste-input').value = '';
+  document.getElementById('cs-upload-text').textContent = 'Click to upload Carfax PDF (max 10MB)';
+  document.getElementById('cs-analyze-upload-btn').disabled = true;
+  document.getElementById('cs-result-area').innerHTML = '';
+  document.getElementById('cs-save-bar').style.display = 'none';
+  const fileInput = document.getElementById('cs-file-input');
+  if (fileInput) fileInput.value = '';
+}
+
+function saveCarfaxScanToList() {
+  if (!quickCarfaxResult) return;
+  // Pre-fill modal from carfax data
+  window._importPayload = {
+    carfaxAnalysis: quickCarfaxResult,
+    listingAnalysis: null,
+    combinedAnalysis: null,
+    nicbChecked: null,
+    mvdChecked: null,
+    vinData: null,
+    recallCount: 0,
+    recallSummary: [],
+    complaintCount: 0
+  };
+  carModalEditId = null;
+  document.getElementById('car-modal-title').textContent = 'Add Car from Carfax Scan';
+  document.getElementById('cm-urls').innerHTML = '';
+  document.getElementById('cm-year').value = quickCarfaxResult.vehicle ? quickCarfaxResult.vehicle.split(' ')[0] : '';
+  document.getElementById('cm-make').value = quickCarfaxResult.vehicle ? quickCarfaxResult.vehicle.split(' ')[1] || '' : '';
+  document.getElementById('cm-model').value = quickCarfaxResult.vehicle ? quickCarfaxResult.vehicle.split(' ').slice(2, 3).join(' ') : '';
+  document.getElementById('cm-trim').value = quickCarfaxResult.vehicle ? quickCarfaxResult.vehicle.split(' ').slice(3).join(' ') : '';
+  document.getElementById('cm-vin').value = quickCarfaxResult.vin || '';
+  const lastOdo = quickCarfaxResult.odometer_readings?.slice(-1)[0]?.miles;
+  document.getElementById('cm-mileage').value = lastOdo || '';
+  document.getElementById('cm-price').value = '';
+  document.getElementById('cm-carfax-url').value = '';
+  document.getElementById('cm-notes').value = '';
+  const vinStatus = document.getElementById('cm-vin-status');
+  if (vinStatus) { vinStatus.textContent = ''; vinStatus.dataset.decoded = ''; }
+  const carfaxTextSec = document.getElementById('cm-carfax-text-section');
+  const carfaxDoneSec = document.getElementById('cm-carfax-done-section');
+  if (carfaxTextSec) carfaxTextSec.style.display = 'none';
+  if (carfaxDoneSec) carfaxDoneSec.style.display = '';
+  ['cm-price-label','cm-carfax-url-label','cm-urls-label'].forEach(lid => {
+    const el = document.getElementById(lid);
+    if (el) el.style.color = 'var(--yellow)';
+  });
+  resetModalCheckState();
+  addListingUrlField();
+  updateModalVinChecks();
+  document.getElementById('car-modal').style.display = 'block';
+}
+
+// ── Vehicle Search ──
+
+async function decodeVsVin() {
+  const vin = document.getElementById('vs-vin').value.trim().toUpperCase();
+  const status = document.getElementById('vs-vin-status');
+  const btn = document.getElementById('vs-vin-btn');
+
+  if (vin.length !== 17) {
+    status.textContent = 'VIN must be exactly 17 characters.';
+    status.style.color = 'var(--red)';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Decoding…';
+  status.textContent = 'Fetching from NHTSA…';
+  status.style.color = 'var(--text-dim)';
+
+  try {
+    const res = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${vin}?format=json`);
+    if (!res.ok) throw new Error(`NHTSA error ${res.status}`);
+    const data = await res.json();
+    const v = data.Results?.[0];
+    if (!v || !v.Make) throw new Error('No data returned for this VIN');
+    const year  = v.ModelYear || '';
+    const make  = v.Make      || '';
+    const model = v.Model     || '';
+    const trim  = v.Trim      || '';
+    if (!make && !model) throw new Error('VIN not recognised — check the number and try again');
+
+    document.getElementById('vs-year').value  = year;
+    document.getElementById('vs-make').value  = make;
+    document.getElementById('vs-model').value = model;
+    document.getElementById('vs-trim').value  = trim;
+
+    status.textContent = '✓ ' + [year, make, model, trim].filter(Boolean).join(' ') + ' — click Search to analyze';
+    status.style.color = 'var(--green)';
+
+    searchVehicle();
+  } catch (err) {
+    status.textContent = '✗ ' + err.message;
+    status.style.color = 'var(--red)';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Decode VIN';
+  }
+}
+
+async function searchVehicle() {
+  const year = document.getElementById('vs-year').value.trim();
+  const make = document.getElementById('vs-make').value.trim();
+  const model = document.getElementById('vs-model').value.trim();
+  const trim = document.getElementById('vs-trim').value.trim();
+
+  if (!year || !make || !model) {
+    document.getElementById('vs-result-area').innerHTML =
+      '<div style="color:var(--red); font-family:\'DM Sans\',sans-serif; font-size:0.9rem; padding:12px 0;">Please enter Year, Make, and Model.</div>';
+    return;
+  }
+
+  const btn = document.getElementById('vs-search-btn');
+  btn.disabled = true;
+  btn.textContent = 'Searching…';
+  document.getElementById('vs-result-area').innerHTML =
+    '<div style="text-align:center; padding:40px 0; color:var(--text-dim); font-family:\'DM Sans\',sans-serif;">' +
+    '<div style="font-size:1.4rem; margin-bottom:12px;">🔍</div>' +
+    '<div style="font-size:0.95rem; margin-bottom:6px;">Analyzing ' + year + ' ' + make + ' ' + model + (trim ? ' ' + trim : '') + '…</div>' +
+    '<div style="font-size:0.82rem; color:var(--text-dim);">Fetching NHTSA data and running AI analysis — usually 10–15 seconds</div></div>';
+
+  try {
+    const res = await fetch(`${API_BASE}/api/analyze-vehicle`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Access-Pin': accessPin },
+      body: JSON.stringify({ year, make, model, trim: trim || null })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
+    vehicleSearchResult = await res.json();
+    renderVehicleSearchResults(vehicleSearchResult);
+  } catch (e) {
+    document.getElementById('vs-result-area').innerHTML =
+      '<div style="color:var(--red); font-family:\'DM Sans\',sans-serif; font-size:0.9rem; padding:12px 0;">Error: ' + (e.message || 'Search failed') + '</div>';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Search';
+  }
+}
+
+function vsBool(val, trueLabel, falseLabel) {
+  if (val === true || val === 'standard') return `<span class="vs-feat-value good">${trueLabel || 'Yes'}</span>`;
+  if (val === false) return `<span class="vs-feat-value bad">${falseLabel || 'No'}</span>`;
+  if (typeof val === 'string') {
+    const lc = val.toLowerCase();
+    if (lc === 'optional') return `<span class="vs-feat-value" style="color:var(--yellow);">Optional</span>`;
+    if (lc === 'not available') return `<span class="vs-feat-value bad">Not Available</span>`;
+    return `<span class="vs-feat-value">${val}</span>`;
+  }
+  return `<span class="vs-feat-value" style="color:var(--text-dim);">—</span>`;
+}
+
+function vsVal(val, suffix) {
+  if (val === null || val === undefined || val === '') return '<span style="color:var(--text-dim);">—</span>';
+  return `<span class="vs-feat-value">${val}${suffix || ''}</span>`;
+}
+
+function vsFeatureList(items, cls) {
+  if (!Array.isArray(items) || items.length === 0) return '<span style="color:var(--text-dim); font-size:0.85rem; font-family:\'DM Sans\',sans-serif;">None listed</span>';
+  return `<ul class="vs-list ${cls || ''}">${items.map(i => `<li>${i}</li>`).join('')}</ul>`;
+}
+
+function renderVehicleSearchResults(d) {
+  const el = document.getElementById('vs-result-area');
+  if (!el) return;
+
+  const ki = d.known_issues || {};
+  const recallCount = ki.nhtsa_recall_count || 0;
+  const complaintCount = ki.nhtsa_complaint_count || 0;
+  const severity = ki.severity || '';
+  const severityColor = severity === 'Serious' ? 'var(--red)' : severity === 'Moderate' ? 'var(--yellow)' : 'var(--green)';
+
+  const rel = d.reliability || {};
+  const relColor = rel.predicted_reliability === 'Above Average' ? 'var(--green)'
+    : rel.predicted_reliability === 'Below Average' ? 'var(--red)' : 'var(--yellow)';
+
+  const s = d.safety || {};
+  const t = d.technology || {};
+  const c = d.comfort || {};
+  const p = d.performance || {};
+  const e = d.exterior || {};
+
+  el.innerHTML = `
+    <div style="background:var(--surface2); border:1px solid var(--border); border-radius:14px; padding:18px 20px; margin-bottom:14px;">
+      <div style="font-family:'DM Sans',sans-serif; font-size:1.15rem; font-weight:700; color:var(--text); margin-bottom:6px;">${d.vehicle || ''}</div>
+      <div style="font-size:0.88rem; color:var(--text-dim); font-family:'DM Sans',sans-serif; line-height:1.5;">${d.overall_summary || ''}</div>
+      <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+        <span class="vs-badge" style="background:rgba(${rel.predicted_reliability === 'Above Average' ? '52,211,153' : rel.predicted_reliability === 'Below Average' ? '248,113,113' : '251,191,36'},0.12); color:${relColor}; border:1px solid ${relColor};">Reliability: ${rel.predicted_reliability || 'Unknown'}</span>
+        ${recallCount > 0 ? `<span class="vs-badge" style="background:var(--red-bg); color:var(--red); border:1px solid var(--red);">${recallCount} Recall${recallCount !== 1 ? 's' : ''}</span>` : '<span class="vs-badge" style="background:var(--green-bg); color:var(--green); border:1px solid var(--green);">No Recalls</span>'}
+        ${complaintCount > 0 ? `<span class="vs-badge" style="background:var(--yellow-bg); color:var(--yellow); border:1px solid var(--yellow);">${complaintCount} NHTSA Complaints</span>` : '<span class="vs-badge" style="background:var(--green-bg); color:var(--green); border:1px solid var(--green);">No Complaints</span>'}
+      </div>
+    </div>
+
+    <!-- Known Issues — always open and prominent -->
+    <div class="vs-known-issues">
+      <div style="font-family:'DM Sans',sans-serif; font-size:0.95rem; font-weight:700; color:var(--yellow); margin-bottom:12px;">⚠ Known Issues &amp; Recalls</div>
+      <div class="vs-feat-grid" style="margin-bottom:12px;">
+        <div class="vs-feat-item"><div class="vs-feat-label">NHTSA Complaints</div>${vsVal(complaintCount)}</div>
+        <div class="vs-feat-item"><div class="vs-feat-label">NHTSA Recalls</div><span class="vs-feat-value ${recallCount > 0 ? 'bad' : 'good'}">${recallCount}</span></div>
+        <div class="vs-feat-item"><div class="vs-feat-label">Issue Severity</div><span class="vs-feat-value" style="color:${severityColor};">${severity || '—'}</span></div>
+      </div>
+      ${ki.recall_details?.length ? `<div class="vs-section-label">Recalls</div>${vsFeatureList(ki.recall_details, 'recalls')}` : ''}
+      ${ki.top_complaint_areas?.length ? `<div class="vs-section-label" style="margin-top:10px;">Top Complaint Areas</div>${vsFeatureList(ki.top_complaint_areas, 'issues')}` : ''}
+      ${ki.known_problems?.length ? `<div class="vs-section-label" style="margin-top:10px;">Known Problems</div>${vsFeatureList(ki.known_problems, 'issues')}` : ''}
+      ${ki.tsb_notes ? `<div class="vs-section-label" style="margin-top:10px;">TSBs</div><div style="font-size:0.85rem; color:var(--text); font-family:'DM Sans',sans-serif;">${ki.tsb_notes}</div>` : ''}
+      ${ki.notes ? `<div style="font-size:0.83rem; color:var(--text-dim); font-family:'DM Sans',sans-serif; margin-top:10px; font-style:italic;">${ki.notes}</div>` : ''}
+    </div>
+
+    <!-- Safety -->
+    <details class="vs-category" open>
+      <summary>🛡 Safety <span style="font-size:0.8rem; font-weight:400; color:var(--text-dim);">${s.crash_ratings || ''}</span></summary>
+      <div class="vs-category-body">
+        ${s.crash_ratings ? `<div class="vs-feat-item" style="margin-bottom:10px; background:var(--surface);"><div class="vs-feat-label">Crash Ratings</div><div class="vs-feat-value">${s.crash_ratings}</div></div>` : ''}
+        ${s.adas_notes ? `<div style="font-size:0.83rem; color:var(--text-dim); font-family:'DM Sans',sans-serif; margin-bottom:10px;">${s.adas_notes}</div>` : ''}
+        ${s.standard_features?.length ? `<div class="vs-section-label">Standard Safety Features</div>${vsFeatureList(s.standard_features)}` : ''}
+        ${s.optional_features?.length ? `<div class="vs-section-label" style="margin-top:10px;">Optional Safety Features</div>${vsFeatureList(s.optional_features)}` : ''}
+      </div>
+    </details>
+
+    <!-- Technology -->
+    <details class="vs-category">
+      <summary>📱 Technology</summary>
+      <div class="vs-category-body">
+        <div class="vs-feat-grid">
+          <div class="vs-feat-item"><div class="vs-feat-label">Infotainment</div>${vsVal(t.infotainment_system)}</div>
+          <div class="vs-feat-item"><div class="vs-feat-label">Apple CarPlay</div>${vsBool(t.apple_carplay)}</div>
+          <div class="vs-feat-item"><div class="vs-feat-label">Android Auto</div>${vsBool(t.android_auto)}</div>
+          <div class="vs-feat-item"><div class="vs-feat-label">Wireless CarPlay</div>${vsBool(t.wireless_carplay)}</div>
+          <div class="vs-feat-item"><div class="vs-feat-label">Wireless Charging</div>${vsBool(t.wireless_charging)}</div>
+        </div>
+        ${t.standard_features?.length ? `<div class="vs-section-label">Standard Tech Features</div>${vsFeatureList(t.standard_features)}` : ''}
+        ${t.optional_features?.length ? `<div class="vs-section-label" style="margin-top:10px;">Optional Tech Features</div>${vsFeatureList(t.optional_features)}` : ''}
+        ${t.notes ? `<div style="font-size:0.83rem; color:var(--text-dim); font-family:'DM Sans',sans-serif; margin-top:10px;">${t.notes}</div>` : ''}
+      </div>
+    </details>
+
+    <!-- Comfort -->
+    <details class="vs-category">
+      <summary>🛋 Comfort &amp; Interior</summary>
+      <div class="vs-category-body">
+        <div class="vs-feat-grid">
+          <div class="vs-feat-item"><div class="vs-feat-label">Seating Material</div>${vsVal(c.seating_material)}</div>
+          <div class="vs-feat-item"><div class="vs-feat-label">Heated Front Seats</div>${vsBool(c.heated_front_seats)}</div>
+          <div class="vs-feat-item"><div class="vs-feat-label">Heated Rear Seats</div>${vsBool(c.heated_rear_seats)}</div>
+          <div class="vs-feat-item"><div class="vs-feat-label">Ventilated Seats</div>${vsBool(c.ventilated_seats)}</div>
+          <div class="vs-feat-item"><div class="vs-feat-label">Sunroof/Moonroof</div>${vsBool(c.sunroof_moonroof)}</div>
+          ${c.cargo_volume_cuft ? `<div class="vs-feat-item"><div class="vs-feat-label">Cargo Volume</div>${vsVal(c.cargo_volume_cuft, ' cu ft')}</div>` : ''}
+          ${c.passenger_volume_cuft ? `<div class="vs-feat-item"><div class="vs-feat-label">Passenger Volume</div>${vsVal(c.passenger_volume_cuft, ' cu ft')}</div>` : ''}
+        </div>
+        ${c.standard_features?.length ? `<div class="vs-section-label">Standard Comfort Features</div>${vsFeatureList(c.standard_features)}` : ''}
+        ${c.optional_features?.length ? `<div class="vs-section-label" style="margin-top:10px;">Optional Comfort Features</div>${vsFeatureList(c.optional_features)}` : ''}
+        ${c.notes ? `<div style="font-size:0.83rem; color:var(--text-dim); font-family:'DM Sans',sans-serif; margin-top:10px;">${c.notes}</div>` : ''}
+      </div>
+    </details>
+
+    <!-- Performance -->
+    <details class="vs-category">
+      <summary>⚡ Performance</summary>
+      <div class="vs-category-body">
+        <div class="vs-feat-grid">
+          <div class="vs-feat-item"><div class="vs-feat-label">Horsepower</div>${vsVal(p.horsepower_range)}</div>
+          <div class="vs-feat-item"><div class="vs-feat-label">Torque</div>${vsVal(p.torque_range)}</div>
+          <div class="vs-feat-item"><div class="vs-feat-label">Transmission</div>${vsVal(p.transmission)}</div>
+          <div class="vs-feat-item"><div class="vs-feat-label">MPG City / Hwy</div>${p.mpg_city && p.mpg_highway ? `<span class="vs-feat-value">${p.mpg_city} / ${p.mpg_highway}</span>` : vsVal(p.mpg_combined, ' combined')}</div>
+          <div class="vs-feat-item"><div class="vs-feat-label">Drivetrain</div>${vsVal(Array.isArray(p.drivetrain_options) ? p.drivetrain_options.join(', ') : p.drivetrain_options)}</div>
+          ${p.towing_capacity_lbs ? `<div class="vs-feat-item"><div class="vs-feat-label">Towing Capacity</div>${vsVal(p.towing_capacity_lbs.toLocaleString(), ' lbs')}</div>` : ''}
+          ${p.ground_clearance_inches ? `<div class="vs-feat-item"><div class="vs-feat-label">Ground Clearance</div>${vsVal(p.ground_clearance_inches, ' in')}</div>` : ''}
+        </div>
+        ${p.engine_options?.length ? `<div class="vs-section-label">Engine Options</div>${vsFeatureList(p.engine_options)}` : ''}
+        ${p.notes ? `<div style="font-size:0.83rem; color:var(--text-dim); font-family:'DM Sans',sans-serif; margin-top:10px;">${p.notes}</div>` : ''}
+      </div>
+    </details>
+
+    <!-- Exterior -->
+    <details class="vs-category">
+      <summary>🚗 Exterior &amp; Dimensions</summary>
+      <div class="vs-category-body">
+        <div class="vs-feat-grid">
+          <div class="vs-feat-item"><div class="vs-feat-label">Body Style</div>${vsVal(e.body_style)}</div>
+          ${e.length_inches ? `<div class="vs-feat-item"><div class="vs-feat-label">Length</div>${vsVal(e.length_inches, '"')}</div>` : ''}
+          ${e.width_inches ? `<div class="vs-feat-item"><div class="vs-feat-label">Width</div>${vsVal(e.width_inches, '"')}</div>` : ''}
+          ${e.height_inches ? `<div class="vs-feat-item"><div class="vs-feat-label">Height</div>${vsVal(e.height_inches, '"')}</div>` : ''}
+          ${e.wheelbase_inches ? `<div class="vs-feat-item"><div class="vs-feat-label">Wheelbase</div>${vsVal(e.wheelbase_inches, '"')}</div>` : ''}
+          ${e.wheel_size_range ? `<div class="vs-feat-item"><div class="vs-feat-label">Wheel Size</div>${vsVal(e.wheel_size_range)}</div>` : ''}
+        </div>
+        ${e.standard_features?.length ? `<div class="vs-section-label">Standard Exterior Features</div>${vsFeatureList(e.standard_features)}` : ''}
+        ${e.optional_features?.length ? `<div class="vs-section-label" style="margin-top:10px;">Optional Exterior Features</div>${vsFeatureList(e.optional_features)}` : ''}
+        ${e.notes ? `<div style="font-size:0.83rem; color:var(--text-dim); font-family:'DM Sans',sans-serif; margin-top:10px;">${e.notes}</div>` : ''}
+      </div>
+    </details>
+
+    <!-- Reliability -->
+    <details class="vs-category">
+      <summary>🔧 Reliability</summary>
+      <div class="vs-category-body">
+        <div class="vs-feat-grid">
+          <div class="vs-feat-item"><div class="vs-feat-label">Predicted Reliability</div><span class="vs-feat-value" style="color:${relColor};">${rel.predicted_reliability || '—'}</span></div>
+          ${rel.consumer_reports_rating ? `<div class="vs-feat-item"><div class="vs-feat-label">Consumer Reports</div>${vsVal(rel.consumer_reports_rating)}</div>` : ''}
+          ${rel.jd_power_score ? `<div class="vs-feat-item"><div class="vs-feat-label">J.D. Power</div>${vsVal(rel.jd_power_score)}</div>` : ''}
+        </div>
+        ${rel.common_reported_issues?.length ? `<div class="vs-section-label">Common Reported Issues</div>${vsFeatureList(rel.common_reported_issues, 'issues')}` : ''}
+        ${rel.notes ? `<div style="font-size:0.83rem; color:var(--text-dim); font-family:'DM Sans',sans-serif; margin-top:10px;">${rel.notes}</div>` : ''}
+      </div>
+    </details>
+  `;
+}
+
+// ── Zoom ──
+const ZOOM_STEPS = [70, 80, 90, 100, 110, 125, 150, 175, 200];
+let zoomIdx = ZOOM_STEPS.indexOf(parseInt(localStorage.getItem('app_zoom') || '100'));
+if (zoomIdx === -1) zoomIdx = ZOOM_STEPS.indexOf(100);
+
+function applyZoom() {
+  const pct = ZOOM_STEPS[zoomIdx];
+  document.body.style.zoom = (pct / 100);
+  const label = document.getElementById('zoom-label');
+  if (label) label.textContent = pct + '%';
+  localStorage.setItem('app_zoom', pct);
+}
+
+function adjustZoom(dir) {
+  if (dir === 0) { zoomIdx = ZOOM_STEPS.indexOf(100); }
+  else { zoomIdx = Math.max(0, Math.min(ZOOM_STEPS.length - 1, zoomIdx + dir)); }
+  applyZoom();
+}
+
+applyZoom();
+
 setMode('compare');
 
 // ── Car Search ──────────────────────────────────────────────────────────────
