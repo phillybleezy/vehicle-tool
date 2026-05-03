@@ -520,7 +520,7 @@ async function handleGetListings(request, env) {
   try {
     const raw = await env.LISTINGS.get('listings');
     const lastUpdated = await env.LISTINGS.get('listings_last_updated');
-    const listings = raw ? JSON.parse(raw) : [];
+    const listings = (raw ? JSON.parse(raw) : []).filter(isValidListing);
     return jsonResponse({ listings, last_updated: lastUpdated || null, count: listings.length }, 200, env);
   } catch {
     return jsonResponse({ error: 'Could not read listings' }, 500, env);
@@ -544,12 +544,45 @@ async function handlePostListings(request, env) {
     return jsonResponse({ error: 'listings must be an array' }, 400, env);
   }
   try {
-    await env.LISTINGS.put('listings', JSON.stringify(body.listings));
+    const listings = body.listings.filter(isValidListing);
+    await env.LISTINGS.put('listings', JSON.stringify(listings));
     await env.LISTINGS.put('listings_last_updated', body.last_updated || new Date().toISOString());
-    return jsonResponse({ ok: true, count: body.listings.length }, 200, env);
+    return jsonResponse({ ok: true, count: listings.length }, 200, env);
   } catch {
     return jsonResponse({ error: 'Could not write listings' }, 500, env);
   }
+}
+
+function isValidListing(listing) {
+  if (!listing || typeof listing !== 'object') return false;
+  const title = String(listing.title || '').trim();
+  const url = String(listing.url || '').trim();
+  const year = Number(listing.year || 0);
+  const price = Number(listing.price || 0);
+  const blockedTitles = new Set([
+    'loading...',
+    'sell',
+    'blog',
+    'store',
+    'partners',
+    'search cars',
+    'new cars',
+    'news',
+    'guides',
+    'how autotempest works',
+    'compare insurance quotes',
+    'get shipping quotes',
+    'calculate trade-in value',
+    'results beyond 100mi',
+  ]);
+
+  if (!title || blockedTitles.has(title.toLowerCase())) return false;
+  if (!url.startsWith('http')) return false;
+  if (url.includes('#') || url.includes('/tools/') || url.includes('/partners') || url.includes('/news')) return false;
+  if (url.includes('blog.autotempest.com') || url.includes('shop.autotempest.com')) return false;
+  if (year < 2019 || year > 2023) return false;
+  if (price <= 0 || price > 22000) return false;
+  return true;
 }
 
 async function handleDeleteCar(request, env, id) {

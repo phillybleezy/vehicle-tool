@@ -80,10 +80,28 @@ def _is_valid_listing(listing):
     year = listing.get("year") or 0
     price = listing.get("price") or 0
     make = (listing.get("make") or "").lower()
+    blocked_titles = {
+        "loading...",
+        "sell",
+        "blog",
+        "store",
+        "partners",
+        "search cars",
+        "new cars",
+        "news",
+        "guides",
+        "how autotempest works",
+        "compare insurance quotes",
+        "get shipping quotes",
+        "calculate trade-in value",
+        "results beyond 100mi",
+    }
 
-    if not title or title.lower() in {"loading...", "sell", "blog", "store", "partners"}:
+    if not title or title.lower() in blocked_titles:
         return False
     if not url.startswith("http"):
+        return False
+    if any(part in url for part in ("#", "/tools/", "/partners", "/news", "blog.autotempest.com", "shop.autotempest.com")):
         return False
     if not (YEAR_MIN <= year <= YEAR_MAX):
         return False
