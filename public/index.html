@@ -4925,7 +4925,7 @@ async function loadSearchListings() {
   const tbody = document.getElementById('search-tbody');
   tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:40px 0;">Loading…</td></tr>';
   try {
-    const res = await fetch('/api/listings', {
+    const res = await fetch(`${API_BASE}/api/listings`, {
       headers: { 'X-Access-Pin': localStorage.getItem('accessPin') || '' }
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
