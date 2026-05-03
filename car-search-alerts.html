@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Search Alerts Setup</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #0f172a; color: #e2e8f0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 32px 24px; }
+  h1 { color: #f8fafc; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .subtitle { color: #94a3b8; font-size: 14px; margin-bottom: 32px; }
+  .criteria { background: #1e293b; border-radius: 10px; padding: 16px 20px; margin-bottom: 32px; display: flex; flex-wrap: wrap; gap: 12px 24px; }
+  .criteria-item { font-size: 13px; color: #cbd5e1; }
+  .criteria-item span { color: #60a5fa; font-weight: 600; }
+  .site { background: #1e293b; border-radius: 12px; padding: 20px 24px; margin-bottom: 16px; }
+  .site-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .site-name { font-size: 17px; font-weight: 700; color: #f1f5f9; }
+  .badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+  .badge-scrape { background: #166534; color: #86efac; }
+  .badge-alert { background: #312e81; color: #a5b4fc; }
+  .site-note { color: #94a3b8; font-size: 13px; margin-bottom: 14px; line-height: 1.5; }
+  .makes { display: flex; flex-direction: column; gap: 8px; }
+  .make-row { display: flex; align-items: center; gap: 12px; }
+  .make-label { color: #94a3b8; font-size: 12px; font-weight: 600; width: 64px; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.04em; }
+  .link-btn { display: inline-flex; align-items: center; gap: 6px; background: #2563eb; color: #fff; text-decoration: none; padding: 7px 14px; border-radius: 7px; font-size: 13px; font-weight: 600; transition: background 0.15s; }
+  .link-btn:hover { background: #1d4ed8; }
+  .link-btn.amber { background: #b45309; }
+  .link-btn.amber:hover { background: #92400e; }
+  .link-btn.green { background: #166534; }
+  .link-btn.green:hover { background: #14532d; }
+  .link-btn.purple { background: #6d28d9; }
+  .link-btn.purple:hover { background: #5b21b6; }
+  .single-link { margin-top: 10px; }
+  .alert-steps { margin-top: 12px; background: #0f172a; border-radius: 8px; padding: 12px 16px; }
+  .alert-steps p { color: #94a3b8; font-size: 12px; margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .alert-steps ol { color: #cbd5e1; font-size: 13px; padding-left: 18px; display: flex; flex-direction: column; gap: 3px; }
+  .divider { border: none; border-top: 1px solid #334155; margin: 24px 0; }
+  .section-title { color: #64748b; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+  .arrow { font-size: 11px; opacity: 0.7; }
+</style>
+</head>
+<body>
+
+<h1>Car Search — Saved Alerts Setup</h1>
+<p class="subtitle">Bookmark these links or click once to open each search with your filters pre-loaded. Then save the search and enable email alerts on each site.</p>
+
+<div class="criteria">
+  <div class="criteria-item">Years <span>2019–2023</span></div>
+  <div class="criteria-item">Makes <span>Toyota · Honda · Subaru</span></div>
+  <div class="criteria-item">Max miles <span>80,000</span></div>
+  <div class="criteria-item">Max price <span>$22,000</span></div>
+  <div class="criteria-item">Location <span>85224 · 100 mi radius</span></div>
+</div>
+
+<!-- AutoTempest -->
+<div class="site">
+  <div class="site-header">
+    <div class="site-name">AutoTempest</div>
+    <span class="badge badge-scrape">Scraped automatically</span>
+  </div>
+  <p class="site-note">Already scraped every 30 min by your GitHub Actions scraper. These links are for manual spot-checks or to set up their email alert as a backup.</p>
+  <div class="makes">
+    <div class="make-row">
+      <span class="make-label">Toyota</span>
+      <a class="link-btn green" href="https://www.autotempest.com/results?make=toyota&minyear=2019&maxyear=2023&maxmiles=80000&maxprice=22000&zip=85224&radius=100" target="_blank">Open search <span class="arrow">↗</span></a>
+    </div>
+    <div class="make-row">
+      <span class="make-label">Honda</span>
+      <a class="link-btn green" href="https://www.autotempest.com/results?make=honda&minyear=2019&maxyear=2023&maxmiles=80000&maxprice=22000&zip=85224&radius=100" target="_blank">Open search <span class="arrow">↗</span></a>
+    </div>
+    <div class="make-row">
+      <span class="make-label">Subaru</span>
+      <a class="link-btn green" href="https://www.autotempest.com/results?make=subaru&minyear=2019&maxyear=2023&maxmiles=80000&maxprice=22000&zip=85224&radius=100" target="_blank">Open search <span class="arrow">↗</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- CarGurus -->
+<div class="site">
+  <div class="site-header">
+    <div class="site-name">CarGurus</div>
+    <span class="badge badge-alert">Email alert needed</span>
+  </div>
+  <p class="site-note">Heavy bot protection — not scraped automatically. Open the search, verify your filters look right, then click "Save Search" and enable email alerts. CarGurus alerts are near-real-time.</p>
+  <div class="single-link">
+    <a class="link-btn" href="https://www.cargurus.com/Cars/new/nl#listing=byZip;zip=85224;distance=100;minYear=2019;maxYear=2023;maxMileage=80000;maxPrice=22000;showNegotiable=true" target="_blank">Open CarGurus search <span class="arrow">↗</span></a>
+  </div>
+  <div class="alert-steps">
+    <p>To set up email alerts</p>
+    <ol>
+      <li>Open the link above and confirm filters match your criteria</li>
+      <li>Click <strong>Save Search</strong> (top right of results)</li>
+      <li>Choose alert frequency: <strong>Instant</strong> or <strong>Daily</strong></li>
+      <li>Sign in or create a free account to save</li>
+    </ol>
+  </div>
+</div>
+
+<!-- Cars.com -->
+<div class="site">
+  <div class="site-header">
+    <div class="site-name">Cars.com</div>
+    <span class="badge badge-alert">Email alert needed</span>
+  </div>
+  <p class="site-note">Separate searches per make recommended — Cars.com multi-make URLs can be finicky. Save each as its own alert.</p>
+  <div class="makes">
+    <div class="make-row">
+      <span class="make-label">Toyota</span>
+      <a class="link-btn amber" href="https://www.cars.com/shopping/results/?list_price_max=22000&make[]=toyota&maximum_distance=100&mileage_max=80000&stock_type=used&year_max=2023&year_min=2019&zip=85224" target="_blank">Open search <span class="arrow">↗</span></a>
+    </div>
+    <div class="make-row">
+      <span class="make-label">Honda</span>
+      <a class="link-btn amber" href="https://www.cars.com/shopping/results/?list_price_max=22000&make[]=honda&maximum_distance=100&mileage_max=80000&stock_type=used&year_max=2023&year_min=2019&zip=85224" target="_blank">Open search <span class="arrow">↗</span></a>
+    </div>
+    <div class="make-row">
+      <span class="make-label">Subaru</span>
+      <a class="link-btn amber" href="https://www.cars.com/shopping/results/?list_price_max=22000&make[]=subaru&maximum_distance=100&mileage_max=80000&stock_type=used&year_max=2023&year_min=2019&zip=85224" target="_blank">Open search <span class="arrow">↗</span></a>
+    </div>
+  </div>
+  <div class="alert-steps">
+    <p>To set up email alerts</p>
+    <ol>
+      <li>Open each link above and verify filters</li>
+      <li>Click the <strong>bell icon</strong> or <strong>Save Search</strong></li>
+      <li>Sign in to enable email notifications</li>
+    </ol>
+  </div>
+</div>
+
+<!-- Autotrader -->
+<div class="site">
+  <div class="site-header">
+    <div class="site-name">Autotrader</div>
+    <span class="badge badge-alert">Email alert needed</span>
+  </div>
+  <p class="site-note">Autotrader supports multiple makes in one search. One saved alert covers all three makes.</p>
+  <div class="single-link">
+    <a class="link-btn purple" href="https://www.autotrader.com/cars-for-sale/used-cars?zip=85224&searchRadius=100&startYear=2019&endYear=2023&maxMileage=80000&maxPrice=22000&makeCode1=TOYOTA&makeCode2=HONDA&makeCode3=SUBARU&listingType=USED" target="_blank">Open Autotrader search <span class="arrow">↗</span></a>
+  </div>
+  <div class="alert-steps">
+    <p>To set up email alerts</p>
+    <ol>
+      <li>Open the link above and verify results look right</li>
+      <li>Click <strong>Save Search</strong> in the results header</li>
+      <li>Sign in to MyAutotrader — choose daily or instant alerts</li>
+    </ol>
+  </div>
+</div>
+
+<!-- Facebook Marketplace -->
+<div class="site">
+  <div class="site-header">
+    <div class="site-name">Facebook Marketplace</div>
+    <span class="badge badge-alert">Notification needed</span>
+  </div>
+  <p class="site-note">Best source for private-party deals that never reach aggregators. FB Marketplace filters encode partially in the URL — you may need to re-apply year range manually after opening.</p>
+  <div class="single-link">
+    <a class="link-btn" style="background:#1877f2" href="https://www.facebook.com/marketplace/85224/vehicles?minYear=2019&maxYear=2023&maxMileage=80000&maxPrice=22000&radiusInMiles=100" target="_blank">Open FB Marketplace <span class="arrow">↗</span></a>
+  </div>
+  <div class="alert-steps">
+    <p>To set up notifications</p>
+    <ol>
+      <li>Open the link above, set filters for Toyota / Honda / Subaru</li>
+      <li>Click <strong>Save search</strong> (bell icon near search bar)</li>
+      <li>Enable notifications in your FB notification settings</li>
+      <li>Tip: Also check the <strong>Phoenix Buy/Sell</strong> local groups for private listings</li>
+    </ol>
+  </div>
+</div>
+
+<hr class="divider">
+<p style="color:#475569;font-size:12px;text-align:center">Generated for 85224 · 100 mi · 2019–2023 · Toyota / Honda / Subaru · ≤80k mi · ≤$22,000</p>
+
+</body>
+</html>

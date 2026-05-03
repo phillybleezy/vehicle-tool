@@ -432,6 +432,7 @@
     <button class="mode-tab" onclick="setMode(&#39;single&#39;)">Single Vehicle Lookup</button>
     <button class="mode-tab" onclick="setMode(&#39;vin&#39;)">VIN Check</button>
     <button class="mode-tab" onclick="setMode('saved')">Saved Cars</button>
+    <button class="mode-tab" onclick="setMode('search')">Car Search</button>
   </div>
   
   <div id="compare-selectors" class="selectors" style="flex-direction:column;align-items:center;">
@@ -478,6 +479,41 @@
     </select>
   </div>
   <div id="saved-car-list"><div style="text-align:center; color:var(--text-dim); padding:40px 0;">Loading…</div></div>
+</div>
+
+<!-- Car Search Panel -->
+<div id="search-panel" style="display:none; max-width:1000px; margin:24px auto; padding:0 16px;">
+  <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+    <h2 style="font-family:'DM Sans',sans-serif; font-size:1.4rem; font-weight:700; color:var(--text); margin:0;">Car Search</h2>
+    <span id="search-last-updated" style="font-size:0.82rem; color:var(--text-dim);"></span>
+  </div>
+
+  <!-- Filter type tabs -->
+  <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+    <button id="sf-all"     onclick="setSearchFilter('all')"     style="padding:5px 14px; border-radius:20px; border:1px solid var(--border); background:var(--accent); color:#fff; font-family:'DM Sans',sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer;">All</button>
+    <button id="sf-dealer"  onclick="setSearchFilter('dealer')"  style="padding:5px 14px; border-radius:20px; border:1px solid var(--border); background:var(--surface2); color:var(--text-dim); font-family:'DM Sans',sans-serif; font-size:0.85rem; cursor:pointer;">Dealers</button>
+    <button id="sf-private" onclick="setSearchFilter('private')" style="padding:5px 14px; border-radius:20px; border:1px solid var(--border); background:var(--surface2); color:var(--text-dim); font-family:'DM Sans',sans-serif; font-size:0.85rem; cursor:pointer;">Private</button>
+  </div>
+
+  <!-- Results table -->
+  <div style="overflow-x:auto;">
+    <table id="search-table" style="width:100%; border-collapse:collapse; font-family:'DM Sans',sans-serif; font-size:0.88rem;">
+      <thead>
+        <tr style="background:var(--surface2); color:var(--text-dim); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.05em;">
+          <th onclick="sortSearch('title')"   style="text-align:left; padding:8px 10px; cursor:pointer; white-space:nowrap;">Vehicle <span id="sort-title"></span></th>
+          <th onclick="sortSearch('price')"   style="text-align:right; padding:8px 10px; cursor:pointer; white-space:nowrap;">Price <span id="sort-price">↑</span></th>
+          <th onclick="sortSearch('mileage')" style="text-align:right; padding:8px 10px; cursor:pointer; white-space:nowrap;">Miles <span id="sort-mileage"></span></th>
+          <th onclick="sortSearch('distance_miles')" style="text-align:right; padding:8px 10px; cursor:pointer; white-space:nowrap;">Dist <span id="sort-distance_miles"></span></th>
+          <th style="text-align:left; padding:8px 10px; white-space:nowrap;">Source</th>
+          <th onclick="sortSearch('days_on_market')" style="text-align:right; padding:8px 10px; cursor:pointer; white-space:nowrap;">Listed <span id="sort-days_on_market"></span></th>
+        </tr>
+      </thead>
+      <tbody id="search-tbody">
+        <tr><td colspan="6" style="text-align:center; color:var(--text-dim); padding:40px 0;">Loading listings…</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="search-count" style="margin-top:10px; font-size:0.82rem; color:var(--text-dim);"></div>
 </div>
 
 <!-- Add / Edit Car Modal -->
@@ -1400,9 +1436,21 @@ function setMode(mode) {
   savedPanel.style.display = 'none';
   stopCarPolling();
 
+  const searchPanel = document.getElementById('search-panel');
+  searchPanel.style.display = 'none';
+
   const compareSelectors = document.getElementById('compare-selectors');
   const resultsDiv = document.getElementById('results');
   const vinPanel = document.getElementById('vin-panel');
+
+  if (mode === 'search') {
+    compareSelectors.style.display = 'none';
+    resultsDiv.style.display = 'none';
+    vinPanel.style.display = 'none';
+    searchPanel.style.display = 'block';
+    loadSearchListings();
+    return;
+  }
 
   if (mode === 'vin') {
     compareSelectors.style.display = 'none';
@@ -2930,6 +2978,140 @@ function renderCarfaxResults(a) {
 
 initPin();
 setMode('compare');
+
+// ── Car Search ──────────────────────────────────────────────────────────────
+
+let _searchListings = [];
+let _searchFilter = 'all';
+let _searchSort = { key: 'price', dir: 1 };
+
+async function loadSearchListings() {
+  const tbody = document.getElementById('search-tbody');
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:40px 0;">Loading…</td></tr>';
+  try {
+    const res = await fetch('/api/listings', {
+      headers: { 'X-Access-Pin': localStorage.getItem('accessPin') || '' }
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    _searchListings = data.listings || [];
+    const lu = data.last_updated;
+    document.getElementById('search-last-updated').textContent =
+      lu ? 'Last updated ' + _relTime(lu) : '';
+    renderSearchTable();
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:40px 0;">Could not load listings. ${e.message}</td></tr>`;
+  }
+}
+
+function _relTime(iso) {
+  const diff = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+  if (diff < 1) return 'just now';
+  if (diff < 60) return diff + ' min ago';
+  if (diff < 1440) return Math.round(diff / 60) + ' hr ago';
+  return Math.round(diff / 1440) + ' days ago';
+}
+
+function setSearchFilter(f) {
+  _searchFilter = f;
+  ['all', 'dealer', 'private'].forEach(id => {
+    const btn = document.getElementById('sf-' + id);
+    if (btn) {
+      btn.style.background = id === f ? 'var(--accent)' : 'var(--surface2)';
+      btn.style.color = id === f ? '#fff' : 'var(--text-dim)';
+    }
+  });
+  renderSearchTable();
+}
+
+function sortSearch(key) {
+  if (_searchSort.key === key) {
+    _searchSort.dir *= -1;
+  } else {
+    _searchSort.key = key;
+    _searchSort.dir = 1;
+  }
+  ['title', 'price', 'mileage', 'distance_miles', 'days_on_market'].forEach(k => {
+    const el = document.getElementById('sort-' + k);
+    if (el) el.textContent = k === key ? (_searchSort.dir === 1 ? '↑' : '↓') : '';
+  });
+  renderSearchTable();
+}
+
+function renderSearchTable() {
+  const tbody = document.getElementById('search-tbody');
+  const now = Date.now();
+
+  let rows = _searchFilter === 'all'
+    ? _searchListings
+    : _searchListings.filter(l => l.source_type === _searchFilter);
+
+  rows = [...rows].sort((a, b) => {
+    const av = a[_searchSort.key] ?? 0;
+    const bv = b[_searchSort.key] ?? 0;
+    if (typeof av === 'string') return av.localeCompare(bv) * _searchSort.dir;
+    return (av - bv) * _searchSort.dir;
+  });
+
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-dim);padding:40px 0;">No listings found.</td></tr>';
+    document.getElementById('search-count').textContent = '';
+    return;
+  }
+
+  const dealerCount  = _searchListings.filter(l => l.source_type === 'dealer').length;
+  const privateCount = _searchListings.filter(l => l.source_type === 'private').length;
+  document.getElementById('sf-all').textContent     = `All (${_searchListings.length})`;
+  document.getElementById('sf-dealer').textContent  = `Dealers (${dealerCount})`;
+  document.getElementById('sf-private').textContent = `Private (${privateCount})`;
+  document.getElementById('search-count').textContent = `Showing ${rows.length} listing${rows.length !== 1 ? 's' : ''}`;
+
+  tbody.innerHTML = rows.map(l => {
+    const isNew = l.first_seen && (now - new Date(l.first_seen).getTime()) < 7200000;
+    const badge = l.source_type === 'private'
+      ? '<span style="background:#b45309;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600">Private</span>'
+      : '<span style="background:#6366f1;color:#fff;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600">Dealer</span>';
+    const newBadge = isNew
+      ? '<span style="background:#15803d;color:#fff;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700;margin-left:4px">NEW</span>'
+      : '';
+    const price = l.price ? '$' + l.price.toLocaleString() : '—';
+    const miles = l.mileage ? l.mileage.toLocaleString() : '—';
+    const dist  = l.distance_miles ? l.distance_miles + ' mi' : '—';
+    const listed = l.days_on_market === 0 ? 'Today'
+                 : l.days_on_market === 1 ? '1 day ago'
+                 : l.days_on_market > 0 ? l.days_on_market + ' days ago' : '—';
+    return `
+      <tr class="search-row" onclick="toggleSearchRow(this)" data-id="${l.id}" style="border-bottom:1px solid var(--border);cursor:pointer;">
+        <td style="padding:8px 10px;color:var(--text);">${l.title}${newBadge}</td>
+        <td style="padding:8px 10px;text-align:right;color:#22c55e;font-weight:700;">${price}</td>
+        <td style="padding:8px 10px;text-align:right;color:var(--text-dim);">${miles}</td>
+        <td style="padding:8px 10px;text-align:right;color:var(--text-dim);">${dist}</td>
+        <td style="padding:8px 10px;">${badge}</td>
+        <td style="padding:8px 10px;text-align:right;color:var(--text-dim);">${listed}</td>
+      </tr>
+      <tr id="detail-${l.id}" style="display:none;background:var(--surface2);">
+        <td colspan="6" style="padding:12px 16px;">
+          ${l.description ? `<p style="color:var(--text-dim);font-size:0.88rem;margin:0 0 10px">${l.description}</p>` : ''}
+          <div style="display:flex;flex-wrap:wrap;gap:8px;font-size:0.82rem;color:var(--text-dim);margin-bottom:10px">
+            ${l.location ? `<span>📍 ${l.location}</span>` : ''}
+            ${l.vin      ? `<span>VIN: <code style="color:var(--text)">${l.vin}</code></span>` : ''}
+            ${l.days_on_market > 0 ? `<span>Listed ${l.days_on_market} day${l.days_on_market !== 1 ? 's' : ''} ago</span>` : ''}
+            <span>Source: ${l.source}</span>
+          </div>
+          <a href="${l.url}" target="_blank" rel="noopener" style="display:inline-block;padding:6px 14px;background:var(--accent);color:#fff;border-radius:7px;font-size:0.85rem;font-weight:600;text-decoration:none;">View Listing ↗</a>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+function toggleSearchRow(row) {
+  const id = row.getAttribute('data-id');
+  const detail = document.getElementById('detail-' + id);
+  if (!detail) return;
+  const open = detail.style.display !== 'none';
+  detail.style.display = open ? 'none' : 'table-row';
+  row.style.background = open ? '' : 'rgba(99,102,241,0.06)';
+}
 </script>
 
 
