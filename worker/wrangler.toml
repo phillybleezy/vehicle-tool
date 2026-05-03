@@ -13,3 +13,7 @@ id = "91c5314c136c44949dbb512e918f0359"
 [[kv_namespaces]]
 binding = "SAVED_CARS"
 id = "59d289081cc24b41a6ad58fdde7b6695"
+
+[[kv_namespaces]]
+binding = "LISTINGS"
+id = "REPLACE_WITH_LISTINGS_KV_NAMESPACE_ID"

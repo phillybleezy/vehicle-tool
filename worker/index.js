@@ -19,6 +19,13 @@ export default {
       return handleCombinedAnalysis(request, env);
     }
 
+    if (url.pathname === '/api/listings' && request.method === 'GET') {
+      return handleGetListings(request, env);
+    }
+    if (url.pathname === '/api/listings' && request.method === 'POST') {
+      return handlePostListings(request, env);
+    }
+
     if (url.pathname === '/api/cars' && request.method === 'GET') {
       return handleGetCars(request, env);
     }
@@ -463,6 +470,44 @@ async function handleUpdateCar(request, env, id) {
   return jsonResponse(cars[idx], 200, env);
 }
 
+async function handleGetListings(request, env) {
+  const auth = authPinOnly(request, env);
+  if (auth.error) return auth.error;
+  try {
+    const raw = await env.LISTINGS.get('listings');
+    const lastUpdated = await env.LISTINGS.get('listings_last_updated');
+    const listings = raw ? JSON.parse(raw) : [];
+    return jsonResponse({ listings, last_updated: lastUpdated || null, count: listings.length }, 200, env);
+  } catch {
+    return jsonResponse({ error: 'Could not read listings' }, 500, env);
+  }
+}
+
+async function handlePostListings(request, env) {
+  if (!env.SCRAPER_TOKEN) {
+    return jsonResponse({ error: 'Service misconfigured' }, 503, env);
+  }
+  const authHeader = request.headers.get('Authorization') || '';
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+  if (!token || !timingSafeEqual(token, env.SCRAPER_TOKEN)) {
+    return jsonResponse({ error: 'Unauthorized' }, 401, env);
+  }
+  let body;
+  try { body = await request.json(); } catch {
+    return jsonResponse({ error: 'Invalid JSON body' }, 400, env);
+  }
+  if (!Array.isArray(body.listings)) {
+    return jsonResponse({ error: 'listings must be an array' }, 400, env);
+  }
+  try {
+    await env.LISTINGS.put('listings', JSON.stringify(body.listings));
+    await env.LISTINGS.put('listings_last_updated', body.last_updated || new Date().toISOString());
+    return jsonResponse({ ok: true, count: body.listings.length }, 200, env);
+  } catch {
+    return jsonResponse({ error: 'Could not write listings' }, 500, env);
+  }
+}
+
 async function handleDeleteCar(request, env, id) {
   const auth = authPinOnly(request, env);
   if (auth.error) return auth.error;
@@ -503,7 +548,7 @@ function corsHeaders(env) {
   return {
     'Access-Control-Allow-Origin': env.ALLOWED_ORIGIN || '*',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, X-Access-Pin',
+    'Access-Control-Allow-Headers': 'Content-Type, X-Access-Pin, Authorization',
   };
 }
 
