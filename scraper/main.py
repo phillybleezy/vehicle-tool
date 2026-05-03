@@ -116,86 +116,8 @@ def _is_valid_listing(listing):
 # ---------------------------------------------------------------------------
 
 def scrape_autotempest(make):
-    url = "https://www.autotempest.com/results"
-    params = {
-        "make": make,
-        "zip": ZIP_CODE,
-        "radius": RADIUS_MILES,
-        "minyear": YEAR_MIN,
-        "maxyear": YEAR_MAX,
-        "maxprice": MAX_PRICE,
-        "maxmiles": MAX_MILEAGE,
-    }
-    try:
-        resp = requests.get(url, params=params, headers=_headers(), timeout=20)
-        resp.raise_for_status()
-    except Exception as exc:
-        print(f"[AutoTempest/{make}] fetch error: {exc}", file=sys.stderr)
-        return []
-
-    soup = BeautifulSoup(resp.text, "lxml")
-    listings = []
-
-    # AutoTempest wraps each result in <li class="srp-list-item"> or similar
-    items = soup.select("li.srp-list-item, li[class*='listing'], div[class*='listing-item']")
-    if not items:
-        # Fallback: any <li> with a price-looking element
-        items = soup.find_all("li", class_=re.compile(r"result|listing|item", re.I))
-
-    for item in items:
-        try:
-            link_tag = item.find("a", href=True)
-            if not link_tag:
-                continue
-            listing_url = link_tag["href"]
-            if not listing_url.startswith("http"):
-                listing_url = "https://www.autotempest.com" + listing_url
-
-            title_el = item.select_one("[class*='title'], [class*='heading'], h2, h3")
-            title = title_el.get_text(strip=True) if title_el else link_tag.get_text(strip=True)
-
-            price_el = item.select_one("[class*='price']")
-            price = _parse_price(price_el.get_text() if price_el else "")
-
-            mileage_el = item.select_one("[class*='mileage'], [class*='miles']")
-            mileage = _parse_mileage(mileage_el.get_text() if mileage_el else title)
-
-            location_el = item.select_one("[class*='location'], [class*='city']")
-            location = location_el.get_text(strip=True) if location_el else ""
-
-            source_el = item.select_one("[class*='source'], [class*='site'], [class*='partner']")
-            source_label = source_el.get_text(strip=True) if source_el else ""
-            source_type = "private" if "craigslist" in source_label.lower() else "dealer"
-
-            year = _parse_year(title)
-            item_make = _parse_make(title)
-            model, trim = _parse_model_trim(title, item_make or make.capitalize())
-
-            listings.append({
-                "id": _listing_id(listing_url),
-                "url": listing_url,
-                "title": title,
-                "year": year,
-                "make": item_make or make.capitalize(),
-                "model": model,
-                "trim": trim,
-                "price": price,
-                "mileage": mileage,
-                "distance_miles": 0,
-                "source": "AutoTempest",
-                "source_type": source_type,
-                "location": location,
-                "description": "",
-                "vin": "",
-                "image_url": "",
-                "first_seen": "",
-                "last_seen": "",
-                "days_on_market": 0,
-            })
-        except Exception as exc:
-            print(f"[AutoTempest/{make}] parse error on item: {exc}", file=sys.stderr)
-
-    return listings
+    print(f"[AutoTempest/{make}] skipped: page returns partner/search links, not stable listing rows.")
+    return []
 
 # ---------------------------------------------------------------------------
 # Craigslist Phoenix scraper
@@ -223,8 +145,11 @@ def scrape_craigslist(make):
     soup = BeautifulSoup(resp.text, "lxml")
     listings = []
 
-    # Craigslist new layout: <li class="cl-search-result"> or old: <li class="result-row">
-    items = soup.select("li.cl-search-result, li.result-row")
+    # Craigslist layouts:
+    # - static/no-JS: <li class="cl-static-search-result">
+    # - app layout: <li class="cl-search-result">
+    # - old layout: <li class="result-row">
+    items = soup.select("li.cl-static-search-result, li.cl-search-result, li.result-row")
 
     for item in items:
         try:
@@ -235,8 +160,7 @@ def scrape_craigslist(make):
             if not listing_url.startswith("http"):
                 listing_url = "https://phoenix.craigslist.org" + listing_url
 
-            # New layout: a.cl-app-anchor or title span
-            title_el = item.select_one(".cl-listing-title, .result-title, a[class*='title']")
+            title_el = item.select_one(".title, .cl-listing-title, .result-title, a[class*='title']")
             title = title_el.get_text(strip=True) if title_el else link_tag.get_text(strip=True)
 
             price_el = item.select_one(".price, [class*='price']")
@@ -244,7 +168,7 @@ def scrape_craigslist(make):
 
             mileage = _parse_mileage(title)
 
-            location_el = item.select_one(".result-hood, [class*='location'], [class*='hood']")
+            location_el = item.select_one(".location, .result-hood, [class*='location'], [class*='hood']")
             location = location_el.get_text(strip=True).strip("()") if location_el else "Phoenix, AZ"
 
             year = _parse_year(title)
